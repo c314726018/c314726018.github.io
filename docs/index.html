@@ -40,7 +40,7 @@
     <span class="brand-mark">Au</span>
     <span class="brand-txt"><strong>今日金价</strong><small>Real-time Gold Market</small></span>
   </a>
-  <nav class="nav-menu" id="navMenu"><a href="./index.html#overview" class="active">行情概览</a><a href="./index.html#quotes" class="">实时行情</a><a href="./index.html#premium" class="">溢价对照</a><a href="./index.html#energy" class="">油价汇率</a><a href="./index.html#charts" class="">走势图表</a><a href="./history.html" class="">历史走势</a><a href="./index.html#alerts" class="">价格提醒</a><a href="./index.html#learn" class="">黄金百科</a><a href="./about.html" class="">关于本站</a></nav>
+  <nav class="nav-menu" id="navMenu"><a href="./index.html#overview" class="active">行情概览</a><a href="./index.html#quotes" class="">实时行情</a><a href="./index.html#premium" class="">溢价对照</a><a href="./index.html#physical" class="">实物金价</a><a href="./index.html#energy" class="">油价汇率</a><a href="./index.html#tools" class="">工具计算</a><a href="./index.html#charts" class="">走势图表</a><a href="./history.html" class="">历史走势</a><a href="./index.html#alerts" class="">价格提醒</a><a href="./index.html#learn" class="">黄金百科</a><a href="./about.html" class="">关于本站</a></nav>
   <div class="nav-act">
     <button class="icon-btn" id="themeBtn" type="button" aria-label="切换深浅色">🌓 <span>主题</span></button>
     <button class="nav-toggle" id="navToggle" type="button" aria-label="打开菜单">☰</button>
@@ -102,7 +102,7 @@
       <div class="card-head"><h3>合约行情</h3>
         <div class="chip-row"><span class="badge">◷ 每小时抓取</span><span class="chip">SGE 官方行情</span></div></div>
       <table>
-        <thead><tr><th>品种</th><th>合约</th><th>最新价</th><th>涨跌幅</th><th>今开</th><th>最高</th><th>最低</th><th>日内走势</th><th>单位</th></tr></thead>
+        <thead><tr><th>品种</th><th>合约</th><th>最新价</th><th>涨跌幅</th><th>涨跌额</th><th>今开</th><th>最高</th><th>最低</th><th>振幅</th><th>日内走势</th><th>单位</th></tr></thead>
         <tbody id="tbody"></tbody>
       </table>
       <div class="tfoot">「今开 / 最高 / 最低」为当日（或最近交易时段）区间；「最新价」为最近一笔成交。非交易时段显示最近一次有效报价。日内走势为分时序列迷你图，仅示意节奏，不代表完整逐笔成交。</div>
@@ -124,6 +124,48 @@
         <tbody id="metalsBody"><tr><td class="lbl" data-label="品种">黄金 <span class="sym">Au99.99</span></td><td class="num" data-label="境内报价">860.05 <span class="unit">元/克</span></td><td class="num" data-label="国际折算">873.80 <span class="unit">元/克</span></td><td data-label="国内溢价"><span class="chg down">-1.57%</span></td><td class="unit" data-label="口径">XAU/USD × USD/CNY</td></tr><tr><td class="lbl" data-label="品种">白银 <span class="sym">Ag99.99</span></td><td class="num" data-label="境内报价">12,732.00 <span class="unit">元/千克</span></td><td class="num" data-label="国际折算">11,439.94 <span class="unit">元/千克</span></td><td data-label="国内溢价"><span class="chg up">+11.29%</span></td><td class="unit" data-label="口径">XAG/USD × USD/CNY</td></tr></tbody>
       </table>
       <div class="tfoot">国际折算 = 国际美元价 × USD/CNY ÷ 31.1034768（白银为元/千克口径，再 × 1000）。溢价 =（SGE − 折算）÷ 折算 × 100%。注意：境内白银报价含增值税因素，对国际价的溢价天然偏高；各品种口径详见「关于本站」。</div>
+    </div>
+  </section>
+
+  <!-- ============ 实物金价参考 ============ -->
+  <section class="section" id="physical">
+    <div class="section-head">
+      <div><div class="lbl">PHYSICAL GOLD · RETAIL REFERENCE</div><h2>实物金价参考</h2>
+        <p>以 SGE Au99.99 为基准金价，按常见零售加价 / 折价估算投资金条、回收价与首饰金价。所有数字随实时基准自动更新。</p></div>
+      <div class="side">基准 = Au99.99 实时价</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>实物金价估算</h3>
+        <div class="chip-row"><span class="badge">◷ 随实时基准更新</span><span class="chip">参考估算</span></div></div>
+      <div class="assume-row">
+        <div class="a-item"><label>金条加价 (元/克)</label><input id="asBar" type="number" step="0.5" value="12"></div>
+        <div class="a-item"><label>回收折价 (元/克)</label><input id="asRec" type="number" step="0.5" value="5"></div>
+        <div class="a-item"><label>首饰工费 (元/克)</label><input id="asJew" type="number" step="1" value="70"></div>
+        <div class="a-item"><label>3D/古法工费 (元/克)</label><input id="as3d" type="number" step="1" value="120"></div>
+        <div class="a-item"><label>积存金点差 (%)</label><input id="asAcc" type="number" step="0.1" value="0.5"></div>
+        <button class="btn mini" id="asReset" type="button">恢复默认</button>
+      </div>
+      <div class="phys-grid">
+        <div class="phys-card real"><div class="pk"><span class="dot"></span>基准金价（SGE Au99.99）</div>
+          <div class="pv" id="physBase">—<span class="pu">元/克</span></div>
+          <div class="pn">上海黄金交易所实时现货价</div></div>
+        <div class="phys-card"><div class="pk">投资金条（买入）</div>
+          <div class="pv" id="physBar">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 + 金条加价，银行 / 金店买卖价差小</div></div>
+        <div class="phys-card"><div class="pk">金条回收价</div>
+          <div class="pv" id="physRec">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 − 回收折价，回购通常低于基准</div></div>
+        <div class="phys-card"><div class="pk">足金 999 首饰（买入）</div>
+          <div class="pv" id="physJew">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 + 首饰工费，含加工与品牌溢价</div></div>
+        <div class="phys-card"><div class="pk">3D / 古法金（买入）</div>
+          <div class="pv" id="phys3d">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 + 高工费，工艺溢价更高</div></div>
+        <div class="phys-card"><div class="pk">银行积存金</div>
+          <div class="pv" id="physAcc">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 ×（1 + 点差），可定投赎回</div></div>
+      </div>
+      <div class="phys-note"><b>说明：</b>以上为「基准金价 + 行业典型加价 / 折价」的<b>参考估算值</b>，用于理解实物金买卖价差结构，<b>非周大福、老凤祥等品牌实时挂牌价</b>。品牌金价由各家每日公布、含独立工费与促销，需以门店为准。调整上方假设可观察不同加价下的估算结果。</div>
     </div>
   </section>
 
@@ -150,6 +192,43 @@
           <tbody id="fxBody"><tr><td class="lbl" data-label="币种">美元</td><td class="sym" data-label="代码">USD</td><td class="num strong" data-label="兑人民币">1 USD = 6.6878</td><td class="num" data-label="人民币兑">1 CNY = 0.1495</td></tr><tr><td class="lbl" data-label="币种">欧元</td><td class="sym" data-label="代码">EUR</td><td class="num strong" data-label="兑人民币">1 EUR = 7.4814</td><td class="num" data-label="人民币兑">1 CNY = 0.1337</td></tr><tr><td class="lbl" data-label="币种">日元</td><td class="sym" data-label="代码">JPY</td><td class="num strong" data-label="兑人民币">100 JPY = 4.2180</td><td class="num" data-label="人民币兑">1 CNY = 23.7081</td></tr><tr><td class="lbl" data-label="币种">英镑</td><td class="sym" data-label="代码">GBP</td><td class="num strong" data-label="兑人民币">1 GBP = 8.9389</td><td class="num" data-label="人民币兑">1 CNY = 0.1119</td></tr><tr><td class="lbl" data-label="币种">港币</td><td class="sym" data-label="代码">HKD</td><td class="num strong" data-label="兑人民币">1 HKD = 0.8525</td><td class="num" data-label="人民币兑">1 CNY = 1.1730</td></tr><tr><td class="lbl" data-label="币种">韩元</td><td class="sym" data-label="代码">KRW</td><td class="num strong" data-label="兑人民币">100 KRW = 0.4985</td><td class="num" data-label="人民币兑">1 CNY = 200.6181</td></tr><tr><td class="lbl" data-label="币种">澳元</td><td class="sym" data-label="代码">AUD</td><td class="num strong" data-label="兑人民币">1 AUD = 4.5968</td><td class="num" data-label="人民币兑">1 CNY = 0.2175</td></tr><tr><td class="lbl" data-label="币种">新加坡元</td><td class="sym" data-label="代码">SGD</td><td class="num strong" data-label="兑人民币">1 SGD = 5.2221</td><td class="num" data-label="人民币兑">1 CNY = 0.1915</td></tr><tr><td class="lbl" data-label="币种">瑞士法郎</td><td class="sym" data-label="代码">CHF</td><td class="num strong" data-label="兑人民币">1 CHF = 8.1144</td><td class="num" data-label="人民币兑">1 CNY = 0.1232</td></tr><tr><td class="lbl" data-label="币种">加元</td><td class="sym" data-label="代码">CAD</td><td class="num strong" data-label="兑人民币">1 CAD = 4.7197</td><td class="num" data-label="人民币兑">1 CNY = 0.2119</td></tr><tr><td class="lbl" data-label="币种">泰铢</td><td class="sym" data-label="代码">THB</td><td class="num strong" data-label="兑人民币">100 THB = 19.9337</td><td class="num" data-label="人民币兑">1 CNY = 5.0166</td></tr></tbody>
         </table>
         <div class="tfoot">汇率取自公开汇率接口的 1 美元折算口径，与银行柜台实时牌价存在点差；日元 / 韩元 / 泰铢按 100 单位展示。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 工具计算器 ============ -->
+  <section class="section" id="tools">
+    <div class="section-head">
+      <div><div class="lbl">CALCULATORS · 工具</div><h2>黄金工具计算器</h2>
+        <p>纯本地计算，自动读取实时基准金价与汇率。输入即算，不上传任何数据。</p></div>
+    </div>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h3>克 ↔ 金衡盎司</h3>
+        <div class="field"><label>克 (g)</label><input id="t1g" type="number" step="0.01" placeholder="1"></div>
+        <div class="field"><label>金衡盎司 (oz)</label><input id="t1o" type="number" step="0.0001" placeholder="0.03215"></div>
+        <div class="src">1 金衡盎司 = 31.1034768 克（与日常常衡盎司 28.35g 不同）</div>
+      </div>
+      <div class="tool-card">
+        <h3>美元金价 → 人民币金价</h3>
+        <div class="field"><label>国际金价 (美元/盎司)</label><input id="t2usd" type="number" step="0.1"></div>
+        <div class="field"><label>美元兑人民币</label><input id="t2fx" type="number" step="0.0001"></div>
+        <div class="tool-out" id="t2out">—</div>
+        <div class="src" id="t2src"></div>
+      </div>
+      <div class="tool-card">
+        <h3>实物金买卖成本估算</h3>
+        <div class="field"><label>克重 (g)</label><input id="t3g" type="number" step="0.1" value="10"></div>
+        <div class="field"><label>买入价 (元/克)</label><input id="t3b" type="number" step="0.01"></div>
+        <div class="field"><label>卖出 / 回收价 (元/克)</label><input id="t3s" type="number" step="0.01"></div>
+        <div class="tool-out" id="t3out">—</div>
+      </div>
+      <div class="tool-card">
+        <h3>持仓盈亏计算</h3>
+        <div class="field"><label>克重 (g)</label><input id="t4g" type="number" step="0.1" value="10"></div>
+        <div class="field"><label>成本价 (元/克)</label><input id="t4b" type="number" step="0.01"></div>
+        <div class="field"><label>现价 (元/克)</label><input id="t4n" type="number" step="0.01"></div>
+        <div class="tool-out" id="t4out">—</div>
       </div>
     </div>
   </section>
@@ -219,6 +298,33 @@
       <span>所有指标的计算口径与数据源都在「关于本站」中公开说明；上游失败时自动回退到上一次有效数据，不会显示空白或错误数字。</span></div>
     <a class="btn ghost" href="./about.html">查看数据说明 →</a>
   </div>
+
+  <!-- ============ 术语表 ============ -->
+  <section class="section" id="glossary">
+    <div class="section-head">
+      <div><div class="lbl">GLOSSARY · 术语表</div><h2>黄金 / 贵金属术语速查</h2>
+        <p>15 个高频术语，读懂行情表与实物金价背后的口径差异。</p></div>
+    </div>
+    <div class="glossary"><div class="gloss"><h4>国内溢价</h4><p>SGE 现货价相对「国际金价折算人民币」的偏离百分比。为正说明国内比国际贵，常见于实物需求旺、进口配额紧；为负称贴水。</p></div><div class="gloss"><h4>递延费</h4><p>Au(T+D) 等延期合约的特有成本：多空失衡时一方每日向另一方支付的费用，方向每日可能切换，长期持仓不可忽视。</p></div><div class="gloss"><h4>T+D 延期</h4><p>上海黄金交易所的黄金延期交收合约，可多空双向、带保证金杠杆，是国内黄金投机最主流的工具，成交远旺于现货。</p></div><div class="gloss"><h4>基础金价</h4><p>通常指 SGE Au99.99 等现货基准报价，是投资金条、积存金与首饰定价的锚点；实物买卖在此基础上加减工费与价差。</p></div><div class="gloss"><h4>工费 / 佣金</h4><p>实物金的加工与品牌溢价，按元/克或按件收取。投资金条约 +8~15 元/克，足金首饰常 +60~120 元/克，3D/古法金更高。</p></div><div class="gloss"><h4>升水 / 贴水</h4><p>升水指某市场价格高于基准（如国内溢价）；贴水指低于基准。用于描述境内外、期现、远近月之间的价格结构。</p></div><div class="gloss"><h4>K 金</h4><p>黄金与其他金属的合金，数字代表含金量：18K≈75%、14K≈58.3%、9K≈37.5%。硬度高、适合镶嵌，单价低于足金。</p></div><div class="gloss"><h4>3D 硬金</h4><p>电铸工艺制成的足金（99.9%），硬度高、造型立体，但按「一口价」卖、克单价远高于基础金价，回收仍按克重。</p></div><div class="gloss"><h4>成色 / 纯度</h4><p>Au99.99 即含金量 99.99%（万足金），Au99.95 为 99.95%。国内首饰常见足金 999（99.9%）。</p></div><div class="gloss"><h4>金衡盎司</h4><p>国际贵金属计价单位，1 金衡盎司 = 31.1034768 克；与日常常衡盎司（28.3495 克）不同，换算时务必用对。</p></div><div class="gloss"><h4>上海金</h4><p>上海黄金交易所推出的人民币黄金基准价（SHAU），每日两次定价，是国内黄金现货与衍生品的重要参考。</p></div><div class="gloss"><h4>国际板 iAu</h4><p>iAu99.99 是 SGE 国际板合约，以人民币计价、面向境外投资者，是观察境内外金价联动的窗口。</p></div><div class="gloss"><h4>积存金</h4><p>银行按克或金额定期买入黄金的账户产品，门槛低、可定投，部分支持赎回或提实物，留意点差与赎回规则。</p></div><div class="gloss"><h4>回收折价</h4><p>金店/机构回购实物金时低于基础金价的差额（常 −4~8 元/克），是买入到卖出之间必须跨越的成本。</p></div><div class="gloss"><h4>伦敦金定盘</h4><p>LBMA 每日两次公布的黄金定盘价，是国际现货黄金的权威参考，与 COMEX 期货共同构成全球定价体系。</p></div></div>
+  </section>
+
+  <!-- ============ 相关板块 ============ -->
+  <section class="section" id="related">
+    <div class="section-head">
+      <div><div class="lbl">EXPLORE · 相关</div><h2>一站式行情导航</h2>
+        <p>从实时交易所行情到实物金价、计算工具与历史走势，一次看全。</p></div>
+    </div>
+    <div class="rel-grid">
+      <a class="rel" href="./index.html#quotes"><div class="rt">实时行情表</div><p>8 个 SGE 合约最新价、涨跌幅、振幅与分时</p></a>
+      <a class="rel" href="./index.html#premium"><div class="rt">多品种溢价</div><p>金 / 银 / 铂 / 钯境内价 vs 国际折算</p></a>
+      <a class="rel" href="./index.html#physical"><div class="rt">实物金价参考</div><p>金条 / 回收 / 首饰 / 积存金估算</p></a>
+      <a class="rel" href="./index.html#tools"><div class="rt">工具计算器</div><p>克↔盎司、人民币金价、盈亏计算</p></a>
+      <a class="rel" href="./index.html#charts"><div class="rt">走势图表</div><p>分时 / K 线 / 多品种强弱对比</p></a>
+      <a class="rel" href="./history.html"><div class="rt">历史走势</div><p>Au99.99 日线蜡烛图与每日开高低收</p></a>
+      <a class="rel" href="./index.html#alerts"><div class="rt">价格提醒</div><p>免费设置目标价，浏览器通知你</p></a>
+      <a class="rel" href="./index.html#learn"><div class="rt">黄金百科</div><p>15 篇科普 + 术语速查，读懂金价</p></a>
+    </div>
+  </section>
 
   <div class="ad-slot" aria-label="广告位"></div>
 

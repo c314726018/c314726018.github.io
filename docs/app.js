@@ -112,18 +112,114 @@
         ? '<span class="chg ' + ch.cls + '">' + (ch.d > 0 ? "▲ +" : ch.d < 0 ? "▼ " : "— ") +
           fmt(Math.abs(ch.d)) + " (" + (ch.pct >= 0 ? "+" : "") + fmt(ch.pct) + "%)</span>"
         : '<span class="flat">—</span>';
+      var amp = (Number(it.max) - Number(it.min)) / Number(it.open) * 100;
+      var ampTxt = isFinite(amp) ? fmt(amp) + "%" : "—";
+      var dCell = ch
+        ? '<span class="num strong ' + ch.cls + '">' + (ch.d > 0 ? "+" : "") + fmt(ch.d) + "</span>"
+        : '<span class="flat">—</span>';
       return "<tr>" +
         '<td class="lbl" data-label="品种">' + esc(it.label) + "</td>" +
         '<td class="sym" data-label="合约">' + esc(it.symbol) + "</td>" +
         '<td class="num strong" data-label="最新价">' + fmt(it.last) + "</td>" +
         '<td data-label="涨跌幅">' + chgCell + "</td>" +
+        '<td data-label="涨跌额">' + dCell + "</td>" +
         '<td class="num" data-label="今开">' + fmt(it.open) + "</td>" +
         '<td class="num up" data-label="最高">' + fmt(it.max) + "</td>" +
         '<td class="num down" data-label="最低">' + fmt(it.min) + "</td>" +
+        '<td class="num" data-label="振幅">' + ampTxt + "</td>" +
         '<td data-label="日内走势">' + spark(it.series, ch ? ch.cls : "flat") + "</td>" +
         '<td class="unit" data-label="单位">' + esc(it.unit) + "</td>" +
         "</tr>";
     }).join("");
+  }
+
+  // ---------- 实物金价参考 ----------
+  var PHYS_BASE = null;
+  function _numVal(sel, def) {
+    var el = $(sel); if (!el) return def;
+    var v = parseFloat(el.value); return isFinite(v) ? v : def;
+  }
+  function _setPhys(sel, v) {
+    var el = $(sel); if (el) el.innerHTML = fmt(v) + '<span class="pu">元/克</span>';
+  }
+  function computePhysical() {
+    if (PHYS_BASE == null) return;
+    var baseEl = $("#physBase"); if (baseEl) baseEl.innerHTML = fmt(PHYS_BASE) + '<span class="pu">元/克</span>';
+    var bar = _numVal("#asBar", 12), rec = _numVal("#asRec", 5),
+        jew = _numVal("#asJew", 70), d3 = _numVal("#as3d", 120),
+        acc = _numVal("#asAcc", 0.5);
+    _setPhys("#physBar", PHYS_BASE + bar);
+    _setPhys("#physRec", PHYS_BASE - rec);
+    _setPhys("#physJew", PHYS_BASE + jew);
+    _setPhys("#phys3d", PHYS_BASE + d3);
+    _setPhys("#physAcc", PHYS_BASE * (1 + acc / 100));
+  }
+  function renderPhysical(d) {
+    var it = (d.items || []).filter(function (x) { return x.symbol === "Au99.99"; })[0];
+    PHYS_BASE = it ? Number(it.last) : null;
+    computePhysical();
+  }
+  function bindPhysical() {
+    ["#asBar", "#asRec", "#asJew", "#as3d", "#asAcc"].forEach(function (s) {
+      var el = $(s); if (el) el.addEventListener("input", computePhysical);
+    });
+    var r = $("#asReset");
+    if (r) r.addEventListener("click", function () {
+      if ($("#asBar")) $("#asBar").value = 12;
+      if ($("#asRec")) $("#asRec").value = 5;
+      if ($("#asJew")) $("#asJew").value = 70;
+      if ($("#as3d")) $("#as3d").value = 120;
+      if ($("#asAcc")) $("#asAcc").value = 0.5;
+      computePhysical();
+    });
+  }
+
+  // ---------- 工具计算器 ----------
+  function computeT2() {
+    var u = parseFloat($("#t2usd").value), f = parseFloat($("#t2fx").value);
+    var out = $("#t2out"), src = $("#t2src");
+    if (!out) return;
+    if (!isFinite(u) || !isFinite(f)) { out.textContent = "请输入金价与汇率"; if (src) src.textContent = ""; return; }
+    var cnyg = u * f / GRAMS_PER_OZ;
+    out.innerHTML = "人民币金价：<b>" + fmt(cnyg) + "</b> 元/克";
+    if (src) src.textContent = u + " × " + f + " ÷ 31.1035 = " + fmt(cnyg) + " 元/克";
+  }
+  function computeT3() {
+    var g = parseFloat($("#t3g").value), b = parseFloat($("#t3b").value), s = parseFloat($("#t3s").value);
+    var out = $("#t3out"); if (!out) return;
+    if (!isFinite(g) || !isFinite(b) || !isFinite(s)) { out.textContent = "—"; return; }
+    var buy = g * b, sell = g * s, diff = sell - buy, pct = buy ? diff / buy * 100 : 0;
+    out.innerHTML = "买入总额 <b>" + fmt(buy) + "</b> 元 · 卖出总额 <b>" + fmt(sell) + "</b> 元<br>价差 " +
+      fmt(diff) + " 元 (" + (pct >= 0 ? "+" : "") + fmt(pct) + "%)";
+  }
+  function computeT4() {
+    var g = parseFloat($("#t4g").value), b = parseFloat($("#t4b").value), n = parseFloat($("#t4n").value);
+    var out = $("#t4out"); if (!out) return;
+    if (!isFinite(g) || !isFinite(b) || !isFinite(n)) { out.textContent = "—"; return; }
+    var now = g * n, cost = g * b, p = n - b, pct = b ? p / b * 100 : 0;
+    out.innerHTML = "现总值 <b>" + fmt(now) + "</b> 元 · 成本 <b>" + fmt(cost) + "</b> 元<br>盈亏 " +
+      fmt(p * g) + " 元 (" + (pct >= 0 ? "+" : "") + fmt(pct) + "%)";
+  }
+  function bindTools() {
+    var g = $("#t1g"), o = $("#t1o");
+    if (g && o) {
+      g.addEventListener("input", function () { var v = parseFloat(g.value); o.value = isFinite(v) ? (v / GRAMS_PER_OZ).toFixed(6) : ""; });
+      o.addEventListener("input", function () { var v = parseFloat(o.value); g.value = isFinite(v) ? (v * GRAMS_PER_OZ).toFixed(4) : ""; });
+    }
+    ["#t2usd", "#t2fx"].forEach(function (s) { var e = $(s); if (e) e.addEventListener("input", computeT2); });
+    ["#t3g", "#t3b", "#t3s"].forEach(function (s) { var e = $(s); if (e) e.addEventListener("input", computeT3); });
+    ["#t4g", "#t4b", "#t4n"].forEach(function (s) { var e = $(s); if (e) e.addEventListener("input", computeT4); });
+    // 用实时数据预填空字段（不覆盖用户已输入的值；用原始数值避免千分位逗号破坏 parseFloat）
+    var it = (DATA.items || []).filter(function (x) { return x.symbol === "Au99.99"; })[0];
+    var xau = (DATA.intl || {}).xau_usd, fx = (DATA.intl || {}).usd_cny;
+    if (it) {
+      if ($("#t3b") && !$("#t3b").value) $("#t3b").value = it.last;
+      if ($("#t4b") && !$("#t4b").value) $("#t4b").value = it.last;
+      if ($("#t4n") && !$("#t4n").value) $("#t4n").value = it.last;
+    }
+    if (xau && $("#t2usd") && !$("#t2usd").value) $("#t2usd").value = xau;
+    if (fx && $("#t2fx") && !$("#t2fx").value) $("#t2fx").value = fx;
+    computeT2(); computeT3(); computeT4();
   }
 
   // ---------- 多品种溢价对照 ----------
@@ -390,6 +486,7 @@
     renderMetals(d);
     renderEnergy(d);
     renderFx(d);
+    renderPhysical(d);
     renderCharts(d);
     checkAlerts(d);
   }
@@ -405,6 +502,8 @@
   document.addEventListener("DOMContentLoaded", function () {
     bindTheme();
     bindAlerts();
+    bindPhysical();
+    bindTools();
     renderAll(DATA);
     loadData();                 // 拉取最新 baked 数据
     setInterval(loadData, 60000); // 每 60s 检查一次（新构建发布即更新）

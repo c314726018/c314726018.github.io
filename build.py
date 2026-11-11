@@ -399,6 +399,69 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   *{animation-duration:.001ms!important;transition-duration:.001ms!important}
   html{scroll-behavior:auto}
 }
+
+/* ============ 实物金价参考 ============ */
+.phys-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.phys-card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px;box-shadow:var(--shadow);overflow:hidden;transition:transform .18s,box-shadow .18s}
+.phys-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.phys-card.real{border-color:color-mix(in srgb,var(--gold-2) 45%,var(--line))}
+.phys-card.real::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.phys-card .pk{display:flex;align-items:center;gap:8px;color:var(--sub);font-size:12px;font-weight:600}
+.phys-card .pk .dot{width:8px;height:8px;border-radius:50%;background:var(--gold-2);flex:0 0 auto}
+.phys-card .pv{font-size:25px;font-weight:730;letter-spacing:-.6px;margin-top:10px;line-height:1.1}
+.phys-card .pu{color:var(--sub);font-size:11.5px;margin-left:4px;font-weight:400}
+.phys-card .pn{color:var(--sub);font-size:11.5px;margin-top:8px;line-height:1.6}
+.assume-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:16px 0 4px}
+.assume-row .a-item{display:flex;flex-direction:column;gap:5px}
+.assume-row label{font-size:11.5px;color:var(--sub)}
+.assume-row input{width:80px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink);
+  border-radius:8px;padding:7px 9px;font-size:13.5px}
+.btn.mini{padding:6px 13px;font-size:12.5px}
+.phys-note{color:var(--sub);font-size:11.5px;line-height:1.8;margin-top:14px}
+.phys-note b{color:var(--gold-ink)}
+
+/* ============ 工具计算器 ============ */
+.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.tool-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
+.tool-card h3{font-size:15px;margin:0 0 14px;display:flex;align-items:center;gap:8px;font-weight:700}
+.tool-card h3::before{content:"";width:3px;height:15px;border-radius:2px;background:var(--accent)}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
+.field label{font-size:12px;color:var(--sub)}
+.field input,.field select{background:var(--surface-2);border:1px solid var(--line);color:var(--ink);
+  border-radius:8px;padding:9px 11px;font-size:13.5px;width:100%}
+.field .hintu{font-size:11px;color:var(--sub);margin-top:-2px}
+.tool-out{margin-top:8px;padding:14px 16px;border-radius:var(--r-sm);background:var(--gold-soft);
+  color:var(--gold-ink);font-size:13.5px;line-height:1.85;border:1px solid color-mix(in srgb,var(--gold-2) 30%,var(--line))}
+.tool-out b{font-size:19px;color:var(--gold-ink);font-variant-numeric:tabular-nums}
+.tool-card .src{font-size:11px;color:var(--sub);margin-top:10px;line-height:1.7}
+
+/* ============ 术语表 ============ */
+.glossary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.gloss{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:15px 17px;box-shadow:var(--shadow)}
+.gloss h4{margin:0 0 6px;font-size:13.5px;color:var(--gold-ink);display:flex;align-items:center;gap:8px;font-weight:700}
+.gloss h4::before{content:"";width:6px;height:6px;border-radius:2px;background:var(--gold-2);flex:0 0 auto}
+.gloss p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.75}
+
+/* ============ 快捷入口 / 相关板块 ============ */
+.quick-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.quick-row a{padding:9px 16px;border:1px solid var(--line);border-radius:30px;font-size:13px;
+  background:var(--surface);color:var(--ink-2);box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
+.quick-row a:hover{border-color:var(--gold-2);color:var(--gold);background:var(--gold-soft)}
+.rel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+.rel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow);transition:.15s}
+.rel:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 40%,var(--line))}
+.rel .rt{font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px}
+.rel .rt::before{content:"◈";color:var(--gold-2)}
+.rel p{margin:7px 0 0;font-size:12px;color:var(--sub);line-height:1.65}
+
+@media(max-width:900px){
+  .phys-grid,.glossary,.tool-grid{grid-template-columns:1fr}
+  .rel-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:540px){
+  .rel-grid{grid-template-columns:1fr}
+}
 """
 
 FAQ = [
@@ -460,6 +523,25 @@ ARTICLES = [
      "p": ["新闻里的「人民币汇率」其实有三个口径：中间价是中国外汇交易中心每个交易日开盘前公布的基准价；在岸价（CNY）是境内银行间市场的成交价，浮动受管理；离岸价（CNH）在境外市场交易，波动更自由，常被视为市场情绪的温度计。",
            "本页展示的是公开接口的折算汇率，接近在岸口径，适合看「大数」与换算参考；真正的换汇成交价是各银行牌价，含买入/卖出点差，通常比中间价差 0.2%～0.5%。换大额外汇前值得先比一比不同银行的牌价。",
            "汇率对贵金属投资者还有一层意义：国际金价以美元计价，人民币贬值时，即使国际金价横盘，以人民币计价的国内金价也会走高——这也是本页同时展示汇率与国内溢价的原因。"]},
+]
+
+
+GLOSSARY = [
+    {"t": "国内溢价", "d": "SGE 现货价相对「国际金价折算人民币」的偏离百分比。为正说明国内比国际贵，常见于实物需求旺、进口配额紧；为负称贴水。"},
+    {"t": "递延费", "d": "Au(T+D) 等延期合约的特有成本：多空失衡时一方每日向另一方支付的费用，方向每日可能切换，长期持仓不可忽视。"},
+    {"t": "T+D 延期", "d": "上海黄金交易所的黄金延期交收合约，可多空双向、带保证金杠杆，是国内黄金投机最主流的工具，成交远旺于现货。"},
+    {"t": "基础金价", "d": "通常指 SGE Au99.99 等现货基准报价，是投资金条、积存金与首饰定价的锚点；实物买卖在此基础上加减工费与价差。"},
+    {"t": "工费 / 佣金", "d": "实物金的加工与品牌溢价，按元/克或按件收取。投资金条约 +8~15 元/克，足金首饰常 +60~120 元/克，3D/古法金更高。"},
+    {"t": "升水 / 贴水", "d": "升水指某市场价格高于基准（如国内溢价）；贴水指低于基准。用于描述境内外、期现、远近月之间的价格结构。"},
+    {"t": "K 金", "d": "黄金与其他金属的合金，数字代表含金量：18K≈75%、14K≈58.3%、9K≈37.5%。硬度高、适合镶嵌，单价低于足金。"},
+    {"t": "3D 硬金", "d": "电铸工艺制成的足金（99.9%），硬度高、造型立体，但按「一口价」卖、克单价远高于基础金价，回收仍按克重。"},
+    {"t": "成色 / 纯度", "d": "Au99.99 即含金量 99.99%（万足金），Au99.95 为 99.95%。国内首饰常见足金 999（99.9%）。"},
+    {"t": "金衡盎司", "d": "国际贵金属计价单位，1 金衡盎司 = 31.1034768 克；与日常常衡盎司（28.3495 克）不同，换算时务必用对。"},
+    {"t": "上海金", "d": "上海黄金交易所推出的人民币黄金基准价（SHAU），每日两次定价，是国内黄金现货与衍生品的重要参考。"},
+    {"t": "国际板 iAu", "d": "iAu99.99 是 SGE 国际板合约，以人民币计价、面向境外投资者，是观察境内外金价联动的窗口。"},
+    {"t": "积存金", "d": "银行按克或金额定期买入黄金的账户产品，门槛低、可定投，部分支持赎回或提实物，留意点差与赎回规则。"},
+    {"t": "回收折价", "d": "金店/机构回购实物金时低于基础金价的差额（常 −4~8 元/克），是买入到卖出之间必须跨越的成本。"},
+    {"t": "伦敦金定盘", "d": "LBMA 每日两次公布的黄金定盘价，是国际现货黄金的权威参考，与 COMEX 期货共同构成全球定价体系。"},
 ]
 
 
@@ -556,7 +638,9 @@ def nav_html(active=""):
         ("overview", "./index.html#overview", "行情概览"),
         ("quotes", "./index.html#quotes", "实时行情"),
         ("premium", "./index.html#premium", "溢价对照"),
+        ("physical", "./index.html#physical", "实物金价"),
         ("energy", "./index.html#energy", "油价汇率"),
+        ("tools", "./index.html#tools", "工具计算"),
         ("charts", "./index.html#charts", "走势图表"),
         ("history", "./history.html", "历史走势"),
         ("alerts", "./index.html#alerts", "价格提醒"),
@@ -716,6 +800,9 @@ def page_index(data):
         '<article class="prose-card"><div class="no">' + esc(a["no"]) + ' / GUIDE</div>'
         '<h3>' + esc(a["h"]) + '</h3>' + "".join('<p>' + esc(p) + '</p>' for p in a["p"]) + '</article>'
         for a in ARTICLES)
+    glossary_html = "".join(
+        '<div class="gloss"><h4>' + esc(g["t"]) + '</h4><p>' + esc(g["d"]) + '</p></div>'
+        for g in GLOSSARY)
 
     website_ld = json.dumps({
         "@context": "https://schema.org", "@type": "WebSite", "name": "今日金价",
@@ -807,7 +894,7 @@ def page_index(data):
       <div class="card-head"><h3>合约行情</h3>
         <div class="chip-row"><span class="badge">◷ 每小时抓取</span><span class="chip">SGE 官方行情</span></div></div>
       <table>
-        <thead><tr><th>品种</th><th>合约</th><th>最新价</th><th>涨跌幅</th><th>今开</th><th>最高</th><th>最低</th><th>日内走势</th><th>单位</th></tr></thead>
+        <thead><tr><th>品种</th><th>合约</th><th>最新价</th><th>涨跌幅</th><th>涨跌额</th><th>今开</th><th>最高</th><th>最低</th><th>振幅</th><th>日内走势</th><th>单位</th></tr></thead>
         <tbody id="tbody"></tbody>
       </table>
       <div class="tfoot">「今开 / 最高 / 最低」为当日（或最近交易时段）区间；「最新价」为最近一笔成交。非交易时段显示最近一次有效报价。日内走势为分时序列迷你图，仅示意节奏，不代表完整逐笔成交。</div>
@@ -829,6 +916,48 @@ def page_index(data):
         <tbody id="metalsBody">{metals_rows(intl)}</tbody>
       </table>
       <div class="tfoot">国际折算 = 国际美元价 × USD/CNY ÷ 31.1034768（白银为元/千克口径，再 × 1000）。溢价 =（SGE − 折算）÷ 折算 × 100%。注意：境内白银报价含增值税因素，对国际价的溢价天然偏高；各品种口径详见「关于本站」。</div>
+    </div>
+  </section>
+
+  <!-- ============ 实物金价参考 ============ -->
+  <section class="section" id="physical">
+    <div class="section-head">
+      <div><div class="lbl">PHYSICAL GOLD · RETAIL REFERENCE</div><h2>实物金价参考</h2>
+        <p>以 SGE Au99.99 为基准金价，按常见零售加价 / 折价估算投资金条、回收价与首饰金价。所有数字随实时基准自动更新。</p></div>
+      <div class="side">基准 = Au99.99 实时价</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>实物金价估算</h3>
+        <div class="chip-row"><span class="badge">◷ 随实时基准更新</span><span class="chip">参考估算</span></div></div>
+      <div class="assume-row">
+        <div class="a-item"><label>金条加价 (元/克)</label><input id="asBar" type="number" step="0.5" value="12"></div>
+        <div class="a-item"><label>回收折价 (元/克)</label><input id="asRec" type="number" step="0.5" value="5"></div>
+        <div class="a-item"><label>首饰工费 (元/克)</label><input id="asJew" type="number" step="1" value="70"></div>
+        <div class="a-item"><label>3D/古法工费 (元/克)</label><input id="as3d" type="number" step="1" value="120"></div>
+        <div class="a-item"><label>积存金点差 (%)</label><input id="asAcc" type="number" step="0.1" value="0.5"></div>
+        <button class="btn mini" id="asReset" type="button">恢复默认</button>
+      </div>
+      <div class="phys-grid">
+        <div class="phys-card real"><div class="pk"><span class="dot"></span>基准金价（SGE Au99.99）</div>
+          <div class="pv" id="physBase">—<span class="pu">元/克</span></div>
+          <div class="pn">上海黄金交易所实时现货价</div></div>
+        <div class="phys-card"><div class="pk">投资金条（买入）</div>
+          <div class="pv" id="physBar">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 + 金条加价，银行 / 金店买卖价差小</div></div>
+        <div class="phys-card"><div class="pk">金条回收价</div>
+          <div class="pv" id="physRec">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 − 回收折价，回购通常低于基准</div></div>
+        <div class="phys-card"><div class="pk">足金 999 首饰（买入）</div>
+          <div class="pv" id="physJew">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 + 首饰工费，含加工与品牌溢价</div></div>
+        <div class="phys-card"><div class="pk">3D / 古法金（买入）</div>
+          <div class="pv" id="phys3d">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 + 高工费，工艺溢价更高</div></div>
+        <div class="phys-card"><div class="pk">银行积存金</div>
+          <div class="pv" id="physAcc">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 ×（1 + 点差），可定投赎回</div></div>
+      </div>
+      <div class="phys-note"><b>说明：</b>以上为「基准金价 + 行业典型加价 / 折价」的<b>参考估算值</b>，用于理解实物金买卖价差结构，<b>非周大福、老凤祥等品牌实时挂牌价</b>。品牌金价由各家每日公布、含独立工费与促销，需以门店为准。调整上方假设可观察不同加价下的估算结果。</div>
     </div>
   </section>
 
@@ -855,6 +984,43 @@ def page_index(data):
           <tbody id="fxBody">{fx_rows(fx)}</tbody>
         </table>
         <div class="tfoot">汇率取自公开汇率接口的 1 美元折算口径，与银行柜台实时牌价存在点差；日元 / 韩元 / 泰铢按 100 单位展示。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 工具计算器 ============ -->
+  <section class="section" id="tools">
+    <div class="section-head">
+      <div><div class="lbl">CALCULATORS · 工具</div><h2>黄金工具计算器</h2>
+        <p>纯本地计算，自动读取实时基准金价与汇率。输入即算，不上传任何数据。</p></div>
+    </div>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h3>克 ↔ 金衡盎司</h3>
+        <div class="field"><label>克 (g)</label><input id="t1g" type="number" step="0.01" placeholder="1"></div>
+        <div class="field"><label>金衡盎司 (oz)</label><input id="t1o" type="number" step="0.0001" placeholder="0.03215"></div>
+        <div class="src">1 金衡盎司 = 31.1034768 克（与日常常衡盎司 28.35g 不同）</div>
+      </div>
+      <div class="tool-card">
+        <h3>美元金价 → 人民币金价</h3>
+        <div class="field"><label>国际金价 (美元/盎司)</label><input id="t2usd" type="number" step="0.1"></div>
+        <div class="field"><label>美元兑人民币</label><input id="t2fx" type="number" step="0.0001"></div>
+        <div class="tool-out" id="t2out">—</div>
+        <div class="src" id="t2src"></div>
+      </div>
+      <div class="tool-card">
+        <h3>实物金买卖成本估算</h3>
+        <div class="field"><label>克重 (g)</label><input id="t3g" type="number" step="0.1" value="10"></div>
+        <div class="field"><label>买入价 (元/克)</label><input id="t3b" type="number" step="0.01"></div>
+        <div class="field"><label>卖出 / 回收价 (元/克)</label><input id="t3s" type="number" step="0.01"></div>
+        <div class="tool-out" id="t3out">—</div>
+      </div>
+      <div class="tool-card">
+        <h3>持仓盈亏计算</h3>
+        <div class="field"><label>克重 (g)</label><input id="t4g" type="number" step="0.1" value="10"></div>
+        <div class="field"><label>成本价 (元/克)</label><input id="t4b" type="number" step="0.01"></div>
+        <div class="field"><label>现价 (元/克)</label><input id="t4n" type="number" step="0.01"></div>
+        <div class="tool-out" id="t4out">—</div>
       </div>
     </div>
   </section>
@@ -924,6 +1090,33 @@ def page_index(data):
       <span>所有指标的计算口径与数据源都在「关于本站」中公开说明；上游失败时自动回退到上一次有效数据，不会显示空白或错误数字。</span></div>
     <a class="btn ghost" href="./about.html">查看数据说明 →</a>
   </div>
+
+  <!-- ============ 术语表 ============ -->
+  <section class="section" id="glossary">
+    <div class="section-head">
+      <div><div class="lbl">GLOSSARY · 术语表</div><h2>黄金 / 贵金属术语速查</h2>
+        <p>15 个高频术语，读懂行情表与实物金价背后的口径差异。</p></div>
+    </div>
+    <div class="glossary">{glossary_html}</div>
+  </section>
+
+  <!-- ============ 相关板块 ============ -->
+  <section class="section" id="related">
+    <div class="section-head">
+      <div><div class="lbl">EXPLORE · 相关</div><h2>一站式行情导航</h2>
+        <p>从实时交易所行情到实物金价、计算工具与历史走势，一次看全。</p></div>
+    </div>
+    <div class="rel-grid">
+      <a class="rel" href="./index.html#quotes"><div class="rt">实时行情表</div><p>8 个 SGE 合约最新价、涨跌幅、振幅与分时</p></a>
+      <a class="rel" href="./index.html#premium"><div class="rt">多品种溢价</div><p>金 / 银 / 铂 / 钯境内价 vs 国际折算</p></a>
+      <a class="rel" href="./index.html#physical"><div class="rt">实物金价参考</div><p>金条 / 回收 / 首饰 / 积存金估算</p></a>
+      <a class="rel" href="./index.html#tools"><div class="rt">工具计算器</div><p>克↔盎司、人民币金价、盈亏计算</p></a>
+      <a class="rel" href="./index.html#charts"><div class="rt">走势图表</div><p>分时 / K 线 / 多品种强弱对比</p></a>
+      <a class="rel" href="./history.html"><div class="rt">历史走势</div><p>Au99.99 日线蜡烛图与每日开高低收</p></a>
+      <a class="rel" href="./index.html#alerts"><div class="rt">价格提醒</div><p>免费设置目标价，浏览器通知你</p></a>
+      <a class="rel" href="./index.html#learn"><div class="rt">黄金百科</div><p>15 篇科普 + 术语速查，读懂金价</p></a>
+    </div>
+  </section>
 
   {ad_slot()}
 

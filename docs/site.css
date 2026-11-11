@@ -334,3 +334,66 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   *{animation-duration:.001ms!important;transition-duration:.001ms!important}
   html{scroll-behavior:auto}
 }
+
+/* ============ 实物金价参考 ============ */
+.phys-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.phys-card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px;box-shadow:var(--shadow);overflow:hidden;transition:transform .18s,box-shadow .18s}
+.phys-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.phys-card.real{border-color:color-mix(in srgb,var(--gold-2) 45%,var(--line))}
+.phys-card.real::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold)}
+.phys-card .pk{display:flex;align-items:center;gap:8px;color:var(--sub);font-size:12px;font-weight:600}
+.phys-card .pk .dot{width:8px;height:8px;border-radius:50%;background:var(--gold-2);flex:0 0 auto}
+.phys-card .pv{font-size:25px;font-weight:730;letter-spacing:-.6px;margin-top:10px;line-height:1.1}
+.phys-card .pu{color:var(--sub);font-size:11.5px;margin-left:4px;font-weight:400}
+.phys-card .pn{color:var(--sub);font-size:11.5px;margin-top:8px;line-height:1.6}
+.assume-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:16px 0 4px}
+.assume-row .a-item{display:flex;flex-direction:column;gap:5px}
+.assume-row label{font-size:11.5px;color:var(--sub)}
+.assume-row input{width:80px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink);
+  border-radius:8px;padding:7px 9px;font-size:13.5px}
+.btn.mini{padding:6px 13px;font-size:12.5px}
+.phys-note{color:var(--sub);font-size:11.5px;line-height:1.8;margin-top:14px}
+.phys-note b{color:var(--gold-ink)}
+
+/* ============ 工具计算器 ============ */
+.tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.tool-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
+.tool-card h3{font-size:15px;margin:0 0 14px;display:flex;align-items:center;gap:8px;font-weight:700}
+.tool-card h3::before{content:"";width:3px;height:15px;border-radius:2px;background:var(--accent)}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
+.field label{font-size:12px;color:var(--sub)}
+.field input,.field select{background:var(--surface-2);border:1px solid var(--line);color:var(--ink);
+  border-radius:8px;padding:9px 11px;font-size:13.5px;width:100%}
+.field .hintu{font-size:11px;color:var(--sub);margin-top:-2px}
+.tool-out{margin-top:8px;padding:14px 16px;border-radius:var(--r-sm);background:var(--gold-soft);
+  color:var(--gold-ink);font-size:13.5px;line-height:1.85;border:1px solid color-mix(in srgb,var(--gold-2) 30%,var(--line))}
+.tool-out b{font-size:19px;color:var(--gold-ink);font-variant-numeric:tabular-nums}
+.tool-card .src{font-size:11px;color:var(--sub);margin-top:10px;line-height:1.7}
+
+/* ============ 术语表 ============ */
+.glossary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.gloss{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:15px 17px;box-shadow:var(--shadow)}
+.gloss h4{margin:0 0 6px;font-size:13.5px;color:var(--gold-ink);display:flex;align-items:center;gap:8px;font-weight:700}
+.gloss h4::before{content:"";width:6px;height:6px;border-radius:2px;background:var(--gold-2);flex:0 0 auto}
+.gloss p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.75}
+
+/* ============ 快捷入口 / 相关板块 ============ */
+.quick-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.quick-row a{padding:9px 16px;border:1px solid var(--line);border-radius:30px;font-size:13px;
+  background:var(--surface);color:var(--ink-2);box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
+.quick-row a:hover{border-color:var(--gold-2);color:var(--gold);background:var(--gold-soft)}
+.rel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
+.rel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow);transition:.15s}
+.rel:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 40%,var(--line))}
+.rel .rt{font-size:14px;font-weight:700;display:flex;align-items:center;gap:7px}
+.rel .rt::before{content:"◈";color:var(--gold-2)}
+.rel p{margin:7px 0 0;font-size:12px;color:var(--sub);line-height:1.65}
+
+@media(max-width:900px){
+  .phys-grid,.glossary,.tool-grid{grid-template-columns:1fr}
+  .rel-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:540px){
+  .rel-grid{grid-template-columns:1fr}
+}
