@@ -109,9 +109,9 @@
     tb.innerHTML = (d.items || []).map(function (it) {
       var ch = changeOf(it);
       var chgCell = ch
-        ? '<span class="chg ' + ch.cls + '">' + (ch.d > 0 ? "▲ +" : ch.d < 0 ? "▼ " : "— ") +
+        ? '<span class="pill ' + ch.cls + '">' + (ch.d > 0 ? "▲ +" : ch.d < 0 ? "▼ " : "— ") +
           fmt(Math.abs(ch.d)) + " (" + (ch.pct >= 0 ? "+" : "") + fmt(ch.pct) + "%)</span>"
-        : '<span class="flat">—</span>';
+        : '<span class="pill flat">—</span>';
       var amp = (Number(it.max) - Number(it.min)) / Number(it.open) * 100;
       var ampTxt = isFinite(amp) ? fmt(amp) + "%" : "—";
       var dCell = ch
@@ -259,12 +259,12 @@
       var x = oil[key] || {};
       if (x.last == null) return "";
       var prev = x.prev_close || x.prev_settle;
-      var chgHtml = '<span class="flat">—</span>';
+      var chgHtml = '<span class="pill flat">—</span>';
       if (prev) {
         var pct = (x.last - prev) / prev * 100;
         var cls = pct > 0 ? "up" : pct < 0 ? "down" : "flat";
-        chgHtml = '<span class="chg ' + cls + '">' + (pct > 0 ? "▲" : pct < 0 ? "▼" : "—") +
-          " " + fmt(Math.abs(pct)) + "%</span>";
+        chgHtml = '<span class="pill ' + cls + '">' + (pct > 0 ? "▲ +" : pct < 0 ? "▼ " : "— ") +
+          fmt(Math.abs(pct)) + "%</span>";
       }
       return "<tr>" +
         '<td class="lbl" data-label="品种">' + esc(x.name) + "</td>" +
@@ -473,6 +473,89 @@
     });
   }
 
+  // ---------- 三大报价模块（金投网式,tab 切换品种） ----------
+  var QM_TAB = [0, 0, 0];
+  function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
+  function _pick(items, sym) {
+    return (items || []).filter(function (x) { return x.symbol === sym; })[0];
+  }
+  function _chgHtml(ch) {
+    if (!ch) return '<span class="flat">—</span>';
+    var arrow = ch.d > 0 ? "▲" : ch.d < 0 ? "▼" : "—";
+    return '<span class="' + ch.cls + '">' + arrow + " " + fmt(Math.abs(ch.d)) +
+      "  (" + (ch.pct >= 0 ? "+" : "") + fmt(ch.pct) + "%)</span>";
+  }
+  function renderQM(d) {
+    // 模块1 贵金属
+    var defs1 = [
+      { n: "现货黄金 Au99.99", u: "元/克", it: _pick(d.items, "Au99.99") },
+      { n: "黄金延期 Au(T+D)", u: "元/克", it: _pick(d.items, "Au(T+D)") },
+      { n: "国际金价 XAU", u: "美元/盎司", v: (d.intl || {}).xau_usd, cny: (d.intl || {}).intl_cny_per_g },
+      { n: "现货白银 Ag99.99", u: "元/千克", it: _pick(d.items, "Ag99.99") }
+    ];
+    var x = defs1[QM_TAB[0]] || defs1[0];
+    _set("qm1Name", x.n); _set("qm1Unit", x.u);
+    _set("qm1Price", fmt(x.it ? x.it.last : x.v));
+    var ch1 = $("#qm1Chg"), sp1 = $("#qm1Spark");
+    if (x.it) {
+      var ch = changeOf(x.it);
+      if (ch1) ch1.innerHTML = _chgHtml(ch);
+      if (sp1) sp1.innerHTML = spark(x.it.series, ch ? ch.cls : "flat");
+    } else {
+      if (ch1) ch1.innerHTML = x.cny ? '<span class="tq-sub">≈ 人民币 ' + fmt(x.cny) + " 元/克（实时折算）</span>" : '<span class="flat">—</span>';
+      if (sp1) sp1.innerHTML = "";
+    }
+    // 模块2 外汇牌价
+    var defs2 = [["USD", "美元兑人民币 USD/CNY"], ["EUR", "欧元兑人民币 EUR/CNY"],
+                 ["JPY", "日元兑人民币 JPY/CNY(100)"], ["HKD", "港币兑人民币 HKD/CNY"],
+                 ["GBP", "英镑兑人民币 GBP/CNY"]];
+    var def2 = defs2[QM_TAB[1]] || defs2[0];
+    var fx = (d.fx || []).filter(function (r) { return r.code === def2[0]; })[0];
+    _set("qm2Name", def2[1]);
+    if (fx) {
+      _set("qm2Price", fmt(fx.cny, 4));
+      _set("qm2Unit", fx.unit === 100 ? "人民币/100外币" : "人民币");
+      var ch2 = $("#qm2Chg");
+      if (ch2) ch2.innerHTML = '<span class="flat">1 CNY = ' + fmt(fx.per_cny, 4) + " " + fx.code + "</span>";
+      var sp2 = $("#qm2Spark");
+      if (sp2) sp2.innerHTML = "";
+    }
+    // 模块3 能源
+    var defs3 = [["brent", "布伦特原油 OIL"], ["wti", "WTI原油 CL"], ["sc", "上海原油 SC"]];
+    var def3 = defs3[QM_TAB[2]] || defs3[0];
+    var o = (d.oil || {})[def3[0]] || {};
+    _set("qm3Name", o.name || def3[1]);
+    _set("qm3Price", fmt(o.last));
+    _set("qm3Unit", o.unit || "");
+    var ch3 = $("#qm3Chg");
+    var prev = o.prev_close || o.prev_settle;
+    if (prev && o.last != null) {
+      var pct = (o.last - prev) / prev * 100;
+      var cls = pct > 0 ? "up" : pct < 0 ? "down" : "flat";
+      var arrow = pct > 0 ? "▲" : pct < 0 ? "▼" : "—";
+      if (ch3) ch3.innerHTML = '<span class="' + cls + '">' + arrow + " " + fmt(Math.abs(o.last - prev)) +
+        "  (" + fmt(Math.abs(pct)) + "%)</span>";
+    } else if (ch3) {
+      ch3.innerHTML = '<span class="flat">—</span>';
+    }
+    var sp3 = $("#qm3Spark");
+    if (sp3) sp3.innerHTML = o.date ? '<span class="tq-sub">交易日 ' + esc(o.date) + "</span>" : "";
+  }
+  function bindQM() {
+    [["qm1", 0], ["qm2", 1], ["qm3", 2]].forEach(function (p) {
+      var box = $("#" + p[0]); if (!box) return;
+      box.addEventListener("click", function (e) {
+        var a = e.target.closest(".tq-tabs a"); if (!a) return;
+        var idx = +a.getAttribute("data-i");
+        QM_TAB[p[1]] = idx;
+        box.querySelectorAll(".tq-tabs a").forEach(function (t) {
+          t.classList.toggle("on", +t.getAttribute("data-i") === idx);
+        });
+        renderQM(DATA);
+      });
+    });
+  }
+
   // ---------- 主题 ----------
   function bindTheme() {
     // 主题初始化与按钮交互由 common.js 统一处理；这里只负责主题变化时重绘图表配色
@@ -485,6 +568,7 @@
   function renderAll(d) {
     DATA = d;
     renderOverview(d);
+    renderQM(d);
     renderTable(d);
     renderMetals(d);
     renderEnergy(d);
@@ -507,6 +591,7 @@
     bindAlerts();
     bindPhysical();
     bindTools();
+    bindQM();
     renderAll(DATA);
     loadData();                 // 拉取最新 baked 数据
     setInterval(loadData, 60000); // 每 60s 检查一次（新构建发布即更新）

@@ -92,7 +92,7 @@ a{color:inherit;text-decoration:none}
 a:hover{color:var(--gold)}
 button,input,select{font:inherit}
 .num,.ov-val,.hero-price,.tk-v{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
 .up{color:var(--up)}.down{color:var(--down)}.flat{color:var(--sub)}
 
 /* 顶部信息条 */
@@ -610,6 +610,44 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm)}
 .ov-strip b{margin-left:4px;font-variant-numeric:tabular-nums}
 
+/* ============ 三大报价模块(金投网式,tab 切换品种) ============ */
+.three-quote{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.tq{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.tq-tabs{display:flex;align-items:center;background:var(--surface-2);border-bottom:1px solid var(--line);padding:0 4px;overflow-x:auto}
+.tq-tabs b{font-size:12.5px;color:var(--gold-ink);padding:9px 10px;letter-spacing:1px;white-space:nowrap}
+.tq-tabs a{font-size:12px;color:var(--sub);padding:9px 9px;cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;transition:.13s}
+.tq-tabs a:hover{color:var(--ink)}
+.tq-tabs a.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:650}
+.tq-body{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;gap:10px}
+.tq-name{font-size:12px;color:var(--sub);margin-bottom:3px}
+.tq-price{font-size:31px;font-weight:780;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1.05}
+.tq-unit{font-size:11px;color:var(--sub);margin-left:5px}
+.tq-chg{font-size:12.5px;margin-top:6px;font-variant-numeric:tabular-nums}
+.tq-chg .up{color:var(--up)}
+.tq-chg .down{color:var(--down)}
+.tq-spark{flex:0 0 118px;text-align:right}
+.tq-spark svg{width:118px;height:46px}
+.tq-sub{font-size:11px;color:var(--sub);line-height:1.6}
+@media(max-width:900px){
+  .three-quote{grid-template-columns:1fr}
+}
+
+/* ============ 全宽大行情表(金投网式,紧凑+色块涨跌) ============ */
+.mega-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.mega-table th{font-size:11.5px;color:var(--sub);background:var(--surface-2);padding:8px 10px;text-align:right;
+  font-weight:650;white-space:nowrap;border-bottom:1px solid var(--line)}
+.mega-table th:first-child,.mega-table td:first-child{text-align:left}
+.mega-table td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line-2);
+  font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+.mega-table tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 50%,transparent)}
+.mega-table tbody tr:hover{background:var(--gold-soft)}
+.mega-table .sym{color:var(--sub);font-size:11px}
+.pill{display:inline-block;padding:2px 9px;border-radius:12px;font-size:12px;font-weight:650}
+.pill.up{background:color-mix(in srgb,var(--up) 15%,transparent);color:var(--up)}
+.pill.down{background:color-mix(in srgb,var(--down) 15%,transparent);color:var(--down)}
+.pill.flat{background:var(--surface-2);color:var(--sub)}
+
 @media(max-width:1080px){
   .portal{grid-template-columns:160px minmax(0,1fr) 260px}
 }
@@ -1122,32 +1160,55 @@ def page_index(data):
 
 <div class="wrap">
 
-  <!-- ============ 价格横栏（金投网式） ============ -->
+  <!-- ============ 三大报价模块（金投网式,tab 切换） ============ -->
   <section class="hero-wrap" id="overview" style="margin:14px 0 0">
-    <div class="price-strip">
-      <div class="price-cell"><div class="pk">◈ SGE Au99.99 · 主力现货</div>
-        <div class="pv"><span id="ovSge">—</span><span class="pu" id="ovSgeUnit" style="font-size:11px;color:var(--sub);margin-left:4px">元/克</span></div>
-        <div class="pt"><span class="hero-chg" id="heroChg">—</span></div></div>
-      <div class="price-cell"><div class="pk">◇ 国际现货黄金 XAU</div>
-        <div class="pv" id="hsXau">{fmt(intl.get('xau_usd'))}</div>
-        <div class="pt">美元/盎司 · <i id="ovSgeTime" style="font-style:normal">—</i></div></div>
-      <div class="price-cell"><div class="pk">⇄ 美元兑人民币 / 白银</div>
-        <div class="pv" id="hsFx">{fmt(intl.get('usd_cny'), 4)}</div>
-        <div class="pt">USD/CNY · XAG <span id="hsSilver">{silver_usd}</span></div></div>
-      <div class="price-cell"><div class="pk">◐ 黄金国内溢价</div>
-        <div class="pv"><span class="v num {prem_cls}" id="hsPrem">{prem_txt}</span></div>
-        <div class="pt">SGE 较国际折算</div></div>
+    <div class="three-quote">
+      <div class="tq" id="qm1">
+        <div class="tq-tabs"><b>贵金属</b><a class="on" data-i="0">现货黄金</a><a data-i="1">黄金延期</a><a data-i="2">国际金价</a><a data-i="3">白银</a></div>
+        <div class="tq-body">
+          <div class="tq-main">
+            <div class="tq-name" id="qm1Name">现货黄金 Au99.99</div>
+            <div><span class="tq-price num" id="qm1Price">—</span><span class="tq-unit" id="qm1Unit">元/克</span></div>
+            <div class="tq-chg" id="qm1Chg">—</div>
+          </div>
+          <div class="tq-spark" id="qm1Spark"></div>
+        </div>
+      </div>
+      <div class="tq" id="qm2">
+        <div class="tq-tabs"><b>外汇牌价</b><a class="on" data-i="0">美元</a><a data-i="1">欧元</a><a data-i="2">日元</a><a data-i="3">港币</a><a data-i="4">英镑</a></div>
+        <div class="tq-body">
+          <div class="tq-main">
+            <div class="tq-name" id="qm2Name">美元兑人民币 USD/CNY</div>
+            <div><span class="tq-price num" id="qm2Price">—</span><span class="tq-unit" id="qm2Unit">人民币</span></div>
+            <div class="tq-chg" id="qm2Chg">—</div>
+          </div>
+          <div class="tq-spark" id="qm2Spark"></div>
+        </div>
+      </div>
+      <div class="tq" id="qm3">
+        <div class="tq-tabs"><b>能源化工</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a></div>
+        <div class="tq-body">
+          <div class="tq-main">
+            <div class="tq-name" id="qm3Name">布伦特原油</div>
+            <div><span class="tq-price num" id="qm3Price">—</span><span class="tq-unit" id="qm3Unit">美元/桶</span></div>
+            <div class="tq-chg" id="qm3Chg">—</div>
+          </div>
+          <div class="tq-spark" id="qm3Spark"></div>
+        </div>
+      </div>
     </div>
     <div class="ov-strip">
-      <span>主力今开 <b class="num" id="ovOpen">{ov_open}</b></span>
-      <span>日内最高 <b class="num up" id="ovHigh">{ov_high}</b></span>
-      <span>日内最低 <b class="num down" id="ovLow">{ov_low}</b></span>
-      <span>日内振幅 <b class="num" id="ovRange">{ov_range}</b></span>
+      <span>主力 <b id="ovSge">—</b><span id="ovSgeUnit" style="font-size:10.5px">元/克</span> <span class="hero-chg" id="heroChg">—</span> <i id="ovSgeTime" style="font-style:normal">—</i></span>
+      <span>国际金 <b id="hsXau">—</b> 美元/盎司</span>
+      <span>国际银 <b id="hsSilver">—</b></span>
+      <span>USD/CNY <b id="hsFx">—</b></span>
+      <span>国内溢价 <span class="v num up" id="hsPrem">—</span></span>
+      <span>今开 <b id="ovOpen">—</b></span>
+      <span>最高 <b id="ovHigh">—</b></span>
+      <span>最低 <b id="ovLow">—</b></span>
+      <span>振幅 <b id="ovRange">—</b></span>
     </div>
   </section>
-
-  <div class="portal">{side_left('quotes')}
-  <div class="portal-main">
 
   <!-- ============ 行情表 ============ -->
   <section class="section" id="quotes">
@@ -1159,13 +1220,16 @@ def page_index(data):
     <div class="card">
       <div class="card-head"><h3>合约行情</h3>
         <div class="chip-row"><span class="badge">◷ 每小时抓取</span><span class="chip">SGE 官方行情</span></div></div>
-      <table>
+      <table class="mega-table">
         <thead><tr><th>品种</th><th>合约</th><th>最新价</th><th>涨跌幅</th><th>涨跌额</th><th>今开</th><th>最高</th><th>最低</th><th>振幅</th><th>日内走势</th><th>单位</th></tr></thead>
         <tbody id="tbody"></tbody>
       </table>
       <div class="tfoot">「今开 / 最高 / 最低」为当日（或最近交易时段）区间；「最新价」为最近一笔成交。非交易时段显示最近一次有效报价。日内走势为分时序列迷你图，仅示意节奏，不代表完整逐笔成交。</div>
     </div>
   </section>
+
+  <div class="portal">{side_left('quotes')}
+  <div class="portal-main">
 
   <!-- ============ 多品种溢价 ============ -->
   <section class="section" id="premium">
@@ -1177,7 +1241,7 @@ def page_index(data):
     <div class="card">
       <div class="card-head"><h3>溢价对照</h3>
         <div class="chip-row"><span class="chip">Au99.99 ↔ XAU</span><span class="chip">Ag99.99 ↔ XAG</span><span class="chip">Pt99.95 ↔ XPT</span></div></div>
-      <table>
+      <table class="mega-table">
         <thead><tr><th>品种</th><th>境内报价 (SGE)</th><th>国际折算</th><th>国内溢价</th><th>口径</th></tr></thead>
         <tbody id="metalsBody">{metals_rows(intl)}</tbody>
       </table>
@@ -1237,7 +1301,7 @@ def page_index(data):
     <div class="charts">
       <div class="card"><div class="card-head"><h3>国际与境内油价</h3>
         <div class="chip-row"><span class="chip">布伦特 Brent</span><span class="chip">WTI</span><span class="chip">上海原油 SC</span></div></div>
-        <table>
+        <table class="mega-table">
           <thead><tr><th>品种</th><th>代码</th><th>最新价</th><th>涨跌幅</th><th>单位</th><th>日期</th></tr></thead>
           <tbody id="energyBody">{oil_rows(oil)}</tbody>
         </table>
@@ -1245,7 +1309,7 @@ def page_index(data):
       </div>
       <div class="card"><div class="card-head"><h3>人民币汇率</h3>
         <div class="chip-row"><span class="chip">USD/CNY {fmt(intl.get('usd_cny'), 4)}</span></div></div>
-        <table>
+        <table class="mega-table">
           <thead><tr><th>币种</th><th>代码</th><th>兑人民币</th><th>人民币兑</th></tr></thead>
           <tbody id="fxBody">{fx_rows(fx)}</tbody>
         </table>
@@ -1657,7 +1721,7 @@ def page_history(data, hist):
   <div class="card" style="margin-top:16px">
     <div class="card-head"><h3>最近 30 个交易日</h3>
       <div class="chip-row"><span class="chip">单位 元/克</span></div></div>
-    <table>
+    <table class="mega-table">
       <thead><tr><th>日期</th><th>开盘</th><th>最高</th><th>最低</th><th>收盘</th><th>涨跌幅</th></tr></thead>
       <tbody id="histBody">{au_rows}</tbody>
     </table>

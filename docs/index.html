@@ -53,32 +53,55 @@
 
 <div class="wrap">
 
-  <!-- ============ 价格横栏（金投网式） ============ -->
+  <!-- ============ 三大报价模块（金投网式,tab 切换） ============ -->
   <section class="hero-wrap" id="overview" style="margin:14px 0 0">
-    <div class="price-strip">
-      <div class="price-cell"><div class="pk">◈ SGE Au99.99 · 主力现货</div>
-        <div class="pv"><span id="ovSge">—</span><span class="pu" id="ovSgeUnit" style="font-size:11px;color:var(--sub);margin-left:4px">元/克</span></div>
-        <div class="pt"><span class="hero-chg" id="heroChg">—</span></div></div>
-      <div class="price-cell"><div class="pk">◇ 国际现货黄金 XAU</div>
-        <div class="pv" id="hsXau">4,048.00</div>
-        <div class="pt">美元/盎司 · <i id="ovSgeTime" style="font-style:normal">—</i></div></div>
-      <div class="price-cell"><div class="pk">⇄ 美元兑人民币 / 白银</div>
-        <div class="pv" id="hsFx">6.6878</div>
-        <div class="pt">USD/CNY · XAG <span id="hsSilver">51.67</span></div></div>
-      <div class="price-cell"><div class="pk">◐ 黄金国内溢价</div>
-        <div class="pv"><span class="v num up" id="hsPrem">+0.30%</span></div>
-        <div class="pt">SGE 较国际折算</div></div>
+    <div class="three-quote">
+      <div class="tq" id="qm1">
+        <div class="tq-tabs"><b>贵金属</b><a class="on" data-i="0">现货黄金</a><a data-i="1">黄金延期</a><a data-i="2">国际金价</a><a data-i="3">白银</a></div>
+        <div class="tq-body">
+          <div class="tq-main">
+            <div class="tq-name" id="qm1Name">现货黄金 Au99.99</div>
+            <div><span class="tq-price num" id="qm1Price">—</span><span class="tq-unit" id="qm1Unit">元/克</span></div>
+            <div class="tq-chg" id="qm1Chg">—</div>
+          </div>
+          <div class="tq-spark" id="qm1Spark"></div>
+        </div>
+      </div>
+      <div class="tq" id="qm2">
+        <div class="tq-tabs"><b>外汇牌价</b><a class="on" data-i="0">美元</a><a data-i="1">欧元</a><a data-i="2">日元</a><a data-i="3">港币</a><a data-i="4">英镑</a></div>
+        <div class="tq-body">
+          <div class="tq-main">
+            <div class="tq-name" id="qm2Name">美元兑人民币 USD/CNY</div>
+            <div><span class="tq-price num" id="qm2Price">—</span><span class="tq-unit" id="qm2Unit">人民币</span></div>
+            <div class="tq-chg" id="qm2Chg">—</div>
+          </div>
+          <div class="tq-spark" id="qm2Spark"></div>
+        </div>
+      </div>
+      <div class="tq" id="qm3">
+        <div class="tq-tabs"><b>能源化工</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a></div>
+        <div class="tq-body">
+          <div class="tq-main">
+            <div class="tq-name" id="qm3Name">布伦特原油</div>
+            <div><span class="tq-price num" id="qm3Price">—</span><span class="tq-unit" id="qm3Unit">美元/桶</span></div>
+            <div class="tq-chg" id="qm3Chg">—</div>
+          </div>
+          <div class="tq-spark" id="qm3Spark"></div>
+        </div>
+      </div>
     </div>
     <div class="ov-strip">
-      <span>主力今开 <b class="num" id="ovOpen">883.42</b></span>
-      <span>日内最高 <b class="num up" id="ovHigh">883.00</b></span>
-      <span>日内最低 <b class="num down" id="ovLow">862.00</b></span>
-      <span>日内振幅 <b class="num" id="ovRange">2.38%</b></span>
+      <span>主力 <b id="ovSge">—</b><span id="ovSgeUnit" style="font-size:10.5px">元/克</span> <span class="hero-chg" id="heroChg">—</span> <i id="ovSgeTime" style="font-style:normal">—</i></span>
+      <span>国际金 <b id="hsXau">—</b> 美元/盎司</span>
+      <span>国际银 <b id="hsSilver">—</b></span>
+      <span>USD/CNY <b id="hsFx">—</b></span>
+      <span>国内溢价 <span class="v num up" id="hsPrem">—</span></span>
+      <span>今开 <b id="ovOpen">—</b></span>
+      <span>最高 <b id="ovHigh">—</b></span>
+      <span>最低 <b id="ovLow">—</b></span>
+      <span>振幅 <b id="ovRange">—</b></span>
     </div>
   </section>
-
-  <div class="portal"><aside class="portal-l"><div class="pmod"><div class="pmod-h">频道导航</div><div class="pmod-b"><ul class="side-nav"><li><a href="./index.html" class="cur">行情中心</a></li><li><a href="./index.html#overview" style="padding-left:22px;font-size:11.5px;color:var(--sub)">行情概览</a></li><li><a href="./index.html#quotes" style="padding-left:22px;font-size:11.5px;color:var(--sub)">实时行情</a></li><li><a href="./index.html#premium" style="padding-left:22px;font-size:11.5px;color:var(--sub)">溢价对照</a></li><li><a href="./index.html#physical" style="padding-left:22px;font-size:11.5px;color:var(--sub)">实物金价</a></li><li><a href="./index.html#energy" style="padding-left:22px;font-size:11.5px;color:var(--sub)">油价汇率</a></li><li><a href="./index.html#tools" style="padding-left:22px;font-size:11.5px;color:var(--sub)">工具计算</a></li><li><a href="./index.html#charts" style="padding-left:22px;font-size:11.5px;color:var(--sub)">走势图表</a></li><li><a href="./index.html#alerts" style="padding-left:22px;font-size:11.5px;color:var(--sub)">价格提醒</a></li><li><a href="./data.html">数据中心</a></li><li><a href="./calendar.html">财经日历</a></li><li><a href="./news.html">金融快讯</a></li><li><a href="./academy.html">投资学院</a></li></ul></div></div></aside>
-  <div class="portal-main">
 
   <!-- ============ 行情表 ============ -->
   <section class="section" id="quotes">
@@ -90,13 +113,16 @@
     <div class="card">
       <div class="card-head"><h3>合约行情</h3>
         <div class="chip-row"><span class="badge">◷ 每小时抓取</span><span class="chip">SGE 官方行情</span></div></div>
-      <table>
+      <table class="mega-table">
         <thead><tr><th>品种</th><th>合约</th><th>最新价</th><th>涨跌幅</th><th>涨跌额</th><th>今开</th><th>最高</th><th>最低</th><th>振幅</th><th>日内走势</th><th>单位</th></tr></thead>
         <tbody id="tbody"></tbody>
       </table>
       <div class="tfoot">「今开 / 最高 / 最低」为当日（或最近交易时段）区间；「最新价」为最近一笔成交。非交易时段显示最近一次有效报价。日内走势为分时序列迷你图，仅示意节奏，不代表完整逐笔成交。</div>
     </div>
   </section>
+
+  <div class="portal"><aside class="portal-l"><div class="pmod"><div class="pmod-h">频道导航</div><div class="pmod-b"><ul class="side-nav"><li><a href="./index.html" class="cur">行情中心</a></li><li><a href="./index.html#overview" style="padding-left:22px;font-size:11.5px;color:var(--sub)">行情概览</a></li><li><a href="./index.html#quotes" style="padding-left:22px;font-size:11.5px;color:var(--sub)">实时行情</a></li><li><a href="./index.html#premium" style="padding-left:22px;font-size:11.5px;color:var(--sub)">溢价对照</a></li><li><a href="./index.html#physical" style="padding-left:22px;font-size:11.5px;color:var(--sub)">实物金价</a></li><li><a href="./index.html#energy" style="padding-left:22px;font-size:11.5px;color:var(--sub)">油价汇率</a></li><li><a href="./index.html#tools" style="padding-left:22px;font-size:11.5px;color:var(--sub)">工具计算</a></li><li><a href="./index.html#charts" style="padding-left:22px;font-size:11.5px;color:var(--sub)">走势图表</a></li><li><a href="./index.html#alerts" style="padding-left:22px;font-size:11.5px;color:var(--sub)">价格提醒</a></li><li><a href="./data.html">数据中心</a></li><li><a href="./calendar.html">财经日历</a></li><li><a href="./news.html">金融快讯</a></li><li><a href="./academy.html">投资学院</a></li></ul></div></div></aside>
+  <div class="portal-main">
 
   <!-- ============ 多品种溢价 ============ -->
   <section class="section" id="premium">
@@ -108,7 +134,7 @@
     <div class="card">
       <div class="card-head"><h3>溢价对照</h3>
         <div class="chip-row"><span class="chip">Au99.99 ↔ XAU</span><span class="chip">Ag99.99 ↔ XAG</span><span class="chip">Pt99.95 ↔ XPT</span></div></div>
-      <table>
+      <table class="mega-table">
         <thead><tr><th>品种</th><th>境内报价 (SGE)</th><th>国际折算</th><th>国内溢价</th><th>口径</th></tr></thead>
         <tbody id="metalsBody"><tr><td class="lbl" data-label="品种">黄金 <span class="sym">Au99.99</span></td><td class="num" data-label="境内报价">873.00 <span class="unit">元/克</span></td><td class="num" data-label="国际折算">870.39 <span class="unit">元/克</span></td><td data-label="国内溢价"><span class="chg up">+0.30%</span></td><td class="unit" data-label="口径">XAU/USD × USD/CNY</td></tr><tr><td class="lbl" data-label="品种">白银 <span class="sym">Ag99.99</span></td><td class="num" data-label="境内报价">12,750.00 <span class="unit">元/千克</span></td><td class="num" data-label="国际折算">11,109.89 <span class="unit">元/千克</span></td><td data-label="国内溢价"><span class="chg up">+14.76%</span></td><td class="unit" data-label="口径">XAG/USD × USD/CNY</td></tr></tbody>
       </table>
@@ -168,7 +194,7 @@
     <div class="charts">
       <div class="card"><div class="card-head"><h3>国际与境内油价</h3>
         <div class="chip-row"><span class="chip">布伦特 Brent</span><span class="chip">WTI</span><span class="chip">上海原油 SC</span></div></div>
-        <table>
+        <table class="mega-table">
           <thead><tr><th>品种</th><th>代码</th><th>最新价</th><th>涨跌幅</th><th>单位</th><th>日期</th></tr></thead>
           <tbody id="energyBody"><tr><td class="lbl" data-label="品种">布伦特原油</td><td class="sym" data-label="代码">OIL</td><td class="num strong" data-label="最新价">92.06</td><td data-label="涨跌幅"><span class="chg up">▲ 0.11%</span></td><td class="unit" data-label="单位">美元/桶</td><td class="unit" data-label="日期">2026-11-11</td></tr><tr><td class="lbl" data-label="品种">WTI原油</td><td class="sym" data-label="代码">CL</td><td class="num strong" data-label="最新价">86.23</td><td data-label="涨跌幅"><span class="chg down">▼ 0.23%</span></td><td class="unit" data-label="单位">美元/桶</td><td class="unit" data-label="日期">2026-11-11</td></tr><tr><td class="lbl" data-label="品种">上海原油</td><td class="sym" data-label="代码">SC</td><td class="num strong" data-label="最新价">591.90</td><td data-label="涨跌幅"><span class="chg down">▼ 1.23%</span></td><td class="unit" data-label="单位">元/桶</td><td class="unit" data-label="日期">2026-11-11</td></tr></tbody>
         </table>
@@ -176,7 +202,7 @@
       </div>
       <div class="card"><div class="card-head"><h3>人民币汇率</h3>
         <div class="chip-row"><span class="chip">USD/CNY 6.6878</span></div></div>
-        <table>
+        <table class="mega-table">
           <thead><tr><th>币种</th><th>代码</th><th>兑人民币</th><th>人民币兑</th></tr></thead>
           <tbody id="fxBody"><tr><td class="lbl" data-label="币种">美元</td><td class="sym" data-label="代码">USD</td><td class="num strong" data-label="兑人民币">1 USD = 6.6878</td><td class="num" data-label="人民币兑">1 CNY = 0.1495</td></tr><tr><td class="lbl" data-label="币种">欧元</td><td class="sym" data-label="代码">EUR</td><td class="num strong" data-label="兑人民币">1 EUR = 7.4814</td><td class="num" data-label="人民币兑">1 CNY = 0.1337</td></tr><tr><td class="lbl" data-label="币种">日元</td><td class="sym" data-label="代码">JPY</td><td class="num strong" data-label="兑人民币">100 JPY = 4.2180</td><td class="num" data-label="人民币兑">1 CNY = 23.7081</td></tr><tr><td class="lbl" data-label="币种">英镑</td><td class="sym" data-label="代码">GBP</td><td class="num strong" data-label="兑人民币">1 GBP = 8.9389</td><td class="num" data-label="人民币兑">1 CNY = 0.1119</td></tr><tr><td class="lbl" data-label="币种">港币</td><td class="sym" data-label="代码">HKD</td><td class="num strong" data-label="兑人民币">1 HKD = 0.8525</td><td class="num" data-label="人民币兑">1 CNY = 1.1730</td></tr><tr><td class="lbl" data-label="币种">韩元</td><td class="sym" data-label="代码">KRW</td><td class="num strong" data-label="兑人民币">100 KRW = 0.4985</td><td class="num" data-label="人民币兑">1 CNY = 200.6181</td></tr><tr><td class="lbl" data-label="币种">澳元</td><td class="sym" data-label="代码">AUD</td><td class="num strong" data-label="兑人民币">1 AUD = 4.5968</td><td class="num" data-label="人民币兑">1 CNY = 0.2175</td></tr><tr><td class="lbl" data-label="币种">新加坡元</td><td class="sym" data-label="代码">SGD</td><td class="num strong" data-label="兑人民币">1 SGD = 5.2221</td><td class="num" data-label="人民币兑">1 CNY = 0.1915</td></tr><tr><td class="lbl" data-label="币种">瑞士法郎</td><td class="sym" data-label="代码">CHF</td><td class="num strong" data-label="兑人民币">1 CHF = 8.1144</td><td class="num" data-label="人民币兑">1 CNY = 0.1232</td></tr><tr><td class="lbl" data-label="币种">加元</td><td class="sym" data-label="代码">CAD</td><td class="num strong" data-label="兑人民币">1 CAD = 4.7197</td><td class="num" data-label="人民币兑">1 CNY = 0.2119</td></tr><tr><td class="lbl" data-label="币种">泰铢</td><td class="sym" data-label="代码">THB</td><td class="num strong" data-label="兑人民币">100 THB = 19.9337</td><td class="num" data-label="人民币兑">1 CNY = 5.0166</td></tr></tbody>
         </table>
