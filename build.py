@@ -543,6 +543,45 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 @media(max-width:540px){
   .ind-grid{grid-template-columns:1fr}
 }
+
+/* ============ 常驻二级导航条（层级外显，门户式） ============ */
+.subnav{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;
+  box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.subnav-inner{display:flex;align-items:center;gap:16px;min-height:44px;flex-wrap:wrap}
+.subnav-home{font-size:12.5px;color:var(--sub);white-space:nowrap}
+.subnav-home a{color:var(--sub)}
+.subnav-home a:hover{color:var(--gold)}
+.subnav-home i{font-style:normal;margin:0 4px;opacity:.5}
+.subnav-home b{color:var(--gold);font-weight:700}
+.subnav-links{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+.subnav-links a{font-size:12.5px;color:var(--ink-2);padding:6px 11px;border-radius:7px;font-weight:550;white-space:nowrap;transition:.13s}
+.subnav-links a:hover{background:var(--gold-soft);color:var(--gold)}
+@media(max-width:640px){
+  .subnav-inner{gap:8px;padding:7px 20px}
+  .subnav-home{width:100%}
+}
+
+/* ============ 首页频道导航网格（5 板块层级一屏展示） ============ */
+.chan-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.chan{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;
+  box-shadow:var(--shadow);transition:.16s;display:flex;flex-direction:column}
+.chan:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 45%,var(--line))}
+.chan .ch-t{font-size:14px;font-weight:750;display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.chan .ch-t::before{content:"◈";color:var(--gold-2);font-size:12px}
+.chan .ch-d{font-size:11px;color:var(--sub);margin-bottom:10px;line-height:1.55}
+.chan ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.chan li a{display:block;font-size:12px;color:var(--ink-2);padding:4px 7px;border-radius:6px;line-height:1.5}
+.chan li a:hover{background:var(--gold-soft);color:var(--gold)}
+.chan li a::before{content:"›";margin-right:6px;color:var(--gold-2);font-weight:700}
+@media(max-width:1080px){.chan-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){.chan-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.chan-grid{grid-template-columns:1fr}}
+
+/* ============ 章节自动编号（层级视觉强化） ============ */
+main{counter-reset:secno}
+.section{counter-increment:secno}
+.section-head h2::before{content:counter(secno,decimal-leading-zero) " / ";color:var(--gold-2);
+  font-size:.72em;letter-spacing:1.5px;font-weight:700;vertical-align:2px}
 """
 
 FAQ = [
@@ -637,10 +676,10 @@ def head_html(title, desc, canonical, extra=""):
 <meta name="theme-color" content="#0e1626">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
-<meta name="keywords" content="今日金价,黄金价格,实时金价,上海黄金交易所,Au99.99,国际金价,国内溢价,白银价格,铂金价格,今日油价,布伦特原油,WTI,上海原油,人民币汇率,美元汇率">
-<meta name="author" content="今日金价">
+<meta name="keywords" content="金潮网,贵金属行情,今日金价,黄金价格,实时金价,上海黄金交易所,Au99.99,国际金价,国内溢价,白银价格,铂金价格,今日油价,布伦特原油,WTI,上海原油,人民币汇率,美元汇率">
+<meta name="author" content="金潮网">
 <meta name="robots" content="index,follow">
-<meta property="og:site_name" content="今日金价 · REAL-TIME GOLD MARKET">
+<meta property="og:site_name" content="金潮网 · 贵金属行情门户">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:type" content="website">
@@ -714,39 +753,46 @@ def ticker_html(data):
             '</div></div>')
 
 
+# 五大板块数据源（主导航下拉 + 常驻二级导航条 + 首页频道网格共用）
+NAV_SECTIONS = [
+    ("quotes", "行情中心", "./index.html", [
+        ("行情概览", "./index.html#overview"),
+        ("实时行情", "./index.html#quotes"),
+        ("溢价对照", "./index.html#premium"),
+        ("实物金价", "./index.html#physical"),
+        ("油价汇率", "./index.html#energy"),
+        ("工具计算", "./index.html#tools"),
+        ("走势图表", "./index.html#charts"),
+        ("价格提醒", "./index.html#alerts"),
+    ]),
+    ("data", "数据中心", "./data.html", [
+        ("关键指标", "./data.html#indicators"),
+        ("溢价数据", "./data.html#premium"),
+        ("汇率一览", "./data.html#fx"),
+        ("历史日线", "./data.html#history"),
+        ("历史走势", "./history.html"),
+    ]),
+    ("calendar", "财经日历", "./calendar.html", [
+        ("经济事件", "./calendar.html#events"),
+        ("FOMC 议息", "./calendar.html#fomc"),
+        ("央行决议", "./calendar.html#cb"),
+    ]),
+    ("news", "金融快讯", "./news.html", [
+        ("7×24 快讯", "./news.html#live"),
+        ("资讯来源", "./news.html#live"),
+    ]),
+    ("academy", "投资学院", "./academy.html", [
+        ("科普文章", "./academy.html#articles"),
+        ("术语速查", "./academy.html#glossary"),
+        ("常见问题", "./academy.html#faq"),
+    ]),
+]
+
+
 def nav_html(active=""):
-    """门户 5 大板块下拉导航（对标金投网）。active = 板块 key。"""
-    items = [
-        ("quotes", "行情中心", "./index.html", [
-            ("实时行情", "./index.html#quotes"),
-            ("行情概览", "./index.html#overview"),
-            ("溢价对照", "./index.html#premium"),
-            ("实物金价", "./index.html#physical"),
-            ("走势图表", "./index.html#charts"),
-            ("油价汇率", "./index.html#energy"),
-        ]),
-        ("data", "数据中心", "./data.html", [
-            ("关键指标", "./data.html#indicators"),
-            ("历史走势", "./data.html#history"),
-            ("汇率一览", "./data.html#fx"),
-            ("溢价数据", "./data.html#premium"),
-        ]),
-        ("calendar", "财经日历", "./calendar.html", [
-            ("经济事件", "./calendar.html#events"),
-            ("FOMC 议息", "./calendar.html#fomc"),
-            ("央行决议", "./calendar.html#cb"),
-        ]),
-        ("news", "金融快讯", "./news.html", [
-            ("7×24 快讯", "./news.html#live"),
-        ]),
-        ("academy", "投资学院", "./academy.html", [
-            ("科普文章", "./academy.html#articles"),
-            ("术语速查", "./academy.html#glossary"),
-            ("常见问题", "./academy.html#faq"),
-        ]),
-    ]
+    """主导航：5 大板块。悬停展开子栏目（辅助），常驻二级导航条为主入口。"""
     parts = []
-    for key, text, url, subs in items:
+    for key, text, url, subs in NAV_SECTIONS:
         cls = "nav-item active" if key == active else "nav-item"
         sub = "".join(f'<a href="{u}">{esc(t)}</a>' for t, u in subs)
         parts.append(
@@ -754,9 +800,9 @@ def nav_html(active=""):
             f'<div class="nav-drop">{sub}</div></div>')
     a = "".join(parts)
     return f"""<header class="nav"><div class="wrap">
-  <a class="brand" href="./index.html" aria-label="今日金价 首页">
+  <a class="brand" href="./index.html" aria-label="金潮网 首页">
     <span class="brand-mark">Au</span>
-    <span class="brand-txt"><strong>今日金价</strong><small>Real-time Gold Market</small></span>
+    <span class="brand-txt"><strong>金潮网</strong><small>贵金属行情门户</small></span>
   </a>
   <nav class="nav-menu" id="navMenu">{a}</nav>
   <div class="nav-act">
@@ -766,13 +812,26 @@ def nav_html(active=""):
 </div></header>"""
 
 
+def subnav_html(active=""):
+    """常驻二级导航条：当前板块的子栏目始终可见（门户层级外显），附面包屑。"""
+    sec = next((s for s in NAV_SECTIONS if s[0] == active), None)
+    if not sec:
+        return ""
+    _, title, url, subs = sec
+    links = "".join(f'<a href="{u}">{esc(t)}</a>' for t, u in subs)
+    return f"""<div class="subnav"><div class="wrap subnav-inner">
+  <span class="subnav-home"><a href="./index.html">首页</a> <i>›</i> <b>{esc(title)}</b></span>
+  <nav class="subnav-links">{links}</nav>
+</div></div>"""
+
+
 def footer_html():
     return f"""<footer class="site">
   <div class="wrap foot-grid">
     <div class="foot-brand">
       <a class="brand" href="./index.html" style="margin-bottom:6px">
         <span class="brand-mark">Au</span>
-        <span class="brand-txt"><strong>今日金价</strong><small>Real-time Gold Market</small></span>
+        <span class="brand-txt"><strong>金潮网</strong><small>贵金属行情门户</small></span>
       </a>
       <p>一站式贵金属行情门户：实时行情、数据中心、财经日历、金融快讯、投资学院五大板块。数据聚合展示，仅供参考，不构成投资建议。</p>
     </div>
@@ -795,7 +854,7 @@ def footer_html():
     <strong>免责声明：</strong>本站为行情信息聚合展示，价格以上海黄金交易所及相应机构官方发布为准。
     所有内容仅供信息参考，不构成任何投资建议、要约或交易依据。黄金价格波动较大，投资需自行判断并承担风险。<br>
     数据更新：每 30 分钟自动抓取 · 浏览器每 60 秒检查更新 · 非交易时段显示最近一次有效报价 · 快讯来自华尔街见闻公开流<br>
-    © 2026 今日金价 · 页面含第三方广告（Google AdSense），广告内容由第三方提供，与本站点立场无关。
+    © 2026 金潮网 · 页面含第三方广告（Google AdSense），广告内容由第三方提供，与本站点立场无关。
   </div>
 </footer>
 <button class="back-top" id="backTop" type="button" aria-label="返回顶部">↑</button>
@@ -906,9 +965,24 @@ def page_index(data):
     glossary_html = "".join(
         '<div class="gloss"><h4>' + esc(g["t"]) + '</h4><p>' + esc(g["d"]) + '</p></div>'
         for g in GLOSSARY)
+    # 频道导航网格：5 大板块 + 各子栏目，层级一屏可见
+    chan_desc = {
+        "quotes": "实时行情 / 溢价 / 实物金价",
+        "data": "金银比 / 汇率 / 历史日线",
+        "calendar": "FOMC / 非农 / CPI 日程",
+        "news": "7×24 财经快讯流",
+        "academy": "18 篇科普 / 术语 / 问答",
+    }
+    chan_html = "".join(
+        '<a class="chan" href="' + url + '" style="text-decoration:none;color:inherit">'
+        '<div class="ch-t">' + esc(text) + '</div>'
+        '<div class="ch-d">' + chan_desc.get(key, "") + '</div>'
+        '<ul>' + "".join('<li><a href="' + u + '">' + esc(t) + '</a></li>' for t, u in subs[:5]) + '</ul>'
+        '</a>'
+        for key, text, url, subs in NAV_SECTIONS)
 
     website_ld = json.dumps({
-        "@context": "https://schema.org", "@type": "WebSite", "name": "今日金价",
+        "@context": "https://schema.org", "@type": "WebSite", "name": "金潮网",
         "url": SITE, "description": "实时黄金价格、上海黄金交易所行情、国际金价与国内溢价",
         "inLanguage": "zh-CN"}, ensure_ascii=False)
     ld = (f'<script type="application/ld+json">{faq_ld(FAQ)}</script>\n'
@@ -934,13 +1008,14 @@ def page_index(data):
     data_json = json.dumps(data, ensure_ascii=False)
 
     return f"""{head_html(
-        "今日金价_实时黄金价格_上海黄金交易所行情 | 油价汇率 | 国内溢价",
+        "金潮网 - 贵金属行情门户 | 今日金价_上海黄金交易所_国际金价_财经日历_金融快讯",
         "实时黄金白银铂金价格、今日油价（布伦特/WTI/上海原油）与人民币汇率：上海黄金交易所 Au99.99、Au(T+D)、Ag99.99 等合约最新价，国际现货 XAU/XAG/XPT，多品种国内溢价对照，附走势图表与知识百科。",
         SITE, ld)}
 <body>
 {topbar_html(data)}
 {ticker_html(data)}
 {nav_html('quotes')}
+{subnav_html('quotes')}
 
 <div class="wrap">
 
@@ -950,7 +1025,7 @@ def page_index(data):
       <div class="hero-grid">
         <div>
           <span class="eyebrow">SHANGHAI GOLD EXCHANGE · LIVE</span>
-          <h1>今日金价，一屏看懂</h1>
+          <h1>贵金属行情，一屏看懂</h1>
           <p class="lead">国内现货 · 国际金价 · 汇率 · 国内溢价，四个维度同步对照，不再只看一个孤立的数字。</p>
           <div class="hero-price-box">
             <span class="hero-price" id="ovSge">—</span>
@@ -982,6 +1057,11 @@ def page_index(data):
       <div class="ov"><div class="k">日内振幅 <span class="ic">≋</span></div>
         <div class="ov-val num" id="ovRange">{ov_range}</div><div class="t">(最高 − 最低) ÷ 今开</div></div>
     </div>
+  </section>
+
+  <!-- ============ 频道导航（5 大板块层级一屏展示） ============ -->
+  <section class="section" id="channels" style="padding-top:0">
+    <div class="chan-grid">{chan_html}</div>
   </section>
 
   {ad_slot()}
@@ -1241,13 +1321,14 @@ def page_about(data):
         f'<details><summary>{esc(f["q"])}</summary><div class="ans">{esc(f["a"])}</div></details>'
         for f in FAQ)
     return f"""{head_html(
-        "关于本站 · 数据来源与指标算法 | 今日金价",
-        "今日金价的数据来源、更新机制、国内溢价与国际折算价的计算口径，以及完整免责声明与常见问题。",
+        "关于本站 · 数据来源与指标算法 | 金潮网",
+        "金潮网的数据来源、更新机制、国内溢价与国际折算价的计算口径，以及完整免责声明与常见问题。",
         SITE + "about.html")}
 <body>
 {topbar_html(data)}
 {ticker_html(data)}
 {nav_html('about')}
+{subnav_html('about')}
 <div class="wrap">
   <div class="page-hero"><span class="eyebrow">ABOUT THIS SITE</span>
     <h1>数据来源与指标说明</h1>
@@ -1304,8 +1385,8 @@ def page_about(data):
 
 def page_privacy(data):
     return f"""{head_html(
-        "隐私政策 | 今日金价",
-        "今日金价的隐私政策：说明本站如何使用 localStorage、浏览器通知、第三方广告 Cookie 以及你的选择权。",
+        "隐私政策 | 金潮网",
+        "金潮网的隐私政策：说明本站如何使用 localStorage、浏览器通知、第三方广告 Cookie 以及你的选择权。",
         SITE + "privacy.html")}
 <body>
 {topbar_html(data)}
@@ -1400,8 +1481,8 @@ Sitemap: {SITE}sitemap.xml
 """
 
 MANIFEST = {
-    "name": "今日金价 · 实时贵金属行情",
-    "short_name": "今日金价",
+    "name": "金潮网 · 贵金属行情门户",
+    "short_name": "金潮网",
     "description": "上海黄金交易所实时行情、国际金价、白银铂金钯金与多品种国内溢价",
     "start_url": "./",
     "scope": "./",
@@ -1512,13 +1593,14 @@ def page_history(data, hist):
         '<p style="margin:0;color:var(--gold-ink);font-size:13px">历史数据自今日开始逐小时累积，'
         '蜡烛图将在积累 2 天后自动出现；表格每日新增一行，30 天后趋于完整。</p></div>')
     return f"""{head_html(
-        "金价历史走势_黄金价格日线历史 | 今日金价",
+        "金价历史走势_黄金价格日线历史 | 金潮网",
         "上海黄金交易所 Au99.99 黄金日线历史：每日开高低收与涨跌幅，日线蜡烛图，数据逐日自动累积。",
         SITE + "history.html")}
 <body>
 {topbar_html(data)}
 {ticker_html(data)}
 {nav_html('data')}
+{subnav_html('data')}
 <div class="wrap">
   <div class="page-hero"><span class="eyebrow">HISTORICAL PRICES</span>
     <h1>金价历史走势</h1>
@@ -1602,12 +1684,13 @@ def page_news(data):
     else:
         items_html = '<div class="news-empty">快讯数据加载中，请稍候刷新。</div>'
     head = head_html(
-        "财经快讯 - 7×24 实时金融快讯 - 今日金价",
+        "财经快讯 - 7×24 实时金融快讯 - 金潮网",
         "7×24 小时实时财经快讯流，覆盖贵金属、汇率、央行政策、全球宏观。数据来自华尔街见闻公开资讯流。",
         SITE + "news.html")
     body = f"""{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("news")}
+{subnav_html("news")}
 <main>
   <section class="section" id="live">
     <div class="section-head">
@@ -1694,12 +1777,13 @@ def page_calendar(data):
         for name, freq, rate, last in CENTRAL_BANKS)
 
     head = head_html(
-        "财经日历 - 美联储议息/非农/CPI 时间表 - 今日金价",
+        "财经日历 - 美联储议息/非农/CPI 时间表 - 金潮网",
         "2026-2027 年重要财经事件日历：美联储 FOMC 八次议息日程、美国非农与 CPI 公布时间、各国央行利率决议节奏。日期来源为官方公开日程。",
         SITE + "calendar.html")
     body = f"""{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("calendar")}
+{subnav_html("calendar")}
 <main>
   <section class="section" id="events">
     <div class="section-head">
@@ -1840,12 +1924,13 @@ def page_academy(data):
         f'<details><summary>{esc(f["q"])}</summary><div class="ans">{esc(f["a"])}</div></details>'
         for f in FAQ)
     head = head_html(
-        "投资学院 - 黄金投资入门到进阶 - 今日金价",
+        "投资学院 - 黄金投资入门到进阶 - 金潮网",
         "黄金投资学院：18 篇系统科普（基础入门、实物黄金、投资工具、宏观分析、数据指标、风险教育）+ 15 条术语速查 + 常见问题。",
         SITE + "academy.html")
     body = f"""{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("academy")}
+{subnav_html("academy")}
 <main>
   <section class="section" id="articles">
     <div class="section-head">
@@ -1975,12 +2060,13 @@ def page_data(data, hist):
     hist_rows, _hist_n = history_table_rows(hist, "SGE:Au99.99", limit=15)
 
     head = head_html(
-        "数据中心 - 金银比/国内溢价/汇率/历史走势 - 今日金价",
+        "数据中心 - 金银比/国内溢价/汇率/历史走势 - 金潮网",
         "贵金属数据中心：金银比、金油比、金铂比等关键指标看板，国内溢价明细，11 币种汇率表，Au99.99 历史日线数据。",
         SITE + "data.html")
     body = f"""{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("data")}
+{subnav_html("data")}
 <main>
   <section class="section" id="indicators">
     <div class="section-head">

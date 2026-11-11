@@ -478,3 +478,42 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 @media(max-width:540px){
   .ind-grid{grid-template-columns:1fr}
 }
+
+/* ============ 常驻二级导航条（层级外显，门户式） ============ */
+.subnav{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;
+  box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.subnav-inner{display:flex;align-items:center;gap:16px;min-height:44px;flex-wrap:wrap}
+.subnav-home{font-size:12.5px;color:var(--sub);white-space:nowrap}
+.subnav-home a{color:var(--sub)}
+.subnav-home a:hover{color:var(--gold)}
+.subnav-home i{font-style:normal;margin:0 4px;opacity:.5}
+.subnav-home b{color:var(--gold);font-weight:700}
+.subnav-links{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+.subnav-links a{font-size:12.5px;color:var(--ink-2);padding:6px 11px;border-radius:7px;font-weight:550;white-space:nowrap;transition:.13s}
+.subnav-links a:hover{background:var(--gold-soft);color:var(--gold)}
+@media(max-width:640px){
+  .subnav-inner{gap:8px;padding:7px 20px}
+  .subnav-home{width:100%}
+}
+
+/* ============ 首页频道导航网格（5 板块层级一屏展示） ============ */
+.chan-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.chan{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;
+  box-shadow:var(--shadow);transition:.16s;display:flex;flex-direction:column}
+.chan:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 45%,var(--line))}
+.chan .ch-t{font-size:14px;font-weight:750;display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.chan .ch-t::before{content:"◈";color:var(--gold-2);font-size:12px}
+.chan .ch-d{font-size:11px;color:var(--sub);margin-bottom:10px;line-height:1.55}
+.chan ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.chan li a{display:block;font-size:12px;color:var(--ink-2);padding:4px 7px;border-radius:6px;line-height:1.5}
+.chan li a:hover{background:var(--gold-soft);color:var(--gold)}
+.chan li a::before{content:"›";margin-right:6px;color:var(--gold-2);font-weight:700}
+@media(max-width:1080px){.chan-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:720px){.chan-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.chan-grid{grid-template-columns:1fr}}
+
+/* ============ 章节自动编号（层级视觉强化） ============ */
+main{counter-reset:secno}
+.section{counter-increment:secno}
+.section-head h2::before{content:counter(secno,decimal-leading-zero) " / ";color:var(--gold-2);
+  font-size:.72em;letter-spacing:1.5px;font-weight:700;vertical-align:2px}
