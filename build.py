@@ -229,6 +229,9 @@ def main():
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:
         f.write(html)
+    # 同时写出 docs/data.json：站点以 /docs 为根发布，前端 ./data.json 才能拉到实时数据
+    with open(os.path.join(HERE, "docs", "data.json"), "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
     print(f"[ok] 已生成 {OUT}（{len(data.get('items', []))} 个合约）")
 
 
