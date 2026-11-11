@@ -463,20 +463,20 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   .rel-grid{grid-template-columns:1fr}
 }
 
-/* ============ 门户：5 大板块下拉导航 ============ */
-.nav-menu .nav-item{position:relative;display:inline-flex;align-items:center;gap:5px;padding:10px 12px;border-radius:9px;
-  color:var(--ink-2);font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.15s}
-.nav-menu .nav-item:hover{background:var(--gold-soft);color:var(--gold)}
-.nav-menu .nav-item.active{background:var(--gold-soft);color:var(--gold)}
-.nav-menu .nav-item .caret{font-size:9px;opacity:.6;transition:transform .18s}
-.nav-menu .nav-item:hover .caret{transform:rotate(180deg)}
-.nav-drop{position:absolute;top:calc(100% + 8px);left:0;min-width:180px;background:var(--surface);
-  border:1px solid var(--line);border-radius:var(--r-sm);box-shadow:var(--shadow-lg);padding:8px;
-  opacity:0;visibility:hidden;transform:translateY(6px);transition:.18s;z-index:60}
-.nav-item:hover .nav-drop{opacity:1;visibility:visible;transform:translateY(0)}
-.nav-drop a{display:block;padding:9px 12px;border-radius:8px;font-size:13px;color:var(--ink-2);font-weight:500}
-.nav-drop a:hover{background:var(--gold-soft);color:var(--gold)}
-.nav-drop .nd-sub{padding:4px 12px;font-size:10.5px;letter-spacing:.6px;color:var(--sub);font-weight:700}
+/* ============ 一级导航：大标签（与二级条明确区分） ============ */
+.nav-top{display:flex;align-items:stretch;gap:0}
+.nav-menu{display:flex;align-items:stretch;gap:0;flex:1;margin-left:18px}
+.nav-menu .ntab{display:inline-flex;align-items:center;padding:0 22px;font-size:16px;font-weight:750;
+  color:var(--ink-2);letter-spacing:.5px;border-bottom:3px solid transparent;transition:.15s;white-space:nowrap}
+.nav-menu .ntab:hover{color:var(--gold)}
+.nav-menu .ntab.active{color:var(--gold);border-bottom-color:var(--gold);background:var(--gold-soft)}
+@media(max-width:900px){
+  .nav-menu{display:none;position:absolute;top:64px;left:0;right:0;background:var(--surface);
+    border-bottom:1px solid var(--line);flex-direction:column;padding:8px;z-index:70}
+  .nav-menu.open{display:flex}
+  .nav-menu .ntab{padding:13px 18px;border-bottom:1px solid var(--line-2);border-left:3px solid transparent}
+  .nav-menu .ntab.active{border-bottom-color:var(--line-2);border-left-color:var(--gold)}
+}
 
 /* ============ 快讯流 ============ */
 .news-list{display:flex;flex-direction:column;gap:0}
@@ -544,21 +544,79 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   .ind-grid{grid-template-columns:1fr}
 }
 
-/* ============ 常驻二级导航条（层级外显，门户式） ============ */
-.subnav{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;
-  box-shadow:0 1px 0 rgba(0,0,0,.03)}
-.subnav-inner{display:flex;align-items:center;gap:16px;min-height:44px;flex-wrap:wrap}
-.subnav-home{font-size:12.5px;color:var(--sub);white-space:nowrap}
+/* ============ 常驻二级导航条（小字轻量,与一级大标签区分） ============ */
+.subnav{background:var(--surface-2);border-bottom:1px solid var(--line)}
+.subnav-inner{display:flex;align-items:center;gap:12px;min-height:36px;flex-wrap:wrap}
+.subnav-home{font-size:11.5px;color:var(--sub);white-space:nowrap}
 .subnav-home a{color:var(--sub)}
 .subnav-home a:hover{color:var(--gold)}
-.subnav-home i{font-style:normal;margin:0 4px;opacity:.5}
-.subnav-home b{color:var(--gold);font-weight:700}
-.subnav-links{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
-.subnav-links a{font-size:12.5px;color:var(--ink-2);padding:6px 11px;border-radius:7px;font-weight:550;white-space:nowrap;transition:.13s}
-.subnav-links a:hover{background:var(--gold-soft);color:var(--gold)}
+.subnav-home i{font-style:normal;margin:0 3px;opacity:.5}
+.subnav-home b{color:var(--ink-2);font-weight:650}
+.subnav-links{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+.subnav-links a{font-size:12px;color:var(--sub);padding:4px 11px;font-weight:500;white-space:nowrap;transition:.13s;
+  border-right:1px solid var(--line)}
+.subnav-links a:last-child{border-right:none}
+.subnav-links a:hover{color:var(--gold)}
 @media(max-width:640px){
-  .subnav-inner{gap:8px;padding:7px 20px}
+  .subnav-inner{gap:6px;padding:5px 20px}
   .subnav-home{width:100%}
+  .subnav-links a{border-right:none;padding:4px 8px}
+}
+
+/* ============ 金投网式三栏门户布局 ============ */
+.portal{display:grid;grid-template-columns:180px minmax(0,1fr) 300px;gap:14px;align-items:start;margin:16px 0}
+.portal-l, .portal-r{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px}
+.pmod{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.pmod-h{padding:8px 12px;font-size:13px;font-weight:750;color:var(--ink);background:var(--surface-2);
+  border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.pmod-h::before{content:"";width:3px;height:13px;background:var(--gold);border-radius:2px;margin-right:8px;flex:0 0 auto}
+.pmod-h .more{font-size:11px;color:var(--sub);font-weight:500}
+.pmod-h .more:hover{color:var(--gold)}
+.pmod-b{padding:8px 10px;font-size:12.5px}
+.pmod-b .mini-list{list-style:none;margin:0;padding:0}
+.pmod-b .mini-list li{padding:6px 2px;border-bottom:1px dashed var(--line-2);line-height:1.55}
+.pmod-b .mini-list li:last-child{border-bottom:none}
+.pmod-b .mini-list a{color:var(--ink-2);font-size:12px}
+.pmod-b .mini-list a:hover{color:var(--gold)}
+.pmod-b .mini-list .t{color:var(--sub);font-size:10.5px;margin-right:6px;font-variant-numeric:tabular-nums}
+.side-nav{list-style:none;margin:0;padding:0}
+.side-nav li a{display:block;padding:7px 10px;font-size:12.5px;color:var(--ink-2);border-radius:6px;line-height:1.5}
+.side-nav li a:hover{background:var(--gold-soft);color:var(--gold)}
+.side-nav li a.cur{background:var(--gold-soft);color:var(--gold);font-weight:650}
+.portal-main{display:flex;flex-direction:column;gap:14px;min-width:0}
+
+/* 模块盒（中栏,金投网式标题栏+更多） */
+.m\boxed{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.mbox-h{padding:10px 14px;font-size:14px;font-weight:750;background:var(--surface-2);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between}
+.mbox-h .mh-l{display:flex;align-items:center;gap:8px}
+.mbox-h .mh-l::before{content:"";width:3px;height:15px;background:var(--gold);border-radius:2px}
+.mbox-h .more{font-size:11.5px;color:var(--sub);font-weight:500}
+.mbox-h .more:hover{color:var(--gold)}
+.mbox-b{padding:12px 14px}
+.mbox-b.tight{padding:0}
+.portal-main .card{overflow-x:auto}
+.portal-main table{min-width:560px}
+.mbox-note{font-size:11px;color:var(--sub);padding:8px 14px;background:var(--surface-2);border-top:1px solid var(--line);line-height:1.7}
+
+/* 紧凑价格横栏（三栏模式下的 hero 替代） */
+.price-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.price-cell{background:var(--surface);padding:12px 14px}
+.price-cell .pk{font-size:11px;color:var(--sub);margin-bottom:6px}
+.price-cell .pv{font-size:22px;font-weight:750;letter-spacing:-.5px;font-variant-numeric:tabular-nums;line-height:1.15}
+.price-cell .pt{font-size:10.5px;color:var(--sub);margin-top:4px}
+.ov-strip{display:flex;gap:22px;flex-wrap:wrap;padding:8px 14px;margin-top:8px;font-size:11.5px;color:var(--sub);
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm)}
+.ov-strip b{margin-left:4px;font-variant-numeric:tabular-nums}
+
+@media(max-width:1080px){
+  .portal{grid-template-columns:160px minmax(0,1fr) 260px}
+}
+@media(max-width:900px){
+  .portal{grid-template-columns:1fr;gap:12px}
+  .portal-l,.portal-r{position:static}
+  .price-strip{grid-template-columns:1fr 1fr}
 }
 
 /* ============ 首页频道导航网格（5 板块层级一屏展示） ============ */
@@ -793,16 +851,13 @@ NAV_SECTIONS = [
 
 
 def nav_html(active=""):
-    """主导航：5 大板块。悬停展开子栏目（辅助），常驻二级导航条为主入口。"""
+    """一级导航：5 大板块大标签（金投网式）。子栏目由常驻二级导航条承载，不设悬停下拉。"""
     parts = []
     for key, text, url, subs in NAV_SECTIONS:
-        cls = "nav-item active" if key == active else "nav-item"
-        sub = "".join(f'<a href="{u}">{esc(t)}</a>' for t, u in subs)
-        parts.append(
-            f'<div class="{cls}"><a href="{url}">{text} <span class="caret">▾</span></a>'
-            f'<div class="nav-drop">{sub}</div></div>')
+        cls = "ntab active" if key == active else "ntab"
+        parts.append(f'<a class="{cls}" href="{url}">{text}</a>')
     a = "".join(parts)
-    return f"""<header class="nav"><div class="wrap">
+    return f"""<header class="nav"><div class="wrap nav-top">
   <a class="brand" href="./index.html" aria-label="金潮网 首页">
     <span class="brand-mark">Au</span>
     <span class="brand-txt"><strong>金潮网</strong><small>贵金属行情门户</small></span>
@@ -826,6 +881,51 @@ def subnav_html(active=""):
   <span class="subnav-home"><a href="./index.html">首页</a> <i>›</i> <b>{esc(title)}</b></span>
   <nav class="subnav-links">{links}</nav>
 </div></div>"""
+
+
+def side_left(active):
+    """三栏布局左栏：板块导航 + 当前板块子栏目（金投网式）。"""
+    rows = []
+    for key, text, url, subs in NAV_SECTIONS:
+        cur = ' class="cur"' if key == active else ""
+        rows.append(f'<li><a href="{url}"{cur}>{esc(text)}</a></li>')
+        if key == active:
+            rows.extend(f'<li><a href="{u}" style="padding-left:22px;font-size:11.5px;color:var(--sub)">{esc(t)}</a></li>'
+                        for t, u in subs)
+    return (f'<aside class="portal-l"><div class="pmod">'
+            f'<div class="pmod-h">频道导航</div>'
+            f'<div class="pmod-b"><ul class="side-nav">{"".join(rows)}</ul></div></div></aside>')
+
+
+def side_right(data):
+    """三栏布局右栏：快讯 / 财经日历 / 投资学院 / 术语速查（金投网式侧栏）。"""
+    news = (data.get("news") or [])[:6]
+    if news:
+        news_li = "".join(
+            f'<li><span class="t">{esc((n.get("time") or "")[5:16])}</span>'
+            f'<a href="./news.html">{esc(n.get("title"))}</a></li>'
+            for n in news)
+    else:
+        news_li = '<li><a href="./news.html">快讯加载中，点击查看 →</a></li>'
+    ev_li = "".join(
+        f'<li><span class="t">{esc(d[0][5:10])}</span><a href="./calendar.html">{esc(d[1])}</a></li>'
+        for d in ECON_EVENTS[:5])
+    ac_li = "".join(
+        f'<li><a href="./academy.html#articles">{esc(a["h"])}</a></li>'
+        for a in ACAD_ARTICLES[:5])
+    gl_li = "".join(
+        f'<li><a href="./academy.html#glossary"><b>{esc(g["t"])}</b> {esc(g["d"][:26])}…</a></li>'
+        for g in GLOSSARY[:5])
+    return f"""<aside class="portal-r">
+  <div class="pmod"><div class="pmod-h">实时快讯<a class="more" href="./news.html">更多 »</a></div>
+    <div class="pmod-b"><ul class="mini-list">{news_li}</ul></div></div>
+  <div class="pmod"><div class="pmod-h">财经日历<a class="more" href="./calendar.html">更多 »</a></div>
+    <div class="pmod-b"><ul class="mini-list">{ev_li}</ul></div></div>
+  <div class="pmod"><div class="pmod-h">投资学院<a class="more" href="./academy.html">更多 »</a></div>
+    <div class="pmod-b"><ul class="mini-list">{ac_li}</ul></div></div>
+  <div class="pmod"><div class="pmod-h">术语速查<a class="more" href="./academy.html#glossary">更多 »</a></div>
+    <div class="pmod-b"><ul class="mini-list">{gl_li}</ul></div></div>
+</aside>"""
 
 
 def footer_html():
@@ -1022,52 +1122,32 @@ def page_index(data):
 
 <div class="wrap">
 
-  <!-- ============ HERO ============ -->
-  <section class="hero-wrap" id="overview">
-    <div class="hero">
-      <div class="hero-grid">
-        <div>
-          <span class="eyebrow">SHANGHAI GOLD EXCHANGE · LIVE</span>
-          <h1>贵金属行情，一屏看懂</h1>
-          <p class="lead">国内现货 · 国际金价 · 汇率 · 国内溢价，四个维度同步对照，不再只看一个孤立的数字。</p>
-          <div class="hero-price-box">
-            <span class="hero-price" id="ovSge">—</span>
-            <span class="hero-unit" id="ovSgeUnit">元/克</span>
-            <span class="hero-chg" id="heroChg">—</span>
-          </div>
-          <div class="hero-meta">
-            <span>◷ <i id="ovSgeTime" style="font-style:normal">更新 —</i></span>
-            <span>◈ 主力合约 {esc(sym)}</span>
-            <span>↻ 每小时自动更新</span>
-          </div>
-        </div>
-        <div class="hero-side">
-          <div class="hs"><div class="k">◈ 国际现货黄金</div><div class="v num" id="hsXau">{fmt(intl.get('xau_usd'))}</div><div class="t">XAU/USD · 美元/盎司</div></div>
-          <div class="hs"><div class="k">◇ 国际现货白银</div><div class="v num" id="hsSilver">{silver_usd}</div><div class="t">XAG/USD · 美元/盎司</div></div>
-          <div class="hs"><div class="k">⇄ 美元兑人民币</div><div class="v num" id="hsFx">{fmt(intl.get('usd_cny'), 4)}</div><div class="t">USD/CNY</div></div>
-          <div class="hs"><div class="k">◐ 黄金国内溢价</div><div class="v num {prem_cls}" id="hsPrem">{prem_txt}</div><div class="t">SGE 较国际折算</div></div>
-        </div>
-      </div>
+  <!-- ============ 价格横栏（金投网式） ============ -->
+  <section class="hero-wrap" id="overview" style="margin:14px 0 0">
+    <div class="price-strip">
+      <div class="price-cell"><div class="pk">◈ SGE Au99.99 · 主力现货</div>
+        <div class="pv"><span id="ovSge">—</span><span class="pu" id="ovSgeUnit" style="font-size:11px;color:var(--sub);margin-left:4px">元/克</span></div>
+        <div class="pt"><span class="hero-chg" id="heroChg">—</span></div></div>
+      <div class="price-cell"><div class="pk">◇ 国际现货黄金 XAU</div>
+        <div class="pv" id="hsXau">{fmt(intl.get('xau_usd'))}</div>
+        <div class="pt">美元/盎司 · <i id="ovSgeTime" style="font-style:normal">—</i></div></div>
+      <div class="price-cell"><div class="pk">⇄ 美元兑人民币 / 白银</div>
+        <div class="pv" id="hsFx">{fmt(intl.get('usd_cny'), 4)}</div>
+        <div class="pt">USD/CNY · XAG <span id="hsSilver">{silver_usd}</span></div></div>
+      <div class="price-cell"><div class="pk">◐ 黄金国内溢价</div>
+        <div class="pv"><span class="v num {prem_cls}" id="hsPrem">{prem_txt}</span></div>
+        <div class="pt">SGE 较国际折算</div></div>
     </div>
-
-    <div class="ov-grid">
-      <div class="ov"><div class="k">主力今开 <span class="ic">◷</span></div>
-        <div class="ov-val num" id="ovOpen">{ov_open}</div><div class="t">Au99.99 · 元/克</div></div>
-      <div class="ov"><div class="k">日内最高 <span class="ic">▲</span></div>
-        <div class="ov-val num" id="ovHigh">{ov_high}</div><div class="t">最近交易时段</div></div>
-      <div class="ov"><div class="k">日内最低 <span class="ic">▼</span></div>
-        <div class="ov-val num" id="ovLow">{ov_low}</div><div class="t">最近交易时段</div></div>
-      <div class="ov"><div class="k">日内振幅 <span class="ic">≋</span></div>
-        <div class="ov-val num" id="ovRange">{ov_range}</div><div class="t">(最高 − 最低) ÷ 今开</div></div>
+    <div class="ov-strip">
+      <span>主力今开 <b class="num" id="ovOpen">{ov_open}</b></span>
+      <span>日内最高 <b class="num up" id="ovHigh">{ov_high}</b></span>
+      <span>日内最低 <b class="num down" id="ovLow">{ov_low}</b></span>
+      <span>日内振幅 <b class="num" id="ovRange">{ov_range}</b></span>
     </div>
   </section>
 
-  <!-- ============ 频道导航（5 大板块层级一屏展示） ============ -->
-  <section class="section no-num" id="channels" style="padding-top:0">
-    <div class="chan-grid">{chan_html}</div>
-  </section>
-
-  {ad_slot()}
+  <div class="portal">{side_left('quotes')}
+  <div class="portal-main">
 
   <!-- ============ 行情表 ============ -->
   <section class="section" id="quotes">
@@ -1260,49 +1340,7 @@ def page_index(data):
     </div>
   </section>
 
-  <!-- ============ 黄金百科 ============ -->
-  <section class="section" id="learn">
-    <div class="section-head">
-      <div><div class="lbl">GOLD KNOWLEDGE</div><h2>贵金属知识百科</h2>
-        <p>从合约代码到延期费，十篇短文把金价银价读懂。</p></div>
-    </div>
-    <div class="prose-grid">{article_html}</div>
-    <div class="faq-list">{faq_html}</div>
-  </section>
-
-  <div class="note-strip">
-    <div class="ni">◈</div>
-    <div class="nt"><strong>数据透明，来源可查</strong>
-      <span>所有指标的计算口径与数据源都在「关于本站」中公开说明；上游失败时自动回退到上一次有效数据，不会显示空白或错误数字。</span></div>
-    <a class="btn ghost" href="./about.html">查看数据说明 →</a>
-  </div>
-
-  <!-- ============ 术语表 ============ -->
-  <section class="section" id="glossary">
-    <div class="section-head">
-      <div><div class="lbl">GLOSSARY · 术语表</div><h2>黄金 / 贵金属术语速查</h2>
-        <p>15 个高频术语，读懂行情表与实物金价背后的口径差异。</p></div>
-    </div>
-    <div class="glossary">{glossary_html}</div>
-  </section>
-
-  <!-- ============ 相关板块 ============ -->
-  <section class="section" id="related">
-    <div class="section-head">
-      <div><div class="lbl">EXPLORE · 相关</div><h2>一站式行情导航</h2>
-        <p>从实时交易所行情到实物金价、计算工具与历史走势，一次看全。</p></div>
-    </div>
-    <div class="rel-grid">
-      <a class="rel" href="./data.html"><div class="rt">数据中心</div><p>金银比 / 金油比 / 溢价 / 汇率看板</p></a>
-      <a class="rel" href="./calendar.html"><div class="rt">财经日历</div><p>FOMC 议息 / 非农 / CPI 时间表</p></a>
-      <a class="rel" href="./news.html"><div class="rt">金融快讯</div><p>7×24 实时财经快讯流</p></a>
-      <a class="rel" href="./academy.html"><div class="rt">投资学院</div><p>18 篇科普 + 术语速查 + 问答</p></a>
-      <a class="rel" href="./index.html#quotes"><div class="rt">实时行情表</div><p>8 个 SGE 合约最新价、涨跌幅、振幅</p></a>
-      <a class="rel" href="./index.html#physical"><div class="rt">实物金价参考</div><p>金条 / 回收 / 首饰 / 积存金估算</p></a>
-      <a class="rel" href="./index.html#tools"><div class="rt">工具计算器</div><p>克↔盎司、人民币金价、盈亏计算</p></a>
-      <a class="rel" href="./history.html"><div class="rt">历史走势</div><p>Au99.99 日线蜡烛图与每日开高低收</p></a>
-    </div>
-  </section>
+</div>{side_right(data)}</div>
 
   {ad_slot()}
 
@@ -1332,7 +1370,7 @@ def page_about(data):
 {ticker_html(data)}
 {nav_html('about')}
 {subnav_html('about')}
-<div class="wrap">
+<div class="wrap"><div class="portal">{side_left('')}<div class="portal-main">
   <div class="page-hero"><span class="eyebrow">ABOUT THIS SITE</span>
     <h1>数据来源与指标说明</h1>
     <p>我们尽可能把每一个数字是怎么来的讲清楚，方便你判断这些数据的适用范围。</p></div>
@@ -1377,7 +1415,7 @@ def page_about(data):
     <p class="muted">最后更新：2026 年 11 月 · <a href="./privacy.html" style="color:var(--gold)">查看隐私政策 →</a></p>
   </div>
   {ad_slot()}
-</div>
+</div>{side_right(data)}</div></div>
 {footer_html()}
 <script src="./ads.js"></script>
 </body>
@@ -1395,7 +1433,7 @@ def page_privacy(data):
 {topbar_html(data)}
 {ticker_html(data)}
 {nav_html()}
-<div class="wrap">
+<div class="wrap"><div class="portal">{side_left('')}<div class="portal-main">
   <div class="page-hero"><span class="eyebrow">PRIVACY POLICY</span>
     <h1>隐私政策</h1>
     <p>本站不要求注册、不要求登录，也不会主动收集你的姓名、邮箱、电话等个人身份信息。</p></div>
@@ -1440,7 +1478,7 @@ def page_privacy(data):
     <div class="callout"><p>简言之：本站没有账号、没有表单、没有后端数据库；除了浏览器本地保存的主题与提醒规则，以及第三方广告平台的 Cookie，我们不收集你的个人信息。</p></div>
   </div>
   {ad_slot()}
-</div>
+</div>{side_right(data)}</div></div>
 {footer_html()}
 <script src="./ads.js"></script>
 </body>
@@ -1604,7 +1642,7 @@ def page_history(data, hist):
 {ticker_html(data)}
 {nav_html('data')}
 {subnav_html('data')}
-<div class="wrap">
+<div class="wrap"><div class="portal">{side_left('data')}<div class="portal-main">
   <div class="page-hero"><span class="eyebrow">HISTORICAL PRICES</span>
     <h1>金价历史走势</h1>
     <p>Au99.99 黄金合约日线：每日开盘、最高、最低、收盘与涨跌幅。数据每小时自动累积，长期保存。</p></div>
@@ -1627,7 +1665,7 @@ def page_history(data, hist):
   </div>
 
   {ad_slot()}
-</div>
+</div>{side_right(data)}</div></div>
 {footer_html()}
 <script id="hist-data" type="application/json">{hist_data}</script>
 <script src="./vendor/chart.umd.min.js"></script>
@@ -1694,7 +1732,7 @@ def page_news(data):
 {ticker_html(data)}
 {nav_html("news")}
 {subnav_html("news")}
-<main>
+<div class="wrap"><div class="portal">{side_left('news')}<div class="portal-main">
   <section class="section" id="live">
     <div class="section-head">
       <div><div class="lbl">NEWS · 金融快讯</div><h2>7×24 实时财经快讯</h2>
@@ -1713,7 +1751,7 @@ def page_news(data):
       <a class="btn ghost" href="./calendar.html">看财经日历 →</a>
     </div>
   </section>
-</main>
+</div>{side_right(data)}</div></div>
 {footer_html()}
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
@@ -1787,7 +1825,7 @@ def page_calendar(data):
 {ticker_html(data)}
 {nav_html("calendar")}
 {subnav_html("calendar")}
-<main>
+<div class="wrap"><div class="portal">{side_left('calendar')}<div class="portal-main">
   <section class="section" id="events">
     <div class="section-head">
       <div><div class="lbl">CALENDAR · 财经日历</div><h2>重要经济事件日历</h2>
@@ -1837,7 +1875,7 @@ def page_calendar(data):
       <a class="rel" href="./data.html"><div class="rt">数据中心</div><p>利率周期下的金价表现</p></a>
     </div>
   </section>
-</main>
+</div>{side_right(data)}</div></div>
 {footer_html()}
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
@@ -1934,7 +1972,7 @@ def page_academy(data):
 {ticker_html(data)}
 {nav_html("academy")}
 {subnav_html("academy")}
-<main>
+<div class="wrap"><div class="portal">{side_left('academy')}<div class="portal-main">
   <section class="section" id="articles">
     <div class="section-head">
       <div><div class="lbl">ACADEMY · 投资学院</div><h2>黄金投资系统学习</h2>
@@ -1971,7 +2009,7 @@ def page_academy(data):
       <a class="rel" href="./data.html"><div class="rt">数据中心</div><p>金银比、溢价等关键指标</p></a>
     </div>
   </section>
-</main>
+</div>{side_right(data)}</div></div>
 {footer_html()}
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="./ads.js"></script>
@@ -2070,7 +2108,7 @@ def page_data(data, hist):
 {ticker_html(data)}
 {nav_html("data")}
 {subnav_html("data")}
-<main>
+<div class="wrap"><div class="portal">{side_left('data')}<div class="portal-main">
   <section class="section" id="indicators">
     <div class="section-head">
       <div><div class="lbl">DATA CENTER · 数据中心</div><h2>关键指标看板</h2>
@@ -2125,7 +2163,7 @@ def page_data(data, hist):
       <a class="rel" href="./academy.html"><div class="rt">投资学院</div><p>读懂金银比与溢价</p></a>
     </div>
   </section>
-</main>
+</div>{side_right(data)}</div></div>
 {footer_html()}
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
