@@ -299,7 +299,7 @@ tbody tr:last-child td{border-bottom:none}
 
 /* 页脚 */
 footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5px}
-.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:32px;padding:44px 0 34px}
+.foot-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;gap:28px;padding:44px 0 34px}
 .foot-brand .brand-txt strong{color:#fff}
 .foot-brand p{margin:14px 0 0;font-size:12.5px;line-height:1.9;max-width:290px}
 .foot-col h4{color:#fff;font-size:13px;margin:0 0 14px;font-weight:650}
@@ -340,8 +340,9 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   .hero-grid{grid-template-columns:1fr;gap:24px;padding:32px}
   .hero-side{grid-template-columns:repeat(4,1fr)}
   .ov-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .foot-grid{grid-template-columns:1.4fr 1fr 1fr;gap:24px}
-  .foot-grid .foot-col:last-child{grid-column:1/-1}
+  .foot-grid{grid-template-columns:repeat(4,1fr);gap:22px;padding:34px 0 26px}
+  .foot-brand{grid-column:1/-1}
+  .foot-brand p{max-width:none}
 }
 @media(max-width:900px){
   .nav-menu{display:none;position:absolute;top:64px;left:0;right:0;background:var(--surface);
@@ -373,9 +374,11 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   .card{padding:16px}
   .chart-box{height:230px}
   .doc{padding:22px 20px}
-  .foot-grid{grid-template-columns:1fr 1fr;gap:24px;padding:34px 0 26px}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:16px 20px;padding:30px 0 22px}
   .foot-brand{grid-column:1/-1}
-  .foot-grid .foot-col:last-child{grid-column:1/-1}
+  .foot-brand p{margin-top:8px;font-size:12px;line-height:1.7}
+  .foot-col h4{margin-bottom:8px;font-size:12.5px}
+  .foot-col a{padding:4px 0;font-size:12px}
   table,thead,tbody,th,td,tr{display:block}
   thead{display:none}
   tbody tr{border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:6px 12px;background:var(--surface-2)}
@@ -390,7 +393,7 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   .hs{padding:12px}
   .hs .v{font-size:19px}
   .ov-grid{grid-template-columns:1fr}
-  .foot-grid{grid-template-columns:1fr}
+  .foot-grid{gap:14px 16px}
   .topbar .tb-r{width:100%;margin-left:0;padding-bottom:6px}
 }
 @media(max-width:360px){
