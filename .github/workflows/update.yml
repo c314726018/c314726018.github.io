@@ -2,8 +2,8 @@ name: 更新贵金属行情
 
 on:
   schedule:
-    # 工作日（周一~周五）每 2 小时跑一次；非交易时段会复用缓存，不会空白
-    - cron: "0 1,3,5,7,9,11,13,15,21,23 * * 1-5"
+    # 每小时一次（含周末夜盘）；非交易时段会复用缓存，不会空白
+    - cron: "0 * * * *"
   workflow_dispatch: {}   # 允许手动触发
 
 permissions:
@@ -25,6 +25,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json docs/index.html
+          git add data.json docs/
           git commit -m "chore: 更新行情 $(date +%Y-%m-%dT%H:%M)" || echo "no changes"
           git push
