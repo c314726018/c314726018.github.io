@@ -178,6 +178,20 @@
     _setPhys("#physJew", PHYS_BASE + jew);
     _setPhys("#phys3d", PHYS_BASE + d3);
     _setPhys("#physAcc", PHYS_BASE * (1 + acc / 100));
+    // 扩展类别(固定典型假设,格内注明口径):金币 / 回收
+    _setPhys("#physCoin", PHYS_BASE + 30);   // 投资金币:基准+30 升水
+    _setPhys("#physCoin2", PHYS_BASE + 80);  // 纪念金币:基准+80 收藏溢价
+    _setPhys("#physJewRec", PHYS_BASE - 12); // 首饰回收:折价大于金条
+    // 贵金属回收:Ag 元/千克;Pt/Pd 元/克,均按 97% 计价
+    var mets = (DATA.intl || {}).metals || {};
+    var ag = (mets.silver || {}).intl_cny || null;   // 元/千克
+    var pt = (mets.platinum || {}).sge || (mets.platinum || {}).intl_cny;
+    var pd = (mets.palladium || {}).sge || (mets.palladium || {}).intl_cny;
+    var agEl = $("#physAgRec");
+    if (agEl) agEl.innerHTML = (ag ? fmt(ag * 0.97) : "—") + '<span class="pu">元/千克</span>';
+    var ptEl = $("#physPtRec");
+    if (ptEl) ptEl.innerHTML = (pt ? fmt(pt * 0.97) : "—") + '<span class="pu">元/克</span>' +
+      (pd ? ' <span class="pu" style="opacity:.7">钯 ' + fmt(pd * 0.97) + "</span>" : "");
   }
   function renderPhysical(d) {
     var it = (d.items || []).filter(function (x) { return x.symbol === "Au99.99"; })[0];
@@ -498,8 +512,9 @@
     });
   }
 
-  // ---------- 三大报价模块（金投网式,tab 切换品种） ----------
+  // ---------- 三大报价模块（金投网式,tab 切换品种 + 大图） ----------
   var QM_TAB = [0, 0, 0];
+  var qCharts = {};
   function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
   function _pick(items, sym) {
     return (items || []).filter(function (x) { return x.symbol === sym; })[0];
@@ -510,8 +525,31 @@
     return '<span class="' + ch.cls + '">' + arrow + " " + fmt(Math.abs(ch.d)) +
       "  (" + (ch.pct >= 0 ? "+" : "") + fmt(ch.pct) + "%)</span>";
   }
+  function drawQChart(id, labels, data, cls) {
+    var cv = $("#" + id); if (!cv || !data || data.length < 3) return false;
+    if (typeof Chart === "undefined") return false;
+    var c = themeColors();
+    var line = cls === "up" ? "#d4380d" : cls === "down" ? "#129b63" : c.gold;
+    if (qCharts[id]) { qCharts[id].destroy(); qCharts[id] = null; }
+    qCharts[id] = new Chart(cv, {
+      type: "line",
+      data: { labels: labels, datasets: [{ data: data, borderColor: line, borderWidth: 1.6,
+        pointRadius: 0, tension: .25, fill: true,
+        backgroundColor: cls === "up" ? "rgba(212,56,13,.08)" : cls === "down" ? "rgba(18,155,99,.08)" : "rgba(184,134,11,.10)" }] },
+      options: { responsive: true, maintainAspectRatio: false,
+        animation: { duration: 250 },
+        plugins: { legend: { display: false },
+          tooltip: { intersect: false, mode: "index",
+            callbacks: { label: function (ctx) { return fmt(ctx.parsed.y); } } } },
+        scales: {
+          x: { ticks: { maxTicksLimit: 6, color: c.sub, font: { size: 9 }, maxRotation: 0 }, grid: { display: false } },
+          y: { position: "right", ticks: { maxTicksLimit: 4, color: c.sub, font: { size: 9 } }, grid: { color: c.grid } }
+        } }
+    });
+    return true;
+  }
   function renderQM(d) {
-    // 模块1 贵金属(全部走 SGE 序列,带分时图;国际板金即 SGE 国际板合约)
+    // 模块1 贵金属(全部走 SGE 序列,带分时大图;国际板金即 SGE 国际板合约)
     var defs1 = [
       { n: "现货黄金 Au99.99", u: "元/克", it: _pick(d.items, "Au99.99") },
       { n: "黄金延期 Au(T+D)", u: "元/克", it: _pick(d.items, "Au(T+D)") },
@@ -522,15 +560,19 @@
     _set("qm1Name", x.n); _set("qm1Unit", x.u);
     _set("qm1Price", fmt(x.it ? x.it.last : x.v));
     var ch1 = $("#qm1Chg"), sp1 = $("#qm1Spark");
+    var ok1 = false, cls1 = "flat";
     if (x.it) {
       var ch = changeOf(x.it);
+      cls1 = ch ? ch.cls : "flat";
       if (ch1) ch1.innerHTML = _chgHtml(ch);
-      if (sp1) sp1.innerHTML = spark(x.it.series, ch ? ch.cls : "flat");
+      var times = (d.primary && d.primary.symbol === x.it.symbol && d.primary.time) ? d.primary.time : null;
+      ok1 = drawQChart("qm1Chart", times, x.it.series, cls1);
+      if (!ok1 && sp1) { sp1.style.display = ""; sp1.innerHTML = spark(x.it.series, cls1); }
     } else {
       if (ch1) ch1.innerHTML = x.cny ? '<span class="tq-sub">≈ 人民币 ' + fmt(x.cny) + " 元/克（实时折算）</span>" : '<span class="flat">—</span>';
-      if (sp1) sp1.innerHTML = "";
     }
-    // 模块2 外汇牌价(图区显示美元指数)
+    if (!ok1 && sp1 && !x.it) sp1.style.display = "none";
+    // 模块2 外汇牌价(无序列,图区显示美元指数信息块)
     var defs2 = [["USD", "美元兑人民币 USD/CNY"], ["EUR", "欧元兑人民币 EUR/CNY"],
                  ["JPY", "日元兑人民币 JPY/CNY(100)"], ["HKD", "港币兑人民币 HKD/CNY"],
                  ["GBP", "英镑兑人民币 GBP/CNY"]];
@@ -549,14 +591,15 @@
       if (dxy) {
         var dch = chgPair(dxy.last, dxy.prev);
         var dcls = dch ? dch.cls : "flat";
-        sp2.innerHTML = '<div class="tq-sub" style="text-align:right">美元指数<br><b style="font-size:15px">' +
+        sp2.innerHTML = '<div class="tq-sub" style="text-align:left">美元指数&nbsp;&nbsp;<b style="font-size:16px">' +
           fmt(dxy.last) + '</b> <span class="' + dcls + '">' +
-          (dch ? (dch.d > 0 ? "▲ +" : "▼ ") + fmt(dch.pct) + "%" : "—") + "</span></div>";
+          (dch ? (dch.d > 0 ? "▲ +" : "▼ ") + fmt(dch.pct) + "%" : "—") +
+          '</span><br><span style="opacity:.7">高 ' + fmt(dxy.high) + " · 低 " + fmt(dxy.low) + "</span></div>";
       } else {
         sp2.innerHTML = "";
       }
     }
-    // 模块3 能源(布伦特/WTI 新浪实时,图区画近 30 日收盘线)
+    // 模块3 能源(布伦特/WTI 新浪实时 + 近 30 日收盘大图;SC 显示说明)
     var defs3 = [["brent", "布伦特原油 OIL"], ["wti", "WTI原油 CL"], ["sc", "上海原油 SC"]];
     var def3 = defs3[QM_TAB[2]] || defs3[0];
     var o = (d.oil || {})[def3[0]] || {};
@@ -575,10 +618,12 @@
     } else if (ch3) {
       ch3.innerHTML = '<span class="flat">—</span>';
     }
+    var ok3 = false;
+    if (o.hist && o.hist.length > 3) ok3 = drawQChart("qm3Chart", null, o.hist, ocls);
     var sp3 = $("#qm3Spark");
     if (sp3) {
-      sp3.innerHTML = (o.hist && o.hist.length > 3) ? spark(o.hist, ocls) :
-        (o.date ? '<span class="tq-sub">交易日 ' + esc(o.date) + "</span>" : "");
+      sp3.style.display = ok3 ? "none" : "";
+      sp3.innerHTML = (!ok3 && o.date) ? '<span class="tq-sub">交易日 ' + esc(o.date) + "</span>" : "";
     }
   }
   function bindQM() {

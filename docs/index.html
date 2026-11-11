@@ -58,36 +58,30 @@
     <div class="three-quote">
       <div class="tq" id="qm1">
         <div class="tq-tabs"><b>贵金属</b><a class="on" data-i="0">现货黄金</a><a data-i="1">黄金延期</a><a data-i="2">国际板金</a><a data-i="3">白银</a></div>
-        <div class="tq-body">
-          <div class="tq-main">
-            <div class="tq-name" id="qm1Name">现货黄金 Au99.99</div>
-            <div><span class="tq-price num" id="qm1Price">—</span><span class="tq-unit" id="qm1Unit">元/克</span></div>
-            <div class="tq-chg" id="qm1Chg">—</div>
-          </div>
-          <div class="tq-spark" id="qm1Spark"></div>
+        <div class="tq-top">
+          <div class="tq-name" id="qm1Name">现货黄金 Au99.99</div>
+          <div class="tq-priceline"><span class="tq-price num" id="qm1Price">—</span><span class="tq-unit" id="qm1Unit">元/克</span><span class="tq-chg" id="qm1Chg">—</span></div>
         </div>
+        <div class="tq-chart"><canvas id="qm1Chart" height="132"></canvas></div>
+        <div class="tq-spark" id="qm1Spark" style="display:none"></div>
       </div>
       <div class="tq" id="qm2">
         <div class="tq-tabs"><b>外汇牌价</b><a class="on" data-i="0">美元</a><a data-i="1">欧元</a><a data-i="2">日元</a><a data-i="3">港币</a><a data-i="4">英镑</a></div>
-        <div class="tq-body">
-          <div class="tq-main">
-            <div class="tq-name" id="qm2Name">美元兑人民币 USD/CNY</div>
-            <div><span class="tq-price num" id="qm2Price">—</span><span class="tq-unit" id="qm2Unit">人民币</span></div>
-            <div class="tq-chg" id="qm2Chg">—</div>
-          </div>
-          <div class="tq-spark" id="qm2Spark"></div>
+        <div class="tq-top">
+          <div class="tq-name" id="qm2Name">美元兑人民币 USD/CNY</div>
+          <div class="tq-priceline"><span class="tq-price num" id="qm2Price">—</span><span class="tq-unit" id="qm2Unit">人民币</span><span class="tq-chg" id="qm2Chg">—</span></div>
         </div>
+        <div class="tq-chart" id="qm2ChartBox" style="display:none"><canvas id="qm2Chart" height="132"></canvas></div>
+        <div class="tq-spark" id="qm2Spark"></div>
       </div>
       <div class="tq" id="qm3">
         <div class="tq-tabs"><b>能源化工</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a></div>
-        <div class="tq-body">
-          <div class="tq-main">
-            <div class="tq-name" id="qm3Name">布伦特原油</div>
-            <div><span class="tq-price num" id="qm3Price">—</span><span class="tq-unit" id="qm3Unit">美元/桶</span></div>
-            <div class="tq-chg" id="qm3Chg">—</div>
-          </div>
-          <div class="tq-spark" id="qm3Spark"></div>
+        <div class="tq-top">
+          <div class="tq-name" id="qm3Name">布伦特原油</div>
+          <div class="tq-priceline"><span class="tq-price num" id="qm3Price">—</span><span class="tq-unit" id="qm3Unit">美元/桶</span><span class="tq-chg" id="qm3Chg">—</span></div>
         </div>
+        <div class="tq-chart"><canvas id="qm3Chart" height="132"></canvas></div>
+        <div class="tq-spark" id="qm3Spark" style="display:none"></div>
       </div>
     </div>
     <div class="ov-strip">
@@ -181,6 +175,21 @@
         <div class="phys-card"><div class="pk">银行积存金</div>
           <div class="pv" id="physAcc">—<span class="pu">元/克</span></div>
           <div class="pn">基准 ×（1 + 点差），可定投赎回</div></div>
+        <div class="phys-card"><div class="pk">投资金币（熊猫等）</div>
+          <div class="pv" id="physCoin">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 + 金币溢价，官方渠道按克＋升水</div></div>
+        <div class="phys-card"><div class="pk">纪念/收藏金币</div>
+          <div class="pv" id="physCoin2">—<span class="pu">元/克</span></div>
+          <div class="pn">基准 + 收藏溢价，题材与发行量影响大</div></div>
+        <div class="phys-card"><div class="pk">黄金首饰回收</div>
+          <div class="pv" id="physJewRec">—<span class="pu">元/克</span></div>
+          <div class="pn">按克计价，折价大于金条（含损耗）</div></div>
+        <div class="phys-card"><div class="pk">白银回收</div>
+          <div class="pv" id="physAgRec">—<span class="pu">元/千克</span></div>
+          <div class="pn">Ag9999 价 × 约 97%（回收扣减）</div></div>
+        <div class="phys-card"><div class="pk">铂金 / 钯金回收</div>
+          <div class="pv" id="physPtRec">—<span class="pu">元/克</span></div>
+          <div class="pn">境内价 × 约 97%（钯金见数据中心）</div></div>
       </div>
       <div class="phys-note"><b>说明：</b>以上为「基准金价 + 行业典型加价 / 折价」的<b>参考估算值</b>，用于理解实物金买卖价差结构，<b>非周大福、老凤祥等品牌实时挂牌价</b>。品牌金价由各家每日公布、含独立工费与促销，需以门店为准。调整上方假设可观察不同加价下的估算结果。</div>
     </div>

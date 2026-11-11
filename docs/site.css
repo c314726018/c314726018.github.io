@@ -558,13 +558,16 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   border-bottom:2px solid transparent;transition:.13s}
 .tq-tabs a:hover{color:var(--ink)}
 .tq-tabs a.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:650}
-.tq-body{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;gap:10px}
+.tq-top{padding:12px 14px 6px}
 .tq-name{font-size:12px;color:var(--sub);margin-bottom:3px}
-.tq-price{font-size:31px;font-weight:780;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1.05}
-.tq-unit{font-size:11px;color:var(--sub);margin-left:5px}
-.tq-chg{font-size:12.5px;margin-top:6px;font-variant-numeric:tabular-nums}
+.tq-priceline{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.tq-price{font-size:30px;font-weight:780;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1.05}
+.tq-unit{font-size:11px;color:var(--sub)}
+.tq-chg{font-size:12.5px;font-variant-numeric:tabular-nums}
 .tq-chg .up{color:var(--up)}
 .tq-chg .down{color:var(--down)}
+.tq-chart{height:132px;padding:2px 8px 8px;position:relative}
+.tq-chart canvas{width:100%!important;height:100%!important}
 .tq-spark{flex:0 0 118px;text-align:right}
 .tq-spark svg{width:118px;height:46px}
 .tq-sub{font-size:11px;color:var(--sub);line-height:1.6}
