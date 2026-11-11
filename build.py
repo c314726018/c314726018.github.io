@@ -568,6 +568,8 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .chan:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 45%,var(--line))}
 .chan .ch-t{font-size:14px;font-weight:750;display:flex;align-items:center;gap:7px;margin-bottom:4px}
 .chan .ch-t::before{content:"◈";color:var(--gold-2);font-size:12px}
+.chan .ch-t a{color:inherit;text-decoration:none}
+.chan .ch-t a:hover{color:var(--gold)}
 .chan .ch-d{font-size:11px;color:var(--sub);margin-bottom:10px;line-height:1.55}
 .chan ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
 .chan li a{display:block;font-size:12px;color:var(--ink-2);padding:4px 7px;border-radius:6px;line-height:1.5}
@@ -580,6 +582,7 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 /* ============ 章节自动编号（层级视觉强化） ============ */
 main{counter-reset:secno}
 .section{counter-increment:secno}
+.section.no-num{counter-increment:none}
 .section-head h2::before{content:counter(secno,decimal-leading-zero) " / ";color:var(--gold-2);
   font-size:.72em;letter-spacing:1.5px;font-weight:700;vertical-align:2px}
 """
@@ -974,11 +977,11 @@ def page_index(data):
         "academy": "18 篇科普 / 术语 / 问答",
     }
     chan_html = "".join(
-        '<a class="chan" href="' + url + '" style="text-decoration:none;color:inherit">'
-        '<div class="ch-t">' + esc(text) + '</div>'
+        '<div class="chan">'
+        '<div class="ch-t"><a href="' + url + '">' + esc(text) + '</a></div>'
         '<div class="ch-d">' + chan_desc.get(key, "") + '</div>'
         '<ul>' + "".join('<li><a href="' + u + '">' + esc(t) + '</a></li>' for t, u in subs[:5]) + '</ul>'
-        '</a>'
+        '</div>'
         for key, text, url, subs in NAV_SECTIONS)
 
     website_ld = json.dumps({
@@ -1060,7 +1063,7 @@ def page_index(data):
   </section>
 
   <!-- ============ 频道导航（5 大板块层级一屏展示） ============ -->
-  <section class="section" id="channels" style="padding-top:0">
+  <section class="section no-num" id="channels" style="padding-top:0">
     <div class="chan-grid">{chan_html}</div>
   </section>
 
