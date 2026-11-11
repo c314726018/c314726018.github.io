@@ -639,4 +639,11 @@ main{counter-reset:secno}
   .tq-price{font-size:26px}
   .tq-spark{flex:0 0 96px}
   .tq-spark svg{width:96px;height:42px}
+  /* 平板:左导航栏保留为窄列,右栏(快讯/日历)并为双列网格垫底 */
+  .portal{grid-template-columns:172px minmax(0,1fr)}
+  .portal-r{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+}
+@media(max-width:720px){
+  /* 手机:左栏频道导航隐藏(二级导航条已覆盖其入口),内容直达 */
+  .portal-l{display:none}
 }
