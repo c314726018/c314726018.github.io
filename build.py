@@ -458,6 +458,8 @@ def head_html(title, desc, canonical, extra=""):
 <meta property="og:type" content="website">
 <meta property="og:url" content="{esc(canonical)}">
 <link rel="canonical" href="{esc(canonical)}">
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="apple-touch-icon" href="./favicon.svg">
 {ADSENSE_LOADER}
 {extra}
 <link rel="stylesheet" href="./site.css">
@@ -940,6 +942,38 @@ def page_privacy(data):
 </html>"""
 
 
+# ---------------------------------------------------------------- SEO 产物
+
+FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#e6bd55"/><stop offset="1" stop-color="#b5840f"/></linearGradient></defs>
+<rect width="64" height="64" rx="14" fill="url(#g)"/>
+<text x="32" y="43" font-family="-apple-system,'Segoe UI',sans-serif" font-size="27" font-weight="800" fill="#231704" text-anchor="middle">Au</text>
+</svg>
+"""
+
+
+def sitemap_xml(lastmod):
+    urls = [
+        (SITE, "hourly", "1.0"),
+        (SITE + "about.html", "monthly", "0.5"),
+        (SITE + "privacy.html", "yearly", "0.3"),
+    ]
+    body = "".join(
+        f"<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod>"
+        f"<changefreq>{freq}</changefreq><priority>{pri}</priority></url>"
+        for loc, freq, pri in urls)
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + body + "\n</urlset>\n")
+
+
+ROBOTS = f"""User-agent: *
+Allow: /
+
+Sitemap: {SITE}sitemap.xml
+"""
+
+
 # ---------------------------------------------------------------- 入口
 
 def main():
@@ -962,7 +996,18 @@ def main():
     with open(os.path.join(DOCS, "data.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print("[ok] 已生成 index.html / about.html / privacy.html / site.css / data.json "
+    # SEO 三件套
+    gen = str(data.get("generated_at") or "")
+    lastmod = (gen[:10] if len(gen) >= 10 else
+               __import__("datetime").date.today().isoformat())
+    with open(os.path.join(DOCS, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write(sitemap_xml(lastmod))
+    with open(os.path.join(DOCS, "robots.txt"), "w", encoding="utf-8") as f:
+        f.write(ROBOTS)
+    with open(os.path.join(DOCS, "favicon.svg"), "w", encoding="utf-8") as f:
+        f.write(FAVICON)
+
+    print("[ok] 已生成 index/about/privacy/site.css/data.json + sitemap/robots/favicon "
           f"（{len(data.get('items', []))} 个合约）")
 
 
