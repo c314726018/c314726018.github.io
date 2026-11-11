@@ -1009,6 +1009,10 @@ MANIFEST = {
 }
 
 
+# IndexNow 推送密钥（Bing/360/搜狗/Yandex 收录协议）：key 文件发布在站点根目录供引擎校验
+INDEXNOW_KEY = "7f62035e56707ee1c721b77b11de07f8"
+
+
 # ---------------------------------------------------------------- 历史数据累积
 
 HIST = os.path.join(DOCS, "history.json")
@@ -1216,6 +1220,10 @@ def main():
         f.write(FAVICON)
     with open(os.path.join(DOCS, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(MANIFEST, f, ensure_ascii=False, indent=2)
+
+    # IndexNow key 校验文件（必须位于 https://<host>/<key>.txt）
+    with open(os.path.join(DOCS, INDEXNOW_KEY + ".txt"), "w", encoding="utf-8") as f:
+        f.write(INDEXNOW_KEY)
 
     print("[ok] 已生成 index/about/privacy/history + sitemap/robots/favicon/manifest "
           f"（{len(data.get('items', []))} 个合约，历史 {sum(1 for k in hist if k.startswith('SGE:'))} 品种）")

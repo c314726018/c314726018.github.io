@@ -28,3 +28,10 @@ jobs:
           git add data.json docs/
           git commit -m "chore: 更新行情 $(date +%Y-%m-%dT%H:%M)" || echo "no changes"
           git push
+      - name: IndexNow 推送（Bing / 360 / 搜狗 / Yandex 收录）
+        run: |
+          KEY="7f62035e56707ee1c721b77b11de07f8"
+          curl -s -m 20 -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d '{"host":"c314726018.github.io","key":"'"$KEY"'","urlList":["https://c314726018.github.io/","https://c314726018.github.io/history.html","https://c314726018.github.io/about.html","https://c314726018.github.io/privacy.html"]}' \
+            -o /dev/null -w "IndexNow HTTP %{http_code}\n" || echo "IndexNow 推送失败（不影响构建）"
