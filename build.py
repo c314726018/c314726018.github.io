@@ -218,6 +218,7 @@ def render(data):
 </div>
 
 <script id="app-data" type="application/json">{data_json}</script>
+<script src="./ads.js"></script>
 <script src="./app.js"></script>
 </body>
 </html>"""
