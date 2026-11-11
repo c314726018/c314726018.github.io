@@ -483,6 +483,7 @@ def head_html(title, desc, canonical, extra=""):
 <meta property="og:type" content="website">
 <meta property="og:url" content="{esc(canonical)}">
 <link rel="canonical" href="{esc(canonical)}">
+<meta name="google-site-verification" content="fg3VNE2jruGx8MIMWrvQDV9DXioc2BZQcWEDKzUmh9k">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="apple-touch-icon" href="./favicon.svg">
 <link rel="manifest" href="./manifest.json">
