@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>贵金属实时行情 · 上海黄金交易所</title>
+<meta name="description" content="上海黄金交易所黄金、白银、铂金、钯金实时行情，服务端实时抓取，免费托管。">
+<script src="./vendor/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:#f7f8fa; --card:#ffffff; --ink:#1f2329; --sub:#6b7280;
+    --line:#e5e7eb; --gold:#b8860b; --up:#d4380d; --down:#389e0d; --accent:#2f6fed;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+         background:var(--bg); color:var(--ink); line-height:1.5; }
+  .wrap { max-width:920px; margin:0 auto; padding:28px 16px 56px; }
+  header h1 { font-size:22px; margin:0 0 4px; }
+  .meta { color:var(--sub); font-size:13px; margin-bottom:6px; }
+  .meta .live { color:var(--down); font-weight:600; }
+  .meta .seed { color:#d48806; font-weight:600; }
+  .status { font-size:12px; margin-bottom:18px; min-height:16px; }
+  .status .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#cbd5e1; margin-right:6px; vertical-align:middle; }
+  .status.ok .dot { background:var(--down); }
+  .status.warn .dot { background:#d48806; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 18px 8px;
+          box-shadow:0 1px 3px rgba(0,0,0,.04); margin-bottom:20px; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th,td { padding:11px 8px; text-align:right; border-bottom:1px solid var(--line); }
+  th:first-child,td:first-child, th:nth-child(2),td:nth-child(2) { text-align:left; }
+  th { color:var(--sub); font-weight:600; font-size:12px; }
+  .lbl { font-weight:600; }
+  .sym { color:var(--sub); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; }
+  .num { font-variant-numeric:tabular-nums; }
+  .strong { font-weight:700; color:var(--gold); font-size:15px; }
+  .up { color:var(--up); } .down { color:var(--down); }
+  .unit { color:var(--sub); font-size:12px; }
+  .chart-title { font-size:14px; font-weight:600; margin:4px 2px 12px; }
+  .chart-box { height:260px; }
+  .disclaimer { color:var(--sub); font-size:12px; margin-top:8px; line-height:1.7; }
+  footer { color:var(--sub); font-size:12px; text-align:center; margin-top:24px; }
+  a { color:var(--accent); text-decoration:none; }
+  .skeleton td { color:#cbd5e1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>贵金属实时行情</h1>
+    <div class="meta" id="meta">数据来源：上海黄金交易所 (SGE) · 仅供参考，不构成投资建议</div>
+  </header>
+
+  <div class="status" id="status"><span class="dot"></span>正在加载实时行情…</div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>品种</th><th>合约</th><th>最新价</th><th>今开</th><th>最高</th><th>最低</th><th>单位</th></tr>
+      </thead>
+      <tbody id="tbody">
+        <tr class="skeleton"><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="disclaimer">「今开/最高/最低」为当日（或最近交易时段）区间；"最新价"为最近一笔成交。非交易时段显示最近一次有效报价。本页数据由服务端实时代理 SGE，每 5 分钟刷新一次缓存。</div>
+  </div>
+
+  <div class="card">
+    <div class="chart-title" id="chartTitle">主力合约日内走势</div>
+    <div class="chart-box"><canvas id="c"></canvas></div>
+  </div>
+
+  <footer>
+    本页为行情聚合展示，所有价格以交易所官方发布为准 ·
+    <a href="https://www.sge.com.cn/" target="_blank" rel="noopener">上海黄金交易所官网</a>
+  </footer>
+</div>
+
+<script>
+const fmt = (v) => {
+  if (v === null || v === undefined || v === "") return "—";
+  try { return Number(v).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  catch (e) { return "—"; }
+};
+
+function render(data) {
+  const items = data.items || [];
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = items.map(it => `
+    <tr>
+      <td class="lbl">${it.label}</td>
+      <td class="sym">${it.symbol}</td>
+      <td class="num strong">${fmt(it.last)}</td>
+      <td class="num">${fmt(it.open)}</td>
+      <td class="num up">${fmt(it.max)}</td>
+      <td class="num down">${fmt(it.min)}</td>
+      <td class="unit">${it.unit}</td>
+    </tr>`).join("");
+
+  const meta = document.getElementById("meta");
+  const live = data.live;
+  const isLive = live && live > 0;
+  meta.innerHTML = `数据来源：${data.source} · 生成时间：${data.generated_at || "—"} · 仅供参考，不构成投资建议` +
+    (isLive ? ` · <span class="live">● 实时 ${live} 个合约</span>` : ` · <span class="seed">● 兜底缓存</span>`);
+
+  const status = document.getElementById("status");
+  if (isLive) {
+    status.className = "status ok";
+    status.innerHTML = `<span class="dot"></span>已连接 SGE 实时行情（${live} 个合约在线）`;
+  } else {
+    status.className = "status warn";
+    status.innerHTML = `<span class="dot"></span>实时接口暂不可用，当前为兜底缓存数据`;
+  }
+
+  // 走势图
+  const p = data.primary || {};
+  const labels = p.time && p.time.length ? p.time : (p.series || []).map((_, i) => i + 1);
+  const series = p.series || [];
+  document.getElementById("chartTitle").textContent = `${p.symbol || "主力"} 日内走势`;
+  const canvas = document.getElementById("c");
+  if (window.__chart) window.__chart.destroy();
+  if (series.length) {
+    window.__chart = new Chart(canvas, {
+      type: "line",
+      data: { labels, datasets: [{
+        label: p.symbol || "主力", data: series,
+        borderColor: "#b8860b", backgroundColor: "rgba(184,134,11,.08)",
+        borderWidth: 1.6, pointRadius: 0, tension: .25, fill: true }] },
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { maxTicksLimit: 8, color: "#9ca3af", font: { size: 10 } }, grid: { display: false } },
+          y: { ticks: { color: "#9ca3af", font: { size: 10 } }, grid: { color: "#eef0f3" } } } }
+    });
+  } else {
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+async function load() {
+  try {
+    const r = await fetch("/api/quote", { cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const data = await r.json();
+    render(data);
+  } catch (e) {
+    const status = document.getElementById("status");
+    status.className = "status warn";
+    status.innerHTML = `<span class="dot"></span>加载失败：${e.message}（请稍后刷新）`;
+  }
+}
+
+load();
+// 每 60s 自动刷新（服务端有 5min 缓存，这里只是让页面更跟手）
+setInterval(load, 60000);
+</script>
+</body>
+</html>
