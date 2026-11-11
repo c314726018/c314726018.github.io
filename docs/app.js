@@ -25,6 +25,36 @@
   }
   function $(s, r) { return (r || document).querySelector(s); }
   function $all(s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function changeOf(it) {
+    var o = Number(it.open), l = Number(it.last);
+    if (!o || isNaN(o) || isNaN(l)) return null;
+    return { d: l - o, pct: (l - o) / o * 100, cls: l > o ? "up" : l < o ? "down" : "flat" };
+  }
+  // 分时序列迷你走势图（内联 SVG，无依赖）
+  function spark(series, cls) {
+    var s = (series || []).filter(function (v) { return typeof v === "number" && isFinite(v); });
+    if (s.length < 3) return '<span class="flat" style="font-size:11px">—</span>';
+    var step = Math.max(1, Math.floor(s.length / 34));
+    var pts = [];
+    for (var i = 0; i < s.length; i += step) pts.push(s[i]);
+    if (pts[pts.length - 1] !== s[s.length - 1]) pts.push(s[s.length - 1]);
+    var lo = Math.min.apply(null, pts), hi = Math.max.apply(null, pts), span = hi - lo || 1;
+    var w = 76, h = 26, pad = 2;
+    var d = pts.map(function (v, i) {
+      var x = pad + i * (w - pad * 2) / (pts.length - 1);
+      var y = pad + (1 - (v - lo) / span) * (h - pad * 2);
+      return (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
+    }).join(" ");
+    var color = cls === "up" ? "#d4380d" : cls === "down" ? "#129b63" : "#8895a8";
+    return '<svg class="spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none" aria-hidden="true">' +
+      '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="1.6" ' +
+      'stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>';
+  }
 
   function isDark() {
     return document.documentElement.classList.contains("dark");
@@ -41,17 +71,34 @@
     var intl = d.intl || {};
     if (it) {
       $("#ovSge").textContent = fmt(it.last);
-      $("#ovSgeUnit").textContent = it.unit;
-      $("#ovSgeTime").textContent = it.update ? "更新 " + it.update : "";
+      $("#ovSgeUnit").textContent = it.unit || "元/克";
+      $("#ovSgeTime").textContent = it.update ? "更新 " + it.update : "更新 —";
+      // 概览卡：主力日内区间
+      $("#ovOpen").textContent = fmt(it.open);
+      $("#ovHigh").textContent = fmt(it.max);
+      $("#ovLow").textContent = fmt(it.min);
+      var amp = (Number(it.max) - Number(it.min)) / Number(it.open) * 100;
+      $("#ovRange").textContent = isFinite(amp) ? fmt(amp) + "%" : "—";
+      var ch = changeOf(it);
+      var hc = $("#heroChg");
+      if (hc && ch) {
+        hc.className = "hero-chg " + ch.cls;
+        var arrow = ch.d > 0 ? "▲ +" : ch.d < 0 ? "▼ " : "— ";
+        hc.textContent = arrow + fmt(Math.abs(ch.d)) + "  (" +
+          (ch.pct >= 0 ? "+" : "") + fmt(ch.pct) + "%)";
+      } else if (hc) { hc.className = "hero-chg"; hc.textContent = "—"; }
     }
-    if (intl.xau_usd != null) $("#ovXau").textContent = fmt(intl.xau_usd);
-    if (intl.usd_cny != null) $("#ovFx").textContent = fmt(intl.usd_cny, 4);
+    // Hero 右侧：国际维度（每 60s 数据刷新时同步）
+    if (intl.xau_usd != null) $("#hsXau").textContent = fmt(intl.xau_usd);
+    if (intl.usd_cny != null) $("#hsFx").textContent = fmt(intl.usd_cny, 4);
+    if (intl.intl_cny_per_g != null) $("#hsCny").textContent = fmt(intl.intl_cny_per_g);
     if (intl.premium_pct != null) {
-      var el = $("#ovPremium");
+      var el = $("#hsPrem");
       el.textContent = (intl.premium_pct >= 0 ? "+" : "") + fmt(intl.premium_pct) + "%";
-      el.className = "ov-val " + (intl.premium_pct >= 0 ? "up" : "down");
+      el.className = "v num " + (intl.premium_pct >= 0 ? "up" : "down");
     }
-    $("#genTime").textContent = "数据生成：" + (d.generated_at || "—");
+    var gt = $("#genTime");
+    if (gt) gt.textContent = "数据生成：" + (d.generated_at || "—");
   }
 
   // ---------- 行情表 ----------
@@ -59,14 +106,21 @@
     var tb = $("#tbody");
     if (!tb) return;
     tb.innerHTML = (d.items || []).map(function (it) {
+      var ch = changeOf(it);
+      var chgCell = ch
+        ? '<span class="chg ' + ch.cls + '">' + (ch.d > 0 ? "▲ +" : ch.d < 0 ? "▼ " : "— ") +
+          fmt(Math.abs(ch.d)) + " (" + (ch.pct >= 0 ? "+" : "") + fmt(ch.pct) + "%)</span>"
+        : '<span class="flat">—</span>';
       return "<tr>" +
-        '<td class="lbl" data-label="品种">' + it.label + "</td>" +
-        '<td class="sym" data-label="合约">' + it.symbol + "</td>" +
+        '<td class="lbl" data-label="品种">' + esc(it.label) + "</td>" +
+        '<td class="sym" data-label="合约">' + esc(it.symbol) + "</td>" +
         '<td class="num strong" data-label="最新价">' + fmt(it.last) + "</td>" +
+        '<td data-label="涨跌幅">' + chgCell + "</td>" +
         '<td class="num" data-label="今开">' + fmt(it.open) + "</td>" +
         '<td class="num up" data-label="最高">' + fmt(it.max) + "</td>" +
         '<td class="num down" data-label="最低">' + fmt(it.min) + "</td>" +
-        '<td class="unit" data-label="单位">' + it.unit + "</td>" +
+        '<td data-label="日内走势">' + spark(it.series, ch ? ch.cls : "flat") + "</td>" +
+        '<td class="unit" data-label="单位">' + esc(it.unit) + "</td>" +
         "</tr>";
     }).join("");
   }
@@ -178,7 +232,7 @@
 
   // ---------- 价格提醒 ----------
   var ALERT_KEY = "gold_alerts_v1";
-  var FORM_ENDPOINT = ""; // 在此填入 Formspree/自建表单地址可启用邮件订阅；留空则仅本地记录
+  var notified = {}; // 本次页面会话内同一规则只提醒一次，避免每 60s 反复弹窗
 
   function getAlerts() {
     try { return JSON.parse(localStorage.getItem(ALERT_KEY) || "[]"); } catch (e) { return []; }
@@ -223,24 +277,22 @@
     if (!l.length) return;
     var bySym = {};
     (d.items || []).forEach(function (it) { bySym[it.symbol] = it.last; });
-    var fired = [];
     l.forEach(function (a) {
       var cur = bySym[a.sym];
       if (cur == null) return;
-      if ((a.dir === "above" && cur >= a.target) || (a.dir === "below" && cur <= a.target)) {
-        fired.push(a);
+      var key = a.sym + "|" + a.dir + "|" + a.target;
+      var hit = (a.dir === "above" && cur >= a.target) || (a.dir === "below" && cur <= a.target);
+      if (!hit) { delete notified[key]; return; }  // 价格回到区间内后可再次提醒
+      if (notified[key]) return;
+      notified[key] = true;
+      var msg = a.sym + " 已" + (a.dir === "above" ? "涨破" : "跌破") + " " + fmt(a.target) + "（当前 " + fmt(cur) + "）";
+      if (window.Notification && Notification.permission === "granted") {
+        try { new Notification("金价提醒", { body: msg }); } catch (e) { /* 忽略 */ }
+      } else if (document.visibilityState === "visible") {
+        // 未授权桌面通知时只在页面可见时提示，避免后台反复 alert
+        window.alert("金价提醒：" + msg);
       }
     });
-    if (fired.length) {
-      fired.forEach(function (a) {
-        var msg = a.sym + " 已" + (a.dir === "above" ? "涨破" : "跌破") + " " + fmt(a.target) + "（当前 " + fmt(bySym[a.sym]) + "）";
-        if (window.Notification && Notification.permission === "granted") {
-          new Notification("金价提醒", { body: msg });
-        } else {
-          alert("金价提醒：" + msg);
-        }
-      });
-    }
   }
 
   function bindAlerts() {
@@ -253,38 +305,13 @@
         nb.textContent = p === "granted" ? "通知已开启 ✓" : "通知未授权";
       });
     });
-    var form = $("#subForm");
-    if (form) form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var email = $("#subEmail").value.trim();
-      if (!email) return;
-      if (FORM_ENDPOINT) {
-        fetch(FORM_ENDPOINT, {
-          method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
-          body: JSON.stringify({ email: email, source: "gold-site" })
-        }).then(function () { form.reset(); $("#subNote").textContent = "订阅成功，金价异动将邮件通知你。"; })
-          .catch(function () { $("#subNote").textContent = "提交失败，请稍后再试。"; });
-      } else {
-        // 无后端：本地记录，提示可后续接入
-        var subs = JSON.parse(localStorage.getItem("gold_subs") || "[]");
-        subs.push(email); localStorage.setItem("gold_subs", JSON.stringify(subs));
-        form.reset();
-        $("#subNote").textContent = "已记录（演示模式）。接入 Formspree 等后可直接邮件推送。";
-      }
-    });
   }
 
   // ---------- 主题 ----------
   function bindTheme() {
-    var t = localStorage.getItem("gold_theme");
-    if (t === "dark" || (!t && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      document.documentElement.classList.add("dark");
-    }
-    var btn = $("#themeBtn");
-    if (btn) btn.addEventListener("click", function () {
-      var dark = document.documentElement.classList.toggle("dark");
-      localStorage.setItem("gold_theme", dark ? "dark" : "light");
-      renderCharts(DATA);
+    // 主题初始化与按钮交互由 common.js 统一处理；这里只负责主题变化时重绘图表配色
+    window.addEventListener("themechange", function () {
+      if (typeof Chart !== "undefined") renderCharts(DATA);
     });
   }
 
