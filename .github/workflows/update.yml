@@ -1,10 +1,10 @@
 name: 更新贵金属行情
 
 on:
-  schedule:
-    # 每 30 分钟一次；避开整点/半点的高负载时段（GitHub 官方建议选冷门分钟，避免调度延迟/丢帧）
-    - cron: "7,37 * * * *"
-  workflow_dispatch: {}   # 允许手动触发
+  # 仓库改名后 GitHub 的 schedule 调度失效（已知问题，恢复时间不定）。
+  # 改用「自续链」：每次运行结束睡约 28 分钟后自我触发下一轮，形成永久 30 分钟循环。
+  # 断链时手动 dispatch 一次即可重启。
+  workflow_dispatch: {}
 
 permissions:
   contents: write
@@ -35,3 +35,14 @@ jobs:
             -H "Content-Type: application/json; charset=utf-8" \
             -d '{"host":"c314726018.github.io","key":"'"$KEY"'","urlList":["https://c314726018.github.io/","https://c314726018.github.io/history.html","https://c314726018.github.io/about.html","https://c314726018.github.io/privacy.html"]}' \
             -o /dev/null -w "IndexNow HTTP %{http_code}\n" || echo "IndexNow 推送失败（不影响构建）"
+      - name: 自续链（约 30 分钟后触发下一轮）
+        if: always()
+        run: |
+          sleep 1720
+          for i in 1 2 3; do
+            gh workflow run update.yml --ref main && { echo "已触发下一轮 (attempt $i)"; exit 0; }
+            echo "触发失败 attempt $i，60s 后重试"; sleep 60
+          done
+          echo "自续链失败：请手动 dispatch 重启"
+        env:
+          GH_TOKEN: ${{ secrets.UPDATE_PAT }}
