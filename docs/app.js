@@ -176,6 +176,7 @@
 
   // ---------- 工具计算器 ----------
   function computeT2() {
+    if (!$("#t2usd") || !$("#t2fx")) return;
     var u = parseFloat($("#t2usd").value), f = parseFloat($("#t2fx").value);
     var out = $("#t2out"), src = $("#t2src");
     if (!out) return;
@@ -185,6 +186,7 @@
     if (src) src.textContent = u + " × " + f + " ÷ 31.1035 = " + fmt(cnyg) + " 元/克";
   }
   function computeT3() {
+    if (!$("#t3g") || !$("#t3b") || !$("#t3s")) return;
     var g = parseFloat($("#t3g").value), b = parseFloat($("#t3b").value), s = parseFloat($("#t3s").value);
     var out = $("#t3out"); if (!out) return;
     if (!isFinite(g) || !isFinite(b) || !isFinite(s)) { out.textContent = "—"; return; }
@@ -193,6 +195,7 @@
       fmt(diff) + " 元 (" + (pct >= 0 ? "+" : "") + fmt(pct) + "%)";
   }
   function computeT4() {
+    if (!$("#t4g") || !$("#t4b") || !$("#t4n")) return;
     var g = parseFloat($("#t4g").value), b = parseFloat($("#t4b").value), n = parseFloat($("#t4n").value);
     var out = $("#t4out"); if (!out) return;
     if (!isFinite(g) || !isFinite(b) || !isFinite(n)) { out.textContent = "—"; return; }

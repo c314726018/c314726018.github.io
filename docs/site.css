@@ -397,3 +397,84 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 @media(max-width:540px){
   .rel-grid{grid-template-columns:1fr}
 }
+
+/* ============ 门户：5 大板块下拉导航 ============ */
+.nav-menu .nav-item{position:relative;display:inline-flex;align-items:center;gap:5px;padding:10px 12px;border-radius:9px;
+  color:var(--ink-2);font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.15s}
+.nav-menu .nav-item:hover{background:var(--gold-soft);color:var(--gold)}
+.nav-menu .nav-item.active{background:var(--gold-soft);color:var(--gold)}
+.nav-menu .nav-item .caret{font-size:9px;opacity:.6;transition:transform .18s}
+.nav-menu .nav-item:hover .caret{transform:rotate(180deg)}
+.nav-drop{position:absolute;top:calc(100% + 8px);left:0;min-width:180px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-sm);box-shadow:var(--shadow-lg);padding:8px;
+  opacity:0;visibility:hidden;transform:translateY(6px);transition:.18s;z-index:60}
+.nav-item:hover .nav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.nav-drop a{display:block;padding:9px 12px;border-radius:8px;font-size:13px;color:var(--ink-2);font-weight:500}
+.nav-drop a:hover{background:var(--gold-soft);color:var(--gold)}
+.nav-drop .nd-sub{padding:4px 12px;font-size:10.5px;letter-spacing:.6px;color:var(--sub);font-weight:700}
+
+/* ============ 快讯流 ============ */
+.news-list{display:flex;flex-direction:column;gap:0}
+.news-item{display:flex;gap:14px;padding:15px 4px;border-bottom:1px solid var(--line);align-items:flex-start}
+.news-item:last-child{border-bottom:none}
+.news-item .n-time{flex:0 0 88px;font-size:11.5px;color:var(--sub);font-variant-numeric:tabular-nums;padding-top:2px}
+.news-item .n-body{flex:1}
+.news-item .n-title{font-size:14px;font-weight:650;line-height:1.5;margin-bottom:4px}
+.news-item .n-text{font-size:12.5px;color:var(--ink-2);line-height:1.7}
+.news-item .n-src{flex:0 0 60px;font-size:11px;color:var(--sub);text-align:right;padding-top:2px}
+.news-item.hot .n-title{color:var(--gold-ink)}
+.news-empty{padding:30px;text-align:center;color:var(--sub);font-size:13px}
+
+/* ============ 财经日历 ============ */
+.cal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.cal-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;
+  box-shadow:var(--shadow);border-left:4px solid var(--line)}
+.cal-item.imp-high{border-left-color:#e11d48}
+.cal-item.imp-mid{border-left-color:var(--gold-2)}
+.cal-item.imp-low{border-left-color:#6b7280}
+.cal-item .ci-date{font-size:11.5px;color:var(--sub);font-variant-numeric:tabular-nums;letter-spacing:.3px}
+.cal-item .ci-name{font-size:14px;font-weight:700;margin:5px 0 6px;line-height:1.45}
+.cal-item .ci-meta{font-size:11.5px;color:var(--sub);line-height:1.7}
+.cal-item .ci-imp{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;
+  padding:2px 8px;border-radius:20px;margin-top:8px}
+.imp-high .ci-imp{background:color-mix(in srgb,#e11d48 12%,transparent);color:#e11d48}
+.imp-mid .ci-imp{background:var(--gold-soft);color:var(--gold-ink)}
+.imp-low .ci-imp{background:color-mix(in srgb,#6b7280 12%,transparent);color:#6b7280}
+.fomc-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+.fomc-table th{font-size:11px;color:var(--sub);text-align:left;padding:8px 10px;background:var(--surface-2);font-weight:650}
+.fomc-table td{padding:10px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.fomc-table tr:last-child td{border-bottom:none}
+.fomc-table .star{color:var(--gold);font-weight:700}
+
+/* ============ 投资学院 ============ */
+.acad-cats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.acad-cat{padding:8px 16px;border:1px solid var(--line);border-radius:30px;font-size:12.5px;font-weight:600;
+  background:var(--surface);color:var(--ink-2);cursor:pointer;transition:.15s}
+.acad-cat:hover{border-color:var(--gold-2);color:var(--gold);background:var(--gold-soft)}
+.acad-cat.sel{background:var(--gold);color:#fff;border-color:var(--gold)}
+.acad-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:20px;
+  box-shadow:var(--shadow);transition:.15s;display:flex;flex-direction:column}
+.acad-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.acad-card .a-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:2px 9px;
+  border-radius:20px;background:var(--gold-soft);color:var(--gold-ink);margin-bottom:10px;align-self:flex-start}
+.acad-card h3{font-size:15px;margin:0 0 8px;line-height:1.5;font-weight:700}
+.acad-card p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.75;flex:1}
+.acad-card .a-no{font-size:11px;color:var(--sub);margin-top:12px;letter-spacing:.5px}
+
+/* ============ 数据中心指标卡 ============ */
+.ind-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.ind-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:18px;
+  box-shadow:var(--shadow);text-align:center}
+.ind-card .ik{font-size:11.5px;color:var(--sub);font-weight:600;margin-bottom:8px}
+.ind-card .iv{font-size:24px;font-weight:730;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.ind-card .iu{font-size:11px;color:var(--sub);margin-top:5px}
+.ind-card .iv.up{color:#d4380d}
+.ind-card .iv.down{color:#129b63}
+
+@media(max-width:900px){
+  .cal-grid{grid-template-columns:1fr}
+  .ind-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:540px){
+  .ind-grid{grid-template-columns:1fr}
+}

@@ -462,6 +462,87 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 @media(max-width:540px){
   .rel-grid{grid-template-columns:1fr}
 }
+
+/* ============ 门户：5 大板块下拉导航 ============ */
+.nav-menu .nav-item{position:relative;display:inline-flex;align-items:center;gap:5px;padding:10px 12px;border-radius:9px;
+  color:var(--ink-2);font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:.15s}
+.nav-menu .nav-item:hover{background:var(--gold-soft);color:var(--gold)}
+.nav-menu .nav-item.active{background:var(--gold-soft);color:var(--gold)}
+.nav-menu .nav-item .caret{font-size:9px;opacity:.6;transition:transform .18s}
+.nav-menu .nav-item:hover .caret{transform:rotate(180deg)}
+.nav-drop{position:absolute;top:calc(100% + 8px);left:0;min-width:180px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-sm);box-shadow:var(--shadow-lg);padding:8px;
+  opacity:0;visibility:hidden;transform:translateY(6px);transition:.18s;z-index:60}
+.nav-item:hover .nav-drop{opacity:1;visibility:visible;transform:translateY(0)}
+.nav-drop a{display:block;padding:9px 12px;border-radius:8px;font-size:13px;color:var(--ink-2);font-weight:500}
+.nav-drop a:hover{background:var(--gold-soft);color:var(--gold)}
+.nav-drop .nd-sub{padding:4px 12px;font-size:10.5px;letter-spacing:.6px;color:var(--sub);font-weight:700}
+
+/* ============ 快讯流 ============ */
+.news-list{display:flex;flex-direction:column;gap:0}
+.news-item{display:flex;gap:14px;padding:15px 4px;border-bottom:1px solid var(--line);align-items:flex-start}
+.news-item:last-child{border-bottom:none}
+.news-item .n-time{flex:0 0 88px;font-size:11.5px;color:var(--sub);font-variant-numeric:tabular-nums;padding-top:2px}
+.news-item .n-body{flex:1}
+.news-item .n-title{font-size:14px;font-weight:650;line-height:1.5;margin-bottom:4px}
+.news-item .n-text{font-size:12.5px;color:var(--ink-2);line-height:1.7}
+.news-item .n-src{flex:0 0 60px;font-size:11px;color:var(--sub);text-align:right;padding-top:2px}
+.news-item.hot .n-title{color:var(--gold-ink)}
+.news-empty{padding:30px;text-align:center;color:var(--sub);font-size:13px}
+
+/* ============ 财经日历 ============ */
+.cal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.cal-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;
+  box-shadow:var(--shadow);border-left:4px solid var(--line)}
+.cal-item.imp-high{border-left-color:#e11d48}
+.cal-item.imp-mid{border-left-color:var(--gold-2)}
+.cal-item.imp-low{border-left-color:#6b7280}
+.cal-item .ci-date{font-size:11.5px;color:var(--sub);font-variant-numeric:tabular-nums;letter-spacing:.3px}
+.cal-item .ci-name{font-size:14px;font-weight:700;margin:5px 0 6px;line-height:1.45}
+.cal-item .ci-meta{font-size:11.5px;color:var(--sub);line-height:1.7}
+.cal-item .ci-imp{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;
+  padding:2px 8px;border-radius:20px;margin-top:8px}
+.imp-high .ci-imp{background:color-mix(in srgb,#e11d48 12%,transparent);color:#e11d48}
+.imp-mid .ci-imp{background:var(--gold-soft);color:var(--gold-ink)}
+.imp-low .ci-imp{background:color-mix(in srgb,#6b7280 12%,transparent);color:#6b7280}
+.fomc-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+.fomc-table th{font-size:11px;color:var(--sub);text-align:left;padding:8px 10px;background:var(--surface-2);font-weight:650}
+.fomc-table td{padding:10px;border-bottom:1px solid var(--line);color:var(--ink-2);vertical-align:top}
+.fomc-table tr:last-child td{border-bottom:none}
+.fomc-table .star{color:var(--gold);font-weight:700}
+
+/* ============ 投资学院 ============ */
+.acad-cats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.acad-cat{padding:8px 16px;border:1px solid var(--line);border-radius:30px;font-size:12.5px;font-weight:600;
+  background:var(--surface);color:var(--ink-2);cursor:pointer;transition:.15s}
+.acad-cat:hover{border-color:var(--gold-2);color:var(--gold);background:var(--gold-soft)}
+.acad-cat.sel{background:var(--gold);color:#fff;border-color:var(--gold)}
+.acad-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:20px;
+  box-shadow:var(--shadow);transition:.15s;display:flex;flex-direction:column}
+.acad-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.acad-card .a-tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:2px 9px;
+  border-radius:20px;background:var(--gold-soft);color:var(--gold-ink);margin-bottom:10px;align-self:flex-start}
+.acad-card h3{font-size:15px;margin:0 0 8px;line-height:1.5;font-weight:700}
+.acad-card p{margin:0;font-size:12.5px;color:var(--ink-2);line-height:1.75;flex:1}
+.acad-card .a-no{font-size:11px;color:var(--sub);margin-top:12px;letter-spacing:.5px}
+
+/* ============ 数据中心指标卡 ============ */
+.ind-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.ind-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:18px;
+  box-shadow:var(--shadow);text-align:center}
+.ind-card .ik{font-size:11.5px;color:var(--sub);font-weight:600;margin-bottom:8px}
+.ind-card .iv{font-size:24px;font-weight:730;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.ind-card .iu{font-size:11px;color:var(--sub);margin-top:5px}
+.ind-card .iv.up{color:#d4380d}
+.ind-card .iv.down{color:#129b63}
+
+@media(max-width:900px){
+  .cal-grid{grid-template-columns:1fr}
+  .ind-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:540px){
+  .ind-grid{grid-template-columns:1fr}
+}
 """
 
 FAQ = [
@@ -634,23 +715,43 @@ def ticker_html(data):
 
 
 def nav_html(active=""):
-    links = [
-        ("overview", "./index.html#overview", "行情概览"),
-        ("quotes", "./index.html#quotes", "实时行情"),
-        ("premium", "./index.html#premium", "溢价对照"),
-        ("physical", "./index.html#physical", "实物金价"),
-        ("energy", "./index.html#energy", "油价汇率"),
-        ("tools", "./index.html#tools", "工具计算"),
-        ("charts", "./index.html#charts", "走势图表"),
-        ("history", "./history.html", "历史走势"),
-        ("alerts", "./index.html#alerts", "价格提醒"),
-        ("learn", "./index.html#learn", "黄金百科"),
-        ("about", "./about.html", "关于本站"),
+    """门户 5 大板块下拉导航（对标金投网）。active = 板块 key。"""
+    items = [
+        ("quotes", "行情中心", "./index.html", [
+            ("实时行情", "./index.html#quotes"),
+            ("行情概览", "./index.html#overview"),
+            ("溢价对照", "./index.html#premium"),
+            ("实物金价", "./index.html#physical"),
+            ("走势图表", "./index.html#charts"),
+            ("油价汇率", "./index.html#energy"),
+        ]),
+        ("data", "数据中心", "./data.html", [
+            ("关键指标", "./data.html#indicators"),
+            ("历史走势", "./data.html#history"),
+            ("汇率一览", "./data.html#fx"),
+            ("溢价数据", "./data.html#premium"),
+        ]),
+        ("calendar", "财经日历", "./calendar.html", [
+            ("经济事件", "./calendar.html#events"),
+            ("FOMC 议息", "./calendar.html#fomc"),
+            ("央行决议", "./calendar.html#cb"),
+        ]),
+        ("news", "金融快讯", "./news.html", [
+            ("7×24 快讯", "./news.html#live"),
+        ]),
+        ("academy", "投资学院", "./academy.html", [
+            ("科普文章", "./academy.html#articles"),
+            ("术语速查", "./academy.html#glossary"),
+            ("常见问题", "./academy.html#faq"),
+        ]),
     ]
     parts = []
-    for key, url, text in links:
-        cls = "active" if key == active else ""
-        parts.append(f'<a href="{url}" class="{cls}">{text}</a>')
+    for key, text, url, subs in items:
+        cls = "nav-item active" if key == active else "nav-item"
+        sub = "".join(f'<a href="{u}">{esc(t)}</a>' for t, u in subs)
+        parts.append(
+            f'<div class="{cls}"><a href="{url}">{text} <span class="caret">▾</span></a>'
+            f'<div class="nav-drop">{sub}</div></div>')
     a = "".join(parts)
     return f"""<header class="nav"><div class="wrap">
   <a class="brand" href="./index.html" aria-label="今日金价 首页">
@@ -673,25 +774,27 @@ def footer_html():
         <span class="brand-mark">Au</span>
         <span class="brand-txt"><strong>今日金价</strong><small>Real-time Gold Market</small></span>
       </a>
-      <p>一屏看懂国内金价、国际金价、汇率与国内溢价。数据聚合展示，仅供参考，不构成投资建议。</p>
+      <p>一站式贵金属行情门户：实时行情、数据中心、财经日历、金融快讯、投资学院五大板块。数据聚合展示，仅供参考，不构成投资建议。</p>
     </div>
-    <div class="foot-col"><h4>行情</h4>
-      <a href="./index.html#overview">行情概览</a><a href="./index.html#quotes">实时行情表</a>
-      <a href="./index.html#premium">多品种溢价</a><a href="./index.html#energy">油价与汇率</a>
-      <a href="./index.html#charts">走势图表</a><a href="./history.html">历史走势</a>
-      <a href="./index.html#alerts">价格提醒</a></div>
-    <div class="foot-col"><h4>知识</h4>
-      <a href="./index.html#learn">黄金百科</a><a href="./about.html#method">指标与算法</a>
-      <a href="./about.html#source">数据来源</a><a href="./about.html#faq">常见问题</a></div>
-    <div class="foot-col"><h4>站点</h4>
-      <a href="./about.html">关于本站</a><a href="./privacy.html">隐私政策</a>
-      <a href="https://www.sge.com.cn/" target="_blank" rel="noopener noreferrer">上海黄金交易所 ↗</a>
-      <a href="{SITE}">返回首页</a></div>
+    <div class="foot-col"><h4>行情中心</h4>
+      <a href="./index.html#quotes">实时行情</a><a href="./index.html#premium">溢价对照</a>
+      <a href="./index.html#physical">实物金价</a><a href="./index.html#charts">走势图表</a>
+      <a href="./index.html#energy">油价汇率</a><a href="./index.html#tools">工具计算</a></div>
+    <div class="foot-col"><h4>数据中心</h4>
+      <a href="./data.html#indicators">关键指标</a><a href="./data.html#history">历史走势</a>
+      <a href="./data.html#fx">汇率一览</a><a href="./history.html">历史日线</a></div>
+    <div class="foot-col"><h4>日历快讯</h4>
+      <a href="./calendar.html#events">经济事件</a><a href="./calendar.html#fomc">FOMC 议息</a>
+      <a href="./calendar.html#cb">央行决议</a><a href="./news.html">7×24 快讯</a></div>
+    <div class="foot-col"><h4>投资学院</h4>
+      <a href="./academy.html#articles">科普文章</a><a href="./academy.html#glossary">术语速查</a>
+      <a href="./academy.html#faq">常见问题</a><a href="./about.html">关于本站</a>
+      <a href="./privacy.html">隐私政策</a></div>
   </div>
   <div class="wrap foot-bottom">
     <strong>免责声明：</strong>本站为行情信息聚合展示，价格以上海黄金交易所及相应机构官方发布为准。
     所有内容仅供信息参考，不构成任何投资建议、要约或交易依据。黄金价格波动较大，投资需自行判断并承担风险。<br>
-    数据更新：每小时自动抓取 · 浏览器每 60 秒检查更新 · 非交易时段显示最近一次有效报价<br>
+    数据更新：每 30 分钟自动抓取 · 浏览器每 60 秒检查更新 · 非交易时段显示最近一次有效报价 · 快讯来自华尔街见闻公开流<br>
     © 2026 今日金价 · 页面含第三方广告（Google AdSense），广告内容由第三方提供，与本站点立场无关。
   </div>
 </footer>
@@ -837,7 +940,7 @@ def page_index(data):
 <body>
 {topbar_html(data)}
 {ticker_html(data)}
-{nav_html('overview')}
+{nav_html('quotes')}
 
 <div class="wrap">
 
@@ -1107,14 +1210,14 @@ def page_index(data):
         <p>从实时交易所行情到实物金价、计算工具与历史走势，一次看全。</p></div>
     </div>
     <div class="rel-grid">
-      <a class="rel" href="./index.html#quotes"><div class="rt">实时行情表</div><p>8 个 SGE 合约最新价、涨跌幅、振幅与分时</p></a>
-      <a class="rel" href="./index.html#premium"><div class="rt">多品种溢价</div><p>金 / 银 / 铂 / 钯境内价 vs 国际折算</p></a>
+      <a class="rel" href="./data.html"><div class="rt">数据中心</div><p>金银比 / 金油比 / 溢价 / 汇率看板</p></a>
+      <a class="rel" href="./calendar.html"><div class="rt">财经日历</div><p>FOMC 议息 / 非农 / CPI 时间表</p></a>
+      <a class="rel" href="./news.html"><div class="rt">金融快讯</div><p>7×24 实时财经快讯流</p></a>
+      <a class="rel" href="./academy.html"><div class="rt">投资学院</div><p>18 篇科普 + 术语速查 + 问答</p></a>
+      <a class="rel" href="./index.html#quotes"><div class="rt">实时行情表</div><p>8 个 SGE 合约最新价、涨跌幅、振幅</p></a>
       <a class="rel" href="./index.html#physical"><div class="rt">实物金价参考</div><p>金条 / 回收 / 首饰 / 积存金估算</p></a>
       <a class="rel" href="./index.html#tools"><div class="rt">工具计算器</div><p>克↔盎司、人民币金价、盈亏计算</p></a>
-      <a class="rel" href="./index.html#charts"><div class="rt">走势图表</div><p>分时 / K 线 / 多品种强弱对比</p></a>
       <a class="rel" href="./history.html"><div class="rt">历史走势</div><p>Au99.99 日线蜡烛图与每日开高低收</p></a>
-      <a class="rel" href="./index.html#alerts"><div class="rt">价格提醒</div><p>免费设置目标价，浏览器通知你</p></a>
-      <a class="rel" href="./index.html#learn"><div class="rt">黄金百科</div><p>15 篇科普 + 术语速查，读懂金价</p></a>
     </div>
   </section>
 
@@ -1274,7 +1377,11 @@ FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 def sitemap_xml(lastmod):
     urls = [
         (SITE, "hourly", "1.0"),
-        (SITE + "history.html", "daily", "0.8"),
+        (SITE + "data.html", "hourly", "0.9"),
+        (SITE + "calendar.html", "weekly", "0.8"),
+        (SITE + "news.html", "hourly", "0.8"),
+        (SITE + "academy.html", "monthly", "0.7"),
+        (SITE + "history.html", "daily", "0.7"),
         (SITE + "about.html", "monthly", "0.5"),
         (SITE + "privacy.html", "yearly", "0.3"),
     ]
@@ -1411,7 +1518,7 @@ def page_history(data, hist):
 <body>
 {topbar_html(data)}
 {ticker_html(data)}
-{nav_html('history')}
+{nav_html('data')}
 <div class="wrap">
   <div class="page-hero"><span class="eyebrow">HISTORICAL PRICES</span>
     <h1>金价历史走势</h1>
@@ -1482,6 +1589,464 @@ def page_history(data, hist):
 </html>"""
 
 
+# ---------------------------------------------------------------- 金融快讯
+def page_news(data):
+    news = data.get("news") or []
+    if news:
+        items_html = "".join(
+            f'<div class="news-item"><div class="n-time">{esc(n.get("time"))}</div>'
+            f'<div class="n-body"><div class="n-title">{esc(n.get("title"))}</div>'
+            f'<div class="n-text">{esc(n.get("text"))}</div></div>'
+            f'<div class="n-src">{esc(n.get("source"))}</div></div>'
+            for n in news)
+    else:
+        items_html = '<div class="news-empty">快讯数据加载中，请稍候刷新。</div>'
+    head = head_html(
+        "财经快讯 - 7×24 实时金融快讯 - 今日金价",
+        "7×24 小时实时财经快讯流，覆盖贵金属、汇率、央行政策、全球宏观。数据来自华尔街见闻公开资讯流。",
+        SITE + "news.html")
+    body = f"""{topbar_html(data)}
+{ticker_html(data)}
+{nav_html("news")}
+<main>
+  <section class="section" id="live">
+    <div class="section-head">
+      <div><div class="lbl">NEWS · 金融快讯</div><h2>7×24 实时财经快讯</h2>
+        <p>覆盖贵金属、央行政策、汇率与全球宏观。每 30 分钟随数据管道自动更新。</p></div>
+      <div class="side">数据源：华尔街见闻</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>最新快讯</h3>
+        <div class="chip-row"><span class="badge">◷ 自动更新</span><span class="chip">{len(news)} 条</span></div></div>
+      <div class="news-list">{items_html}</div>
+    </div>
+    <div class="note-strip" style="margin-top:18px">
+      <div class="ni">◈</div>
+      <div class="nt"><strong>资讯来源说明</strong>
+        <span>快讯内容来自华尔街见闻公开资讯流，由本站聚合展示；版权归原发布方所有。本站不对资讯内容作任何投资建议。</span></div>
+      <a class="btn ghost" href="./calendar.html">看财经日历 →</a>
+    </div>
+  </section>
+</main>
+{footer_html()}
+<script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1"></script>
+<script src="./ads.js"></script>
+<script src="./common.js"></script>
+<script src="./app.js"></script>
+</body></html>"""
+    return head + body
+
+
+# ---------------------------------------------------------------- 财经日历
+# 2026 年 FOMC 议息日程（来源：美联储官网 fomccalendars.htm）
+FOMC_2026 = [
+    ("1月27-28日", "1月28日", False, "1月27-28日议息会议"),
+    ("3月17-18日", "3月18日", True, "含经济预测与点阵图"),
+    ("4月28-29日", "4月29日", False, "常规议息会议"),
+    ("6月16-17日", "6月17日", True, "含经济预测与点阵图"),
+    ("7月28-29日", "7月29日", False, "常规议息会议"),
+    ("9月15-16日", "9月16日", True, "含经济预测与点阵图"),
+    ("10月27-28日", "10月28日", False, "常规议息会议"),
+    ("12月8-9日", "12月9日", True, "含经济预测与点阵图"),
+]
+
+# 近期重点经济事件（来源：美联储官网 + 交易商公开日历，均经核实；时间均为北京时间）
+ECON_EVENTS = [
+    ("2026-12-04 周五 21:30", "美国 11 月非农就业人口", "高", "约 +2.9 万（10月）", "美国劳工统计局每月首个周五公布，直接影响美联储政策预期"),
+    ("2026-12-08-09 周二三", "美联储 FOMC 议息会议（12月）", "高", "3.75-4.00%（10月）", "12月 8-9 日召开，9 日 03:00 公布利率决议，含经济预测与点阵图"),
+    ("2026-12-10 周四 21:30", "美国 11 月 CPI 同比", "高", "3.7%（10月）", "通胀核心指标，直接牵引利率预期与金价"),
+    ("2026-12-17 周四", "欧洲央行利率决议", "中", "2.50%", "欧元区政策利率，影响美元指数与金价"),
+    ("2026-12-18 周五", "日本央行利率决议", "中", "1.25%", "影响日元汇率与全球套息交易"),
+    ("2027-01-22 周五", "日本央行利率决议", "中", "—", "2027 年首次议息"),
+    ("2027-01-27-28 周三四", "美联储 FOMC 议息会议（2027年1月）", "高", "—", "2027 年首次议息，含经济预测"),
+]
+
+# 各国央行利率决议节奏（来源：各国央行官网公开日历）
+CENTRAL_BANKS = [
+    ("美联储 FED", "每年 8 次议息（1/3/4/6/7/9/10/12 月）", "3.75-4.00%", "2025-12-10 降 25bp"),
+    ("欧洲央行 ECB", "每年约 8 次，通常 1/3/4/6/7/9/10/12 月", "2.50%", "2025-09-10 降 25bp"),
+    ("日本央行 BOJ", "每年约 8 次，季度末含展望报告", "1.25%", "2026-09-18 加 25bp"),
+    ("中国人民银行 PBOC", "每月 20 日公布 LPR；MLF/逆回购每日操作", "1 年 LPR 3.0%", "2025-05-20 调降"),
+    ("英国央行 BOE", "每年 8 次议息", "3.75%", "2025-12-18 降 25bp"),
+]
+
+
+def page_calendar(data):
+    events_html = "".join(
+        f'<div class="cal-item imp-{"high" if imp=="高" else "mid" if imp=="中" else "low"}">'
+        f'<div class="ci-date">◷ {esc(date)}</div>'
+        f'<div class="ci-name">{esc(name)}</div>'
+        f'<div class="ci-meta">前值 / 现值：{esc(prev)}<br>{esc(desc)}</div>'
+        f'<span class="ci-imp">{"★ 高重要性" if imp=="高" else "◆ 中重要性" if imp=="中" else "◇ 低重要性"}</span>'
+        f'</div>'
+        for date, name, imp, prev, desc in ECON_EVENTS)
+
+    fomc_rows = "".join(
+        f'<tr><td><strong>{esc(meet)}</strong></td><td>{esc(dec)}</td>'
+        f'<td class="{"star" if star else ""}">{"★ 是" if star else "—"}</td><td>{esc(note)}</td></tr>'
+        for meet, dec, star, note in FOMC_2026)
+
+    cb_rows = "".join(
+        f'<tr><td><strong>{esc(name)}</strong></td><td>{esc(freq)}</td>'
+        f'<td>{esc(rate)}</td><td>{esc(last)}</td></tr>'
+        for name, freq, rate, last in CENTRAL_BANKS)
+
+    head = head_html(
+        "财经日历 - 美联储议息/非农/CPI 时间表 - 今日金价",
+        "2026-2027 年重要财经事件日历：美联储 FOMC 八次议息日程、美国非农与 CPI 公布时间、各国央行利率决议节奏。日期来源为官方公开日程。",
+        SITE + "calendar.html")
+    body = f"""{topbar_html(data)}
+{ticker_html(data)}
+{nav_html("calendar")}
+<main>
+  <section class="section" id="events">
+    <div class="section-head">
+      <div><div class="lbl">CALENDAR · 财经日历</div><h2>重要经济事件日历</h2>
+        <p>与金价直接相关的核心事件：非农、CPI、美联储议息、各国央行决议。时间为北京时间。</p></div>
+      <div class="side">日期来源：官方公开日程</div>
+    </div>
+    <div class="cal-grid">{events_html}</div>
+    <div class="note-strip" style="margin-top:18px">
+      <div class="ni">◈</div>
+      <div class="nt"><strong>日历说明</strong>
+        <span>非农每月首个周五 21:30（夏令时 20:30）、CPI 每月月中前后公布；具体日期以美国劳工统计局当月公告为准。FOMC 日程来自美联储官网公开议程。</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="fomc">
+    <div class="section-head">
+      <div><div class="lbl">FEDERAL RESERVE</div><h2>2026 年 FOMC 议息日程</h2>
+        <p>美联储每年召开 8 次议息会议；标注「★」的会议发布经济预测摘要（SEP）与点阵图，通常引发更大波动。</p></div>
+      <div class="side">来源：federalreserve.gov</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>2026 年议息会议</h3>
+        <div class="chip-row"><span class="chip">8 次会议</span><span class="badge">4 次含点阵图</span></div></div>
+      <table class="fomc-table">
+        <thead><tr><th>会期</th><th>决议公布日</th><th>点阵图 / SEP</th><th>备注</th></tr></thead>
+        <tbody>{fomc_rows}</tbody>
+      </table>
+      <div class="phys-note" style="margin-top:14px"><b>决议发布时间：</b>美联储在会期第二日美东时间 14:00 发布声明（北京时间次日凌晨 02:00 / 夏令时 03:00），主席新闻会 30 分钟后召开。纪要于会后第三周公布。</div>
+    </div>
+  </section>
+
+  <section class="section" id="cb">
+    <div class="section-head">
+      <div><div class="lbl">CENTRAL BANKS</div><h2>各国央行利率决议节奏</h2>
+        <p>主要央行的议息频率、当前利率与最近一次变动（截至 2026 年 11 月）。</p></div>
+    </div>
+    <div class="card">
+      <table class="fomc-table">
+        <thead><tr><th>央行</th><th>议息节奏</th><th>当前利率</th><th>最近一次变动</th></tr></thead>
+        <tbody>{cb_rows}</tbody>
+      </table>
+    </div>
+    <div class="rel-grid" style="margin-top:18px">
+      <a class="rel" href="./index.html#charts"><div class="rt">金价走势</div><p>事件前后的价格反应，看走势图表</p></a>
+      <a class="rel" href="./news.html"><div class="rt">即时快讯</div><p>事件公布瞬间的市场反应</p></a>
+      <a class="rel" href="./academy.html"><div class="rt">投资学院</div><p>非农 / CPI 如何影响金价</p></a>
+      <a class="rel" href="./data.html"><div class="rt">数据中心</div><p>利率周期下的金价表现</p></a>
+    </div>
+  </section>
+</main>
+{footer_html()}
+<script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="./ads.js"></script>
+<script src="./common.js"></script>
+<script src="./app.js"></script>
+</body></html>"""
+    return head + body
+
+
+# ---------------------------------------------------------------- 投资学院
+ACAD_ARTICLES = [
+    {"cat": "基础入门", "no": "01", "h": "一克黄金多少钱？金价单位与换算速查",
+     "p": ["国内黄金以「元/克」计价，国际黄金以「美元/盎司」计价。1 金衡盎司 = 31.1034768 克。",
+           "换算公式：人民币金价 = 美元金价 × 美元兑人民币 ÷ 31.1035。本站的「工具计算」板块可实时换算。"]},
+    {"cat": "基础入门", "no": "02", "h": "Au99.99 是什么？SGE 常见合约一览",
+     "p": ["Au99.99 指含金量 99.99% 的黄金现货合约，是上海黄金交易所最活跃的现货品种。",
+           "Au99.95（99.95%）、Au100g（100 克小金条）、Au(T+D) 延期交收、Ag99.99 白银、Pt99.95 铂金、Pd99.95 钯金。"]},
+    {"cat": "基础入门", "no": "03", "h": "国际金价与国内金价为何不一样？",
+     "p": ["国际金价以美元/盎司计价，国内金价以人民币/克计价。两者折算后的价差叫「国内溢价」。",
+           "溢价为正，说明境内金比国际贵，常见于实物需求旺、进口配额紧；为负称贴水。"]},
+    {"cat": "实物黄金", "no": "04", "h": "基础金价和金店价格差在哪里？",
+     "p": ["基础金价是 SGE Au99.99 现货报价，是投资金条、积存金与首饰定价的锚点。",
+           "金店价格 = 基础金价 + 工费 + 品牌溢价。投资金条约 +8~15 元/克，足金首饰常 +60~120 元/克，3D/古法金更高。"]},
+    {"cat": "实物黄金", "no": "05", "h": "黄金首饰怎么回收？回购折价怎么算？",
+     "p": ["金店/机构回购实物金时，通常低于基础金价 4~8 元/克。回收按克重计，与你买时的工费无关。",
+           "买入到卖出之间必须跨越的折价 + 工费，就是实物金的交易成本。"]},
+    {"cat": "实物黄金", "no": "06", "h": "3D 硬金、古法金、K 金怎么选？",
+     "p": ["3D 硬金是电铸工艺足金，硬度高、造型立体，按「一口价」卖、克单价远高于基础金价。",
+           "K 金是黄金合金，18K≈75% 含金量，硬度高适合镶嵌。回收时都按克重 × 含金量计算。"]},
+    {"cat": "投资工具", "no": "07", "h": "黄金 ETF vs 实物金 vs 积存金，怎么选？",
+     "p": ["黄金 ETF（如 518880）在证券账户买卖，门槛低、流动性好，跟踪金价。",
+           "积存金适合定投，可提实物；实物金条适合长期持有，但有工费与回购折价。"]},
+    {"cat": "投资工具", "no": "08", "h": "Au(T+D) 延期合约：杠杆、递延费与风险",
+     "p": ["Au(T+D) 是保证金交易（约 8~12 倍杠杆），可多空双向，日内交易活跃。",
+           "递延费是多空失衡时一方每日向另一方支付的费用，方向每日可能切换，长期持仓不可忽视。"]},
+    {"cat": "投资工具", "no": "09", "h": "黄金价格提醒怎么设置才有效？",
+     "p": ["价格提醒应设置在关键价位（如前高前低、整数关口、溢价极值）。",
+           "本站的「价格提醒」功能支持设置高于/低于某值通知，浏览器通知免费无门槛。"]},
+    {"cat": "宏观分析", "no": "10", "h": "美联储利率如何影响金价？",
+     "p": ["利率上升 → 持有黄金的机会成本上升 → 金价承压；利率下降 → 金价获支撑。",
+           "实际利率（名义利率 − 通胀）是金价的长期锚：实际利率下行，金价上行。"]},
+    {"cat": "宏观分析", "no": "11", "h": "非农、CPI 与金价：交易日历怎么看？",
+     "p": ["非农（每月首个周五）与 CPI（每月月中）是美联储决策的核心输入，公布瞬间金价常剧烈波动。",
+           "本站「财经日历」板块提供 2026-2027 年完整 FOMC 日程与非农/CPI 时间表。"]},
+    {"cat": "宏观分析", "no": "12", "h": "人民币汇率：在岸、离岸与中间价的区别",
+     "p": ["中间价由央行每日公布；在岸（CNY）在境内市场波动 ±2%；离岸（CNH）在境外市场自由波动。",
+           "人民币贬值时，即使国际金价横盘，以人民币计价的国内金价也会走高——这也是本站同时展示汇率与国内溢价的原因。"]},
+    {"cat": "数据指标", "no": "13", "h": "金银比、金油比、金铂比：从比值看相对价值",
+     "p": ["金银比 = 金价 ÷ 银价，历史区间约 40~90，比值极高时白银可能补涨。",
+           "金油比 = 金价 ÷ 油价，反映避险需求强弱；金铂比类似，用于观察贵金属内部分化。"]},
+    {"cat": "数据指标", "no": "14", "h": "国内溢价指标：从溢价看实物需求",
+     "p": ["溢价 =（SGE 价 − 国际折算价）÷ 国际折算价 × 100%。",
+           "溢价持续为正且扩大，往往对应国内实物需求旺、进口配额紧；溢价转负则可能预示需求走弱。"]},
+    {"cat": "数据指标", "no": "15", "h": "通胀保值：黄金是抗通胀资产吗？",
+     "p": ["长期看，黄金对恶性通胀有保值作用；但温和通胀时期，实际利率若上升，金价也会承压。",
+           "黄金的「抗通胀」属性主要体现在长期（10 年以上）维度，短期波动大，不能简单等同于通胀保值工具。"]},
+    {"cat": "风险教育", "no": "16", "h": "杠杆交易的风险：为什么 T+D 容易爆仓",
+     "p": ["杠杆放大收益的同时放大亏损。8 倍杠杆下，金价反向波动 12% 即可亏损全部保证金。",
+           "控制仓位、设置止损、避免满仓，是杠杆交易的基本纪律。"]},
+    {"cat": "风险教育", "no": "17", "h": "警惕「金店回购陷阱」与高溢价销售",
+     "p": ["部分「一口价」金饰的克单价远高于基础金价，回收时却按克重计算，价差可达 200+ 元/克。",
+           "买前先算克单价，对比基础金价；投资需求优先选按克计价的金条。"]},
+    {"cat": "风险教育", "no": "18", "h": "常见黄金投资误区",
+     "p": ["误区一：金价只涨不跌——黄金波动率不低，短期回撤 10%+ 常见。",
+           "误区二：首饰=投资——首饰含工费，回收折价大，不是好的投资载体。",
+           "误区三：看涨就加杠杆——杠杆是工具不是策略，仓位管理才是。"]},
+]
+
+
+def page_academy(data):
+    cats = sorted(set(a["cat"] for a in ACAD_ARTICLES))
+    cards = "".join(
+        f'<article class="acad-card" data-cat="{esc(a["cat"])}">'
+        f'<span class="a-tag">{esc(a["cat"])}</span>'
+        f'<h3>{esc(a["h"])}</h3>'
+        f'<p>{" ".join(esc(x) for x in a["p"])}</p>'
+        f'<div class="a-no">GUIDE {esc(a["no"])}</div></article>'
+        for a in ACAD_ARTICLES)
+    cat_html = "".join(
+        f'<button class="acad-cat{"" if i else " sel"}" data-cat="{esc(c)}">{esc(c)}</button>'
+        for i, c in enumerate(cats))
+    glossary_html = "".join(
+        f'<div class="gloss"><h4>{esc(g["t"])}</h4><p>{esc(g["d"])}</p></div>'
+        for g in GLOSSARY)
+    faq_html = "".join(
+        f'<details><summary>{esc(f["q"])}</summary><div class="ans">{esc(f["a"])}</div></details>'
+        for f in FAQ)
+    head = head_html(
+        "投资学院 - 黄金投资入门到进阶 - 今日金价",
+        "黄金投资学院：18 篇系统科普（基础入门、实物黄金、投资工具、宏观分析、数据指标、风险教育）+ 15 条术语速查 + 常见问题。",
+        SITE + "academy.html")
+    body = f"""{topbar_html(data)}
+{ticker_html(data)}
+{nav_html("academy")}
+<main>
+  <section class="section" id="articles">
+    <div class="section-head">
+      <div><div class="lbl">ACADEMY · 投资学院</div><h2>黄金投资系统学习</h2>
+        <p>从「一克黄金多少钱」到「美联储利率如何影响金价」，18 篇科普按六大主题分类，零基础也能看懂。</p></div>
+      <div class="side">18 篇 · 6 大主题</div>
+    </div>
+    <div class="acad-cats" id="acadCats">{cat_html}
+      <button class="acad-cat sel" data-cat="all">全部</button></div>
+    <div class="rel-grid" id="acadGrid" style="grid-template-columns:repeat(3,minmax(0,1fr))">{cards}</div>
+    <div class="note-strip" style="margin-top:20px">
+      <div class="ni">◈</div>
+      <div class="nt"><strong>内容定位</strong>
+        <span>全部文章为投资知识科普，不构成任何投资建议。投资有风险，决策需独立判断。</span></div>
+    </div>
+  </section>
+
+  <section class="section" id="glossary">
+    <div class="section-head">
+      <div><div class="lbl">GLOSSARY · 术语表</div><h2>黄金 / 贵金属术语速查</h2>
+        <p>15 个高频术语，读懂行情表与实物金价背后的口径差异。</p></div>
+    </div>
+    <div class="glossary">{glossary_html}</div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="section-head">
+      <div><div class="lbl">FAQ · 常见问题</div><h2>投资常见疑问</h2></div>
+    </div>
+    <div class="card"><div class="faq-list">{faq_html}</div></div>
+    <div class="rel-grid" style="margin-top:18px">
+      <a class="rel" href="./index.html#tools"><div class="rt">工具计算</div><p>克↔盎司、人民币金价、盈亏计算</p></a>
+      <a class="rel" href="./index.html#physical"><div class="rt">实物金价</div><p>金条 / 回收 / 首饰价格估算</p></a>
+      <a class="rel" href="./calendar.html"><div class="rt">财经日历</div><p>非农 / CPI / FOMC 时间表</p></a>
+      <a class="rel" href="./data.html"><div class="rt">数据中心</div><p>金银比、溢价等关键指标</p></a>
+    </div>
+  </section>
+</main>
+{footer_html()}
+<script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
+<script src="./ads.js"></script>
+<script src="./common.js"></script>
+<script>
+(function(){{
+  var cats=document.getElementById('acadCats');
+  if(!cats)return;
+  cats.addEventListener('click',function(e){{
+    var b=e.target.closest('.acad-cat'); if(!b)return;
+    cats.querySelectorAll('.acad-cat').forEach(function(x){{x.classList.remove('sel')}});
+    b.classList.add('sel');
+    var c=b.getAttribute('data-cat');
+    document.querySelectorAll('#acadGrid .acad-card').forEach(function(card){{
+      card.style.display=(c==='all'||card.getAttribute('data-cat')===c)?'':'none';
+    }});
+  }});
+}})();
+</script>
+</body></html>"""
+    return head + body
+
+
+# ---------------------------------------------------------------- 数据中心
+def page_data(data, hist):
+    intl = data.get("intl") or {}
+    mets = intl.get("metals") or {}
+    gold = mets.get("gold") or {}
+    silver = mets.get("silver") or {}
+    plat = mets.get("platinum") or {}
+    pall = mets.get("palladium") or {}
+    oil = data.get("oil") or {}
+    fx = data.get("fx") or []
+
+    # 衍生指标
+    def ratio(a, b, unit=""):
+        try:
+            if a and b and float(b) != 0:
+                return f"{float(a)/float(b):,.2f}{unit}"
+        except Exception:
+            pass
+        return "—"
+
+    gold_last = gold.get("sge")
+    silver_last = silver.get("sge")
+    plat_last = plat.get("sge")
+    brent_last = (oil.get("brent") or {}).get("last")
+    xau_usd = intl.get("xau_usd")
+    usd_cny = intl.get("usd_cny")
+
+    gold_silver = ratio(gold_last, (silver_last or 0) / 1000 if silver_last else None)  # 元/克 vs 元/克
+    gold_oil = ratio(gold_last, brent_last)
+    gold_plat = ratio(gold_last, plat_last)
+
+    ind_cards = (
+        f'<div class="ind-card"><div class="ik">金银比 (Au/Ag)</div><div class="iv">{gold_silver}</div><div class="iu">金价 ÷ 银价（克口径）</div></div>'
+        f'<div class="ind-card"><div class="ik">金油比 (Au/Brent)</div><div class="iv">{gold_oil}</div><div class="iu">元/克 ÷ 美元/桶</div></div>'
+        f'<div class="ind-card"><div class="ik">金铂比 (Au/Pt)</div><div class="iv">{gold_plat}</div><div class="iu">金价 ÷ 铂金价</div></div>'
+        f'<div class="ind-card"><div class="ik">美元兑人民币</div><div class="iv">{fmt(usd_cny, 4)}</div><div class="iu">实时汇率</div></div>'
+        f'<div class="ind-card"><div class="ik">国际金价 (XAU)</div><div class="iv">{fmt(xau_usd)}</div><div class="iu">美元/盎司</div></div>'
+        f'<div class="ind-card"><div class="ik">黄金国内溢价</div><div class="iv {"up" if (gold.get("premium_pct") or 0) >= 0 else "down"}">{fmt(gold.get("premium_pct"))}%</div><div class="iu">SGE vs 国际折算</div></div>'
+        f'<div class="ind-card"><div class="ik">白银国内溢价</div><div class="iv {"up" if (silver.get("premium_pct") or 0) >= 0 else "down"}">{fmt(silver.get("premium_pct"))}%</div><div class="iu">Ag99.99 vs 国际折算</div></div>'
+        f'<div class="ind-card"><div class="ik">钯金国际价</div><div class="iv">{fmt(pall.get("intl_usd"))}</div><div class="iu">美元/盎司</div></div>'
+    )
+
+    # 汇率表（完整）
+    fx_rows_html = "".join(
+        f'<tr><td class="lbl">{esc(r.get("name"))}</td><td class="sym">{esc(r.get("code"))}</td>'
+        f'<td class="num strong">{fmt(r.get("cny"), 4)}</td>'
+        f'<td class="num">{fmt(r.get("per_cny"), 4)}</td></tr>'
+        for r in fx)
+
+    # 溢价明细
+    prem_rows = ""
+    for key, label in (("gold", "黄金 Au99.99"), ("silver", "白银 Ag99.99"),
+                       ("platinum", "铂金 Pt99.95"), ("palladium", "钯金 Pd99.95")):
+        x = mets.get(key) or {}
+        if x.get("sge") is None and x.get("premium_pct") is None:
+            continue
+        cls = "up" if (x.get("premium_pct") or 0) >= 0 else "down"
+        prem_rows += (
+            f'<tr><td class="lbl">{label}</td><td class="num">{fmt(x.get("sge"))} <span class="unit">{esc(x.get("unit"))}</span></td>'
+            f'<td class="num">{fmt(x.get("intl_cny"))}</td>'
+            f'<td><span class="chg {cls}">{fmt(x.get("premium_pct"))}%</span></td>'
+            f'<td class="unit">{esc(x.get("intl_symbol"))}</td></tr>')
+
+    # 历史数据（Au99.99 最近 15 天）
+    au_hist = hist.get("SGE:Au99.99") or {}
+    hist_rows, _hist_n = history_table_rows(hist, "SGE:Au99.99", limit=15)
+
+    head = head_html(
+        "数据中心 - 金银比/国内溢价/汇率/历史走势 - 今日金价",
+        "贵金属数据中心：金银比、金油比、金铂比等关键指标看板，国内溢价明细，11 币种汇率表，Au99.99 历史日线数据。",
+        SITE + "data.html")
+    body = f"""{topbar_html(data)}
+{ticker_html(data)}
+{nav_html("data")}
+<main>
+  <section class="section" id="indicators">
+    <div class="section-head">
+      <div><div class="lbl">DATA CENTER · 数据中心</div><h2>关键指标看板</h2>
+        <p>金银比、金油比、溢价与汇率——一屏看懂贵金属的相对价值与境内外价差。随数据管道每 30 分钟更新。</p></div>
+      <div class="side">数据生成：{esc(data.get("generated_at") or "—")}</div>
+    </div>
+    <div class="ind-grid">{ind_cards}</div>
+  </section>
+
+  <section class="section" id="premium">
+    <div class="section-head">
+      <div><div class="lbl">PREMIUM</div><h2>多品种国内溢价明细</h2>
+        <p>境内 SGE 报价 vs 国际现货折算（国际金价 × 汇率 ÷ 31.1035）。为正=境内贵，为负=贴水。</p></div>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr><th>品种</th><th>境内报价</th><th>国际折算</th><th>国内溢价</th><th>口径</th></tr></thead>
+        <tbody>{prem_rows}</tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="fx">
+    <div class="section-head">
+      <div><div class="lbl">FOREX</div><h2>汇率一览（11 币种）</h2>
+        <p>美元、欧元、日元、英镑等主流币种兑人民币，以及人民币兑各币种。</p></div>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr><th>币种</th><th>代码</th><th>兑人民币</th><th>人民币兑</th></tr></thead>
+        <tbody>{fx_rows_html}</tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="history">
+    <div class="section-head">
+      <div><div class="lbl">HISTORY</div><h2>Au99.99 历史日线（近 15 日）</h2>
+        <p>每日开高低收数据，随站点运行逐日累积。</p></div>
+      <div class="side"><a class="btn ghost" href="./history.html">看完整走势图 →</a></div>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr><th>日期</th><th>开盘</th><th>最高</th><th>最低</th><th>收盘</th><th>涨跌幅</th></tr></thead>
+        <tbody>{hist_rows}</tbody>
+      </table>
+    </div>
+    <div class="rel-grid" style="margin-top:18px">
+      <a class="rel" href="./history.html"><div class="rt">历史走势图</div><p>日线蜡烛图与每日开高低收</p></a>
+      <a class="rel" href="./index.html#charts"><div class="rt">实时图表</div><p>分时 / K 线 / 多品种对比</p></a>
+      <a class="rel" href="./calendar.html"><div class="rt">财经日历</div><p>数据发布日程</p></a>
+      <a class="rel" href="./academy.html"><div class="rt">投资学院</div><p>读懂金银比与溢价</p></a>
+    </div>
+  </section>
+</main>
+{footer_html()}
+<script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="./ads.js"></script>
+<script src="./common.js"></script>
+<script src="./app.js"></script>
+</body></html>"""
+    return head + body
+
+
 # ---------------------------------------------------------------- 入口
 
 def main():
@@ -1492,6 +2057,10 @@ def main():
 
     pages = [
         (os.path.join(DOCS, "index.html"), page_index(data)),
+        (os.path.join(DOCS, "data.html"), page_data(data, hist)),
+        (os.path.join(DOCS, "calendar.html"), page_calendar(data)),
+        (os.path.join(DOCS, "news.html"), page_news(data)),
+        (os.path.join(DOCS, "academy.html"), page_academy(data)),
         (os.path.join(DOCS, "about.html"), page_about(data)),
         (os.path.join(DOCS, "privacy.html"), page_privacy(data)),
         (os.path.join(DOCS, "history.html"), page_history(data, hist)),

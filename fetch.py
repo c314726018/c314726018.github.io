@@ -304,11 +304,51 @@ def fetch_intl(by_symbol):
     }, fx_rates
 
 
+# ---------------- 实时财经快讯（华尔街见闻 lives） ----------------
+NEWS_API = "https://api-one.wallstcn.com/apiv1/content/lives?channel=global-channel&limit=30"
+
+
+def _strip_html(s):
+    """去掉 HTML 标签，保留纯文本。"""
+    if not s:
+        return ""
+    import re
+    s = re.sub(r"<[^>]+>", "", s)
+    return s.replace("&nbsp;", " ").replace("&amp;", "&").replace("&quot;", '"').strip()
+
+
+def fetch_news():
+    """华尔街见闻 7×24 快讯流 → [{title, text, time, source}]。失败返回 []（站内降级显示占位）。"""
+    try:
+        j = _get_json(NEWS_API, timeout=15,
+                      headers={"User-Agent": HEADERS["User-Agent"],
+                               "Accept": "application/json, text/plain, */*"})
+        items = (j.get("data") or {}).get("items") or []
+        out = []
+        for it in items[:18]:
+            ts = it.get("display_time")
+            tstr = ""
+            if ts:
+                tstr = datetime.datetime.fromtimestamp(int(ts)).strftime("%Y-%m-%d %H:%M")
+            text = _strip_html(it.get("content_text") or it.get("content") or "")
+            title = _strip_html(it.get("title") or "")
+            if not title:
+                # 快讯多为纯内容，无标题时取首句
+                title = (text.split("。")[0] if text else "快讯")[:40]
+            out.append({"title": title, "text": text[:180], "time": tstr,
+                        "source": "华尔街见闻", "uri": it.get("uri") or ""})
+        return out
+    except Exception as e:
+        print(f"[warn] 快讯抓取失败: {e}", file=sys.stderr)
+        return []
+
+
 def main():
     items, primary, by_symbol = fetch_sge_all()
     intl, fx_rates = fetch_intl(by_symbol)
     oil = fetch_oil()
     fx_table = build_fx_table(float(intl["usd_cny"]), fx_rates)
+    news = fetch_news()
 
     if not items:
         print("[error] SGE 全部抓取失败，保留原缓存。", file=sys.stderr)
@@ -316,13 +356,14 @@ def main():
 
     payload = {
         "generated_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "source": "上海黄金交易所 (SGE) · 国际现货贵金属 · 美元兑人民币 · 新浪财经",
+        "source": "上海黄金交易所 (SGE) · 国际现货贵金属 · 美元兑人民币 · 新浪财经 · 华尔街见闻",
         "live": len([1 for _ in items]),
         "items": items,
         "primary": primary,
         "intl": intl,
         "oil": oil,
         "fx": fx_table,
+        "news": news,
     }
     with open(CACHE, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
@@ -332,7 +373,7 @@ def main():
           f"溢价 金={gold['premium_pct']}% 银={intl['metals']['silver']['premium_pct']}% "
           f"铂={intl['metals']['platinum']['premium_pct']}% | "
           f"油价 布伦特={oil.get('brent', {}).get('last')} WTI={oil.get('wti', {}).get('last')} "
-          f"SC={oil.get('sc', {}).get('last')} | 汇率 {len(fx_table)} 币种")
+          f"SC={oil.get('sc', {}).get('last')} | 汇率 {len(fx_table)} 币种 | 快讯 {len(news)} 条")
 
 
 if __name__ == "__main__":
