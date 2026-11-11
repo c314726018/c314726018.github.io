@@ -383,7 +383,8 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   td::before{content:attr(data-label);color:var(--sub);font-size:12px;font-weight:600;text-align:left;flex:0 0 auto}
   td.lbl,td.sym{text-align:right}
   .spark{width:64px}
-}
+
+
 @media(max-width:420px){
   .hero-side{grid-template-columns:1fr 1fr;gap:9px}
   .hs{padding:12px}
@@ -629,9 +630,6 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .tq-spark{flex:0 0 118px;text-align:right}
 .tq-spark svg{width:118px;height:46px}
 .tq-sub{font-size:11px;color:var(--sub);line-height:1.6}
-@media(max-width:900px){
-  .three-quote{grid-template-columns:1fr}
-}
 
 /* ============ 全宽大行情表(金投网式,紧凑+色块涨跌) ============ */
 .mega-table{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -681,8 +679,32 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 main{counter-reset:secno}
 .section{counter-increment:secno}
 .section.no-num{counter-increment:none}
-.section-head h2::before{content:counter(secno,decimal-leading-zero) " / ";color:var(--gold-2);
-  font-size:.72em;letter-spacing:1.5px;font-weight:700;vertical-align:2px}
+/* ============ 移动端适配覆盖(置于所有主定义之后,确保生效) ============ */
+  .portal-main table,.portal table{min-width:0}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
+  .table-scroll .mega-table{display:table;min-width:660px;width:max-content}
+  .mega-table thead{display:table-header-group}
+  .mega-table tbody,.mega-table tr,.mega-table td,.mega-table th{display:table-cell}
+  .mega-table tbody tr{border:none;border-bottom:1px solid var(--line-2);border-radius:0;margin:0;padding:0;background:transparent;display:table-row}
+  .mega-table tbody tr:hover{background:var(--gold-soft)}
+  .mega-table tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 50%,transparent)}
+  .mega-table td{text-align:right;padding:8px 10px;white-space:nowrap;border-bottom:1px solid var(--line-2)}
+  .mega-table td::before{content:none}
+  .mega-table td.lbl,.mega-table td.sym{text-align:left}
+  .mega-table .grow td{text-align:left;background:var(--surface-2);color:var(--gold-ink);font-size:11.5px;font-weight:750;letter-spacing:1.5px;padding:7px 10px}
+  .mega-table th{display:table-cell;padding:8px 10px;font-size:11px}
+  /* 三大报价模块:窄屏单列 + 缩图防截断 */
+  .three-quote{grid-template-columns:1fr}
+  .tq-spark{flex:0 0 84px}
+  .tq-spark svg{width:84px;height:38px}
+  .tq-price{font-size:27px}
+  .tq-body{padding:12px 12px}
+}
+@media(max-width:900px) and (min-width:721px){
+  .tq-price{font-size:26px}
+  .tq-spark{flex:0 0 96px}
+  .tq-spark svg{width:96px;height:42px}
+}
 """
 
 FAQ = [
@@ -1276,10 +1298,12 @@ def page_index(data):
     <div class="card">
       <div class="card-head"><h3>合约行情</h3>
         <div class="chip-row"><span class="badge">◷ 每小时抓取</span><span class="chip">SGE 官方行情</span></div></div>
+      <div class="table-scroll">
       <table class="mega-table">
         <thead><tr><th>品种</th><th>代码</th><th>最新价</th><th>涨跌额</th><th>涨跌幅</th><th>今开</th><th>最高</th><th>最低</th><th>单位</th></tr></thead>
         <tbody id="tbody">{grouped_rows(data)}</tbody>
       </table>
+      </div>
       <div class="tfoot">「今开 / 最高 / 最低」为当日（或最近交易时段）区间；「最新价」为最近一笔成交。非交易时段显示最近一次有效报价。日内走势为分时序列迷你图，仅示意节奏，不代表完整逐笔成交。</div>
     </div>
   </section>
