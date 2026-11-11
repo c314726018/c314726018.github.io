@@ -452,6 +452,14 @@ ARTICLES = [
      "p": ["黄金 ETF 在证券账户内交易，跟踪国内金价、流动性好、费率透明（管理费约 0.5%/年），适合已有证券账户、想灵活进出的投资者；缺点是需要开证券账户，且买卖时机依赖自己的判断。",
            "银行积存金按克或按金额定期买入，门槛低、可设置自动定投，适合「无脑攒金」；但要留意银行的点差（买卖价差）与赎回规则，部分产品只能按金额赎回而不能提实物。",
            "「纸黄金」是银行的账户黄金，报价紧跟国际金价，交易时间长；但它只是记账资产，不对应实物，也有点差成本。三者的共同点：都无法变成手里的一块金子。真要实物，请回到本页科普第 05 篇提到的加工费、保管与回购折价问题，把成本算清楚再决定。"]},
+    {"no": "11", "h": "今日油价：布伦特、WTI 和上海原油是什么关系",
+     "p": ["国际上引用最多的两个基准：布伦特（Brent）出产于北大西洋，覆盖欧洲、非洲与中东原油定价，全球约三分之二原油贸易以其为参照；WTI（西得克萨斯轻质原油）是美国基准。两者走势高度相关，价差反映区域供需与运输成本。",
+           "上海原油（SC）是上海国际能源交易中心的期货合约，以人民币计价、单位是「元/桶」，它既承接国际油价走势，又叠加了人民币汇率因素：国际油价涨、人民币贬值时，SC 的涨幅会被放大。",
+           "一个常见误读：把国际油价直接当成国内加油站的油价。国内成品油价格遵循调价机制（每 10 个工作日一调，并有调控上下限），与国际油价联动但不同步。看懂了这三个价格的关系，再判断「油价涨了明天加油贵不贵」就准确得多。"]},
+    {"no": "12", "h": "人民币汇率：在岸、离岸与中间价的区别",
+     "p": ["新闻里的「人民币汇率」其实有三个口径：中间价是中国外汇交易中心每个交易日开盘前公布的基准价；在岸价（CNY）是境内银行间市场的成交价，浮动受管理；离岸价（CNH）在境外市场交易，波动更自由，常被视为市场情绪的温度计。",
+           "本页展示的是公开接口的折算汇率，接近在岸口径，适合看「大数」与换算参考；真正的换汇成交价是各银行牌价，含买入/卖出点差，通常比中间价差 0.2%～0.5%。换大额外汇前值得先比一比不同银行的牌价。",
+           "汇率对贵金属投资者还有一层意义：国际金价以美元计价，人民币贬值时，即使国际金价横盘，以人民币计价的国内金价也会走高——这也是本页同时展示汇率与国内溢价的原因。"]},
 ]
 
 
@@ -466,7 +474,7 @@ def head_html(title, desc, canonical, extra=""):
 <meta name="theme-color" content="#0e1626">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
-<meta name="keywords" content="今日金价,黄金价格,实时金价,上海黄金交易所,Au99.99,国际金价,国内溢价,白银价格,铂金价格,黄金走势">
+<meta name="keywords" content="今日金价,黄金价格,实时金价,上海黄金交易所,Au99.99,国际金价,国内溢价,白银价格,铂金价格,今日油价,布伦特原油,WTI,上海原油,人民币汇率,美元汇率">
 <meta name="author" content="今日金价">
 <meta name="robots" content="index,follow">
 <meta property="og:site_name" content="今日金价 · REAL-TIME GOLD MARKET">
@@ -510,6 +518,29 @@ def ticker_html(data):
         chips.append(
             f'<div class="tk"><span class="tk-n">{esc(it.get("label"))} {esc(it.get("symbol"))}</span>'
             f'<span class="tk-v num">{fmt(it.get("last"))}</span>{c}</div>')
+    # 油价
+    oil = data.get("oil") or {}
+    for key in ("brent", "wti", "sc"):
+        x = oil.get(key) or {}
+        if x.get("last") is None:
+            continue
+        prev = x.get("prev_close") or x.get("prev_settle")
+        if prev:
+            pct = (x["last"] - prev) / prev * 100
+            cls = "up" if pct > 0 else "down" if pct < 0 else "flat"
+            arrow = "▲" if pct > 0 else "▼" if pct < 0 else "—"
+            c = f'<span class="tk-c {cls}">{arrow} {abs(pct):.2f}%</span>'
+        else:
+            c = '<span class="tk-c flat">—</span>'
+        chips.append(
+            f'<div class="tk"><span class="tk-n">{esc(x.get("name"))}</span>'
+            f'<span class="tk-v num">{fmt(x.get("last"))}</span>'
+            f'<span class="flat" style="font-size:10px">{esc(x.get("unit"))}</span>{c}</div>')
+    # 汇率（主币种）
+    for r in (data.get("fx") or [])[:5]:
+        chips.append(
+            f'<div class="tk"><span class="tk-n">{esc(r.get("code"))}/CNY</span>'
+            f'<span class="tk-v num">{fmt(r.get("cny"), 4)}</span></div>')
     if not chips:
         chips = ['<div class="tk"><span class="tk-n">行情加载中</span></div>']
     track = "".join(chips + chips)  # 复制一份实现无缝滚动
@@ -524,6 +555,7 @@ def nav_html(active=""):
         ("overview", "./index.html#overview", "行情概览"),
         ("quotes", "./index.html#quotes", "实时行情"),
         ("premium", "./index.html#premium", "溢价对照"),
+        ("energy", "./index.html#energy", "油价汇率"),
         ("charts", "./index.html#charts", "走势图表"),
         ("history", "./history.html", "历史走势"),
         ("alerts", "./index.html#alerts", "价格提醒"),
@@ -560,8 +592,9 @@ def footer_html():
     </div>
     <div class="foot-col"><h4>行情</h4>
       <a href="./index.html#overview">行情概览</a><a href="./index.html#quotes">实时行情表</a>
-      <a href="./index.html#premium">多品种溢价</a><a href="./index.html#charts">走势图表</a>
-      <a href="./history.html">历史走势</a><a href="./index.html#alerts">价格提醒</a></div>
+      <a href="./index.html#premium">多品种溢价</a><a href="./index.html#energy">油价与汇率</a>
+      <a href="./index.html#charts">走势图表</a><a href="./history.html">历史走势</a>
+      <a href="./index.html#alerts">价格提醒</a></div>
     <div class="foot-col"><h4>知识</h4>
       <a href="./index.html#learn">黄金百科</a><a href="./about.html#method">指标与算法</a>
       <a href="./about.html#source">数据来源</a><a href="./about.html#faq">常见问题</a></div>
@@ -594,6 +627,49 @@ def ad_slot():
 
 METAL_DEFS = [("gold", "黄金", "Au99.99"), ("silver", "白银", "Ag99.99"),
               ("platinum", "铂金", "Pt99.95"), ("palladium", "钯金", "Pd99.95")]
+
+
+def oil_rows(oil):
+    """能源行情表：布伦特 / WTI / 上海原油。涨跌基准：前收（Brent/WTI）或昨结（SC）。"""
+    rows = []
+    for key in ("brent", "wti", "sc"):
+        x = oil.get(key) or {}
+        last = x.get("last")
+        if last is None:
+            continue
+        prev = x.get("prev_close") or x.get("prev_settle")
+        if prev:
+            chg = (last - prev) / prev * 100
+            cls = "up" if chg > 0 else "down" if chg < 0 else "flat"
+            chg_html = (f'<span class="chg {cls}">{"▲" if chg > 0 else "▼" if chg < 0 else "—"} '
+                        f'{abs(chg):.2f}%</span>')
+        else:
+            chg_html = '<span class="flat">—</span>'
+        rows.append(
+            "<tr>"
+            f'<td class="lbl" data-label="品种">{esc(x.get("name"))}</td>'
+            f'<td class="sym" data-label="代码">{esc(x.get("symbol"))}</td>'
+            f'<td class="num strong" data-label="最新价">{fmt(last)}</td>'
+            f'<td data-label="涨跌幅">{chg_html}</td>'
+            f'<td class="unit" data-label="单位">{esc(x.get("unit"))}</td>'
+            f'<td class="unit" data-label="日期">{esc(x.get("date") or "—")}</td>'
+            "</tr>")
+    return "".join(rows)
+
+
+def fx_rows(fx):
+    """人民币汇率表：1（或 100）外币兑人民币 + 1 人民币兑外币。"""
+    rows = []
+    for r in fx or []:
+        unit_note = "100" if r.get("unit") == 100 else "1"
+        rows.append(
+            "<tr>"
+            f'<td class="lbl" data-label="币种">{esc(r.get("name"))}</td>'
+            f'<td class="sym" data-label="代码">{esc(r.get("code"))}</td>'
+            f'<td class="num strong" data-label="兑人民币">{unit_note} {esc(r.get("code"))} = {fmt(r.get("cny"), 4)}</td>'
+            f'<td class="num" data-label="人民币兑">1 CNY = {fmt(r.get("per_cny"), 4)}</td>'
+            "</tr>")
+    return "".join(rows)
 
 
 def metals_rows(intl):
@@ -651,6 +727,8 @@ def page_index(data):
     prem_cls = "up" if (prem or 0) >= 0 else "down"
     prem_txt = f"{prem:+.2f}%" if prem is not None else "—"
     silver_usd = fmt(((intl.get("metals") or {}).get("silver") or {}).get("intl_usd"))
+    oil = data.get("oil") or {}
+    fx = data.get("fx") or []
 
     # 主力合约日内区间（概览卡静态首屏值，app.js 会在数据刷新后覆盖）
     main_item = next((x for x in items if x.get("symbol") == "Au99.99"), None)
@@ -665,8 +743,8 @@ def page_index(data):
     data_json = json.dumps(data, ensure_ascii=False)
 
     return f"""{head_html(
-        "今日金价_实时黄金价格_上海黄金交易所行情 | 国内溢价",
-        "实时黄金白银铂金价格：上海黄金交易所 Au99.99、Au(T+D)、Ag99.99 等合约最新价，国际现货 XAU/XAG/XPT、美元兑人民币汇率及多品种国内溢价对照，附分时走势、K 线与贵金属知识百科。",
+        "今日金价_实时黄金价格_上海黄金交易所行情 | 油价汇率 | 国内溢价",
+        "实时黄金白银铂金价格、今日油价（布伦特/WTI/上海原油）与人民币汇率：上海黄金交易所 Au99.99、Au(T+D)、Ag99.99 等合约最新价，国际现货 XAU/XAG/XPT，多品种国内溢价对照，附走势图表与知识百科。",
         SITE, ld)}
 <body>
 {topbar_html(data)}
@@ -750,6 +828,33 @@ def page_index(data):
         <tbody id="metalsBody">{metals_rows(intl)}</tbody>
       </table>
       <div class="tfoot">国际折算 = 国际美元价 × USD/CNY ÷ 31.1034768（白银为元/千克口径，再 × 1000）。溢价 =（SGE − 折算）÷ 折算 × 100%。注意：境内白银报价含增值税因素，对国际价的溢价天然偏高；各品种口径详见「关于本站」。</div>
+    </div>
+  </section>
+
+  <!-- ============ 油价与汇率 ============ -->
+  <section class="section" id="energy">
+    <div class="section-head">
+      <div><div class="lbl">OIL &amp; FX</div><h2>国际油价 · 人民币汇率</h2>
+        <p>布伦特、WTI 与上海原油对照；主流货币兑人民币实时汇率。</p></div>
+      <div class="side">油价涨红 跌绿 · 汇率为 1 美元折算口径</div>
+    </div>
+    <div class="charts">
+      <div class="card"><div class="card-head"><h3>国际与境内油价</h3>
+        <div class="chip-row"><span class="chip">布伦特 Brent</span><span class="chip">WTI</span><span class="chip">上海原油 SC</span></div></div>
+        <table>
+          <thead><tr><th>品种</th><th>代码</th><th>最新价</th><th>涨跌幅</th><th>单位</th><th>日期</th></tr></thead>
+          <tbody id="energyBody">{oil_rows(oil)}</tbody>
+        </table>
+        <div class="tfoot">布伦特 / WTI 为国际基准原油（美元/桶，前收为基准）；上海原油为上期能源 SC 主力连续（元/桶，昨结为基准）。国内成品油调价与国际油价联动，但存在调控上下限与调价窗口，本表不直接等于加油站价格。</div>
+      </div>
+      <div class="card"><div class="card-head"><h3>人民币汇率</h3>
+        <div class="chip-row"><span class="chip">USD/CNY {fmt(intl.get('usd_cny'), 4)}</span></div></div>
+        <table>
+          <thead><tr><th>币种</th><th>代码</th><th>兑人民币</th><th>人民币兑</th></tr></thead>
+          <tbody id="fxBody">{fx_rows(fx)}</tbody>
+        </table>
+        <div class="tfoot">汇率取自公开汇率接口的 1 美元折算口径，与银行柜台实时牌价存在点差；日元 / 韩元 / 泰铢按 100 单位展示。</div>
+      </div>
     </div>
   </section>
 

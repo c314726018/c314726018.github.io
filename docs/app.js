@@ -151,6 +151,47 @@
     }).join("");
   }
 
+  // ---------- 油价与汇率 ----------
+  function renderEnergy(d) {
+    var tb = $("#energyBody");
+    if (!tb) return;
+    var oil = d.oil || {};
+    tb.innerHTML = ["brent", "wti", "sc"].map(function (key) {
+      var x = oil[key] || {};
+      if (x.last == null) return "";
+      var prev = x.prev_close || x.prev_settle;
+      var chgHtml = '<span class="flat">—</span>';
+      if (prev) {
+        var pct = (x.last - prev) / prev * 100;
+        var cls = pct > 0 ? "up" : pct < 0 ? "down" : "flat";
+        chgHtml = '<span class="chg ' + cls + '">' + (pct > 0 ? "▲" : pct < 0 ? "▼" : "—") +
+          " " + fmt(Math.abs(pct)) + "%</span>";
+      }
+      return "<tr>" +
+        '<td class="lbl" data-label="品种">' + esc(x.name) + "</td>" +
+        '<td class="sym" data-label="代码">' + esc(x.symbol) + "</td>" +
+        '<td class="num strong" data-label="最新价">' + fmt(x.last) + "</td>" +
+        '<td data-label="涨跌幅">' + chgHtml + "</td>" +
+        '<td class="unit" data-label="单位">' + esc(x.unit || "") + "</td>" +
+        '<td class="unit" data-label="日期">' + esc(x.date || "—") + "</td>" +
+        "</tr>";
+    }).join("");
+  }
+
+  function renderFx(d) {
+    var tb = $("#fxBody");
+    if (!tb) return;
+    tb.innerHTML = (d.fx || []).map(function (r) {
+      var unitNote = r.unit === 100 ? "100" : "1";
+      return "<tr>" +
+        '<td class="lbl" data-label="币种">' + esc(r.name) + "</td>" +
+        '<td class="sym" data-label="代码">' + esc(r.code) + "</td>" +
+        '<td class="num strong" data-label="兑人民币">' + unitNote + " " + esc(r.code) + " = " + fmt(r.cny, 4) + "</td>" +
+        '<td class="num" data-label="人民币兑">1 CNY = ' + fmt(r.per_cny, 4) + "</td>" +
+        "</tr>";
+    }).join("");
+  }
+
   // ---------- 图表 ----------
   function bucketCandles(series, k) {
     k = k || 12;
@@ -347,6 +388,8 @@
     renderOverview(d);
     renderTable(d);
     renderMetals(d);
+    renderEnergy(d);
+    renderFx(d);
     renderCharts(d);
     checkAlerts(d);
   }

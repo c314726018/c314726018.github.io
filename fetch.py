@@ -56,6 +56,30 @@ PRIMARY = "Au99.99"
 METAL_API = "https://api.gold-api.com/price/{sym}"
 FX_URL = "https://open.er-api.com/v6/latest/USD"
 
+# 能源上游（新浪财经，国内可达）
+SINA_DAILY = ("https://stock2.finance.sina.com.cn/futures/api/jsonp.php/var%20_S="
+              "/GlobalFuturesService.getGlobalFuturesDailyKLine?symbol={sym}")
+SINA_HQ = "https://hq.sinajs.cn/list=nf_{code}"
+SINA_HEADERS = {
+    "User-Agent": HEADERS["User-Agent"],
+    "Referer": "https://finance.sina.com.cn/",
+    "Accept": "*/*",
+}
+
+# 汇率表币种（code, 名称, 展示单位倍数）
+FX_SYMBOLS = [
+    ("USD", "美元", 1), ("EUR", "欧元", 1), ("JPY", "日元", 100), ("GBP", "英镑", 1),
+    ("HKD", "港币", 1), ("KRW", "韩元", 100), ("AUD", "澳元", 1), ("SGD", "新加坡元", 1),
+    ("CHF", "瑞士法郎", 1), ("CAD", "加元", 1), ("THB", "泰铢", 100),
+]
+
+# 能源种子兜底（2026-11-11 实测）
+OIL_SEED = {
+    "brent": {"close": 92.47, "prev": 91.96},
+    "wti": {"close": 86.66, "prev": 86.43},
+    "sc": {"last": 594.3, "prev_settle": 599.3},
+}
+
 # 种子兜底（真实采集参考值，仅展示占位；2026-11-11 实测）
 SEED = {
     "xau_usd": 4048.0, "xag_usd": 51.67, "xpt_usd": 1559.0, "xpd_usd": 1056.0, "usd_cny": 6.6878,
@@ -138,13 +162,76 @@ def _fetch_metal(sym):
 
 
 def _fetch_fx():
+    """返回 (usd_cny, 全币种 rates)；失败回退种子。"""
     try:
         j = _get_json(FX_URL, timeout=15)
         if isinstance(j, dict) and j.get("result") == "success":
-            return float(j["rates"]["CNY"])
+            return float(j["rates"]["CNY"]), j.get("rates") or {}
     except Exception as e:
         print(f"[warn] USD/CNY 抓取失败: {e}", file=sys.stderr)
-    return None
+    return SEED["usd_cny"], {}
+
+
+def _get_text(url, timeout=15, headers=None, encoding="utf-8"):
+    req = urllib.request.Request(url, headers=headers or HEADERS)
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return r.read().decode(encoding, errors="replace")
+
+
+def _sina_daily(sym):
+    raw = _get_text(SINA_DAILY.format(sym=sym), headers=SINA_HEADERS)
+    i, j = raw.find("("), raw.rfind(")")
+    arr = json.loads(raw[i + 1:j])
+    if not isinstance(arr, list) or not arr:
+        raise RuntimeError("空K线")
+    return arr
+
+
+def fetch_oil():
+    """布伦特 / WTI（新浪全球期货日线收盘）+ 上海原油 SC（INE 主力连续实时）。"""
+    out = {}
+    for key, sym, name in (("brent", "OIL", "布伦特原油"), ("wti", "CL", "WTI原油")):
+        try:
+            arr = _sina_daily(sym)
+            last = arr[-1]
+            prev = float(arr[-2]["close"]) if len(arr) > 1 else None
+            out[key] = {"name": name, "symbol": sym, "unit": "美元/桶",
+                        "last": float(last["close"]), "open": float(last["open"]),
+                        "high": float(last["high"]), "low": float(last["low"]),
+                        "date": last.get("date", ""), "prev_close": prev}
+        except Exception as e:
+            print(f"[warn] 油价 {key} 抓取失败: {e}", file=sys.stderr)
+            s = OIL_SEED.get(key, {})
+            out[key] = {"name": name, "symbol": sym, "unit": "美元/桶",
+                        "last": s.get("close"), "prev_close": s.get("prev")}
+    try:
+        raw = _get_text(SINA_HQ.format(code="SC0"), headers=SINA_HEADERS, encoding="gbk")
+        f = raw[raw.index('"') + 1:raw.rindex('"')].split(",")
+        out["sc"] = {"name": "上海原油", "symbol": "SC", "unit": "元/桶",
+                     "last": float(f[8]), "open": float(f[2]), "high": float(f[3]),
+                     "low": float(f[4]), "prev_settle": float(f[10]), "date": f[17]}
+    except Exception as e:
+        print(f"[warn] 油价 sc 抓取失败: {e}", file=sys.stderr)
+        s = OIL_SEED["sc"]
+        out["sc"] = {"name": "上海原油", "symbol": "SC", "unit": "元/桶",
+                     "last": s["last"], "prev_settle": s["prev_settle"]}
+    return out
+
+
+def build_fx_table(usd_cny, rates):
+    """主流币种兑人民币（rates 为 1 美元兑各币种）。"""
+    out = []
+    for code, name, mult in FX_SYMBOLS:
+        r = rates.get(code)
+        if not r:
+            continue
+        r = float(r)
+        out.append({
+            "code": code, "name": name, "unit": mult,
+            "cny": round(usd_cny / r * mult, 4),          # 1（或 100）外币 = X 人民币
+            "per_cny": round(r / usd_cny, 6 if mult == 1 else 4),  # 1 人民币 = Y 外币
+        })
+    return out
 
 
 def _premium(sge, intl_cny):
@@ -159,7 +246,7 @@ def fetch_intl(by_symbol):
     xag = _fetch_metal("XAG")
     xpt = _fetch_metal("XPT")
     xpd = _fetch_metal("XPD")
-    fx = _fetch_fx()
+    fx, fx_rates = _fetch_fx()
 
     if xau is None: xau = SEED["xau_usd"]
     if xag is None: xag = SEED["xag_usd"]
@@ -214,12 +301,14 @@ def fetch_intl(by_symbol):
         "premium_pct": metals["gold"]["premium_pct"],
         # 多品种明细
         "metals": metals,
-    }
+    }, fx_rates
 
 
 def main():
     items, primary, by_symbol = fetch_sge_all()
-    intl = fetch_intl(by_symbol)
+    intl, fx_rates = fetch_intl(by_symbol)
+    oil = fetch_oil()
+    fx_table = build_fx_table(float(intl["usd_cny"]), fx_rates)
 
     if not items:
         print("[error] SGE 全部抓取失败，保留原缓存。", file=sys.stderr)
@@ -227,11 +316,13 @@ def main():
 
     payload = {
         "generated_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "source": "上海黄金交易所 (SGE) · 国际现货贵金属 · 美元兑人民币",
+        "source": "上海黄金交易所 (SGE) · 国际现货贵金属 · 美元兑人民币 · 新浪财经",
         "live": len([1 for _ in items]),
         "items": items,
         "primary": primary,
         "intl": intl,
+        "oil": oil,
+        "fx": fx_table,
     }
     with open(CACHE, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
@@ -239,7 +330,9 @@ def main():
     print(f"[ok] 已更新 {len(items)} 个合约 | 国际XAU={intl['xau_usd']} XAG={intl['metals']['silver']['intl_usd']} "
           f"XPT={intl['metals']['platinum']['intl_usd']} | USD/CNY={intl['usd_cny']} | "
           f"溢价 金={gold['premium_pct']}% 银={intl['metals']['silver']['premium_pct']}% "
-          f"铂={intl['metals']['platinum']['premium_pct']}%")
+          f"铂={intl['metals']['platinum']['premium_pct']}% | "
+          f"油价 布伦特={oil.get('brent', {}).get('last')} WTI={oil.get('wti', {}).get('last')} "
+          f"SC={oil.get('sc', {}).get('last')} | 汇率 {len(fx_table)} 币种")
 
 
 if __name__ == "__main__":
