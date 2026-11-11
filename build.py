@@ -12,6 +12,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 CACHE = os.path.join(HERE, "data.json")
 OUT = os.path.join(HERE, "docs", "index.html")
 
+# AdSense 网站代码（loader）—— 直接写入生成页的 <head>，
+# 确保 AdSense 验证做原始 HTML 抓取时也能命中（不受 JS 注入时机影响）。
+ADSENSE_LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>'
+
 
 def load_data():
     try:
@@ -137,7 +141,8 @@ def render(data):
 <meta property="og:title" content="今日金价 · 实时黄金价格与国内溢价">
 <meta property="og:description" content="SGE 实时行情 + 国际金价 + 汇率 + 国内溢价，一站看懂黄金价格。">
 <meta property="og:type" content="website">
-<link rel="canonical" href="https://c314726018.github.io/gold-site/">
+<link rel="canonical" href="https://c314726018.github.io/">
+{ADSENSE_LOADER}
 <script type="application/ld+json">{json.dumps(faq_ld, ensure_ascii=False)}</script>
 <script src="./vendor/chart.umd.min.js"></script>
 <script src="./vendor/chartjs-chart-financial.umd.min.js"></script>
@@ -211,7 +216,7 @@ def render(data):
   <footer>
     数据来源：{src} · 本页为行情聚合展示，价格以交易所官方发布为准<br>
     <a href="https://www.sge.com.cn/" target="_blank" rel="noopener">上海黄金交易所官网</a> ·
-    <a href="https://c314726018.github.io/gold-site/" rel="canonical">今日金价</a>
+    <a href="https://c314726018.github.io/">今日金价</a>
   </footer>
 
   <div class="ad-slot">广告位（页脚 / 侧栏 · 开户返佣 / 实物黄金导流位）</div>
