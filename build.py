@@ -571,15 +571,19 @@ def ad_slot():
     return '<div class="ad-slot" aria-label="广告位"></div>'
 
 
-METAL_DEFS = [("gold", "黄金", "Au99.99"), ("silver", "白银", "Ag99.99"), ("platinum", "铂金", "Pt99.95")]
+METAL_DEFS = [("gold", "黄金", "Au99.99"), ("silver", "白银", "Ag99.99"),
+              ("platinum", "铂金", "Pt99.95"), ("palladium", "钯金", "Pd99.95")]
 
 
 def metals_rows(intl):
-    """多品种溢价对照表静态行（首屏可用，app.js 刷新后重建）。"""
+    """多品种溢价对照表静态行（首屏可用，app.js 刷新后重建）。
+    SGE 无成交的品种（如钯金长期休市）自动隐藏，有数据时自动出现。"""
     m = intl.get("metals") or {}
     rows = []
     for key, label, sge_sym in METAL_DEFS:
         x = m.get(key) or {}
+        if x.get("sge") is None and x.get("premium_pct") is None:
+            continue  # 境内无报价，整行隐藏
         prem = x.get("premium_pct")
         cls = "up" if (prem or 0) >= 0 else "down"
         prem_txt = f"{prem:+.2f}%" if prem is not None else "—"

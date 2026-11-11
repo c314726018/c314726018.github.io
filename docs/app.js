@@ -127,7 +127,8 @@
   }
 
   // ---------- 多品种溢价对照 ----------
-  var METAL_DEFS = [["gold", "黄金", "Au99.99"], ["silver", "白银", "Ag99.99"], ["platinum", "铂金", "Pt99.95"]];
+  var METAL_DEFS = [["gold", "黄金", "Au99.99"], ["silver", "白银", "Ag99.99"],
+                    ["platinum", "铂金", "Pt99.95"], ["palladium", "钯金", "Pd99.95"]];
 
   function renderMetals(d) {
     var tb = $("#metalsBody");
@@ -135,6 +136,7 @@
     var m = (d.intl || {}).metals || {};
     tb.innerHTML = METAL_DEFS.map(function (def) {
       var x = m[def[0]] || {};
+      if (x.sge == null && x.premium_pct == null) return "";  // 境内无报价则隐藏该行
       var prem = x.premium_pct;
       var cls = prem == null ? "flat" : (prem >= 0 ? "up" : "down");
       var premTxt = prem == null ? "—" : (prem >= 0 ? "+" : "") + fmt(prem) + "%";

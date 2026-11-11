@@ -58,7 +58,7 @@ FX_URL = "https://open.er-api.com/v6/latest/USD"
 
 # 种子兜底（真实采集参考值，仅展示占位；2026-11-11 实测）
 SEED = {
-    "xau_usd": 4048.0, "xag_usd": 51.67, "xpt_usd": 1559.0, "usd_cny": 6.6878,
+    "xau_usd": 4048.0, "xag_usd": 51.67, "xpt_usd": 1559.0, "xpd_usd": 1056.0, "usd_cny": 6.6878,
     "items": {
         "Au99.99": 883.0, "Au99.95": 881.0, "iAu99.99": 884.01,
         "Ag99.99": 12760.0, "Pt99.95": 389.59, "Pd99.95": 280.0,
@@ -158,21 +158,25 @@ def fetch_intl(by_symbol):
     xau = _fetch_metal("XAU")
     xag = _fetch_metal("XAG")
     xpt = _fetch_metal("XPT")
+    xpd = _fetch_metal("XPD")
     fx = _fetch_fx()
 
     if xau is None: xau = SEED["xau_usd"]
     if xag is None: xag = SEED["xag_usd"]
     if xpt is None: xpt = SEED["xpt_usd"]
+    if xpd is None: xpd = SEED["xpd_usd"]
     if fx is None: fx = SEED["usd_cny"]
 
     g = GRAMS_PER_OZ
     gold_sge = by_symbol.get("Au99.99", {}).get("last")
     silver_sge = by_symbol.get("Ag99.99", {}).get("last")   # 元/千克
     plat_sge = by_symbol.get("Pt99.95", {}).get("last")
+    pall_sge = by_symbol.get("Pd99.95", {}).get("last")
 
     gold_cny = round(xau * fx / g, 2)                 # 元/克
     silver_cny_kg = round(xag * fx / g * 1000, 2)     # 元/千克
     plat_cny = round(xpt * fx / g, 2)                 # 元/克
+    pall_cny = round(xpd * fx / g, 2)                 # 元/克
 
     metals = {
         "gold": {
@@ -192,6 +196,12 @@ def fetch_intl(by_symbol):
             "unit": "元/克", "intl_usd": round(xpt, 2), "intl_cny": plat_cny,
             "sge": round(float(plat_sge), 2) if plat_sge else None,
             "premium_pct": _premium(plat_sge, plat_cny),
+        },
+        "palladium": {
+            "name": "钯金", "sge_symbol": "Pd99.95", "intl_symbol": "XPD/USD",
+            "unit": "元/克", "intl_usd": round(xpd, 2), "intl_cny": pall_cny,
+            "sge": round(float(pall_sge), 2) if pall_sge else None,
+            "premium_pct": _premium(pall_sge, pall_cny),
         },
     }
 
