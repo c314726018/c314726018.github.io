@@ -1,0 +1,24 @@
+{
+  "name": "今日金价 · 实时贵金属行情",
+  "short_name": "今日金价",
+  "description": "上海黄金交易所实时行情、国际金价、白银铂金钯金与多品种国内溢价",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0e1626",
+  "theme_color": "#0e1626",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

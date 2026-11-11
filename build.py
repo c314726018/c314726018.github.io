@@ -16,6 +16,7 @@
 """
 import json
 import os
+import datetime
 import html as _html
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -435,6 +436,22 @@ ARTICLES = [
      "p": ["上海黄金交易所合约行情来自交易所官方行情接口，每个合约取最近一个交易时段的价格序列，并保留今开、最高、最低与交易所给出的更新时间。国际现货黄金 XAU/USD 与美元兑人民币汇率分别取自公开行情接口。所有数据在服务端每小时抓取一次并生成为静态文件，浏览器端每 60 秒检查是否有新版本。",
            "国内溢价与国际折算价由上述原始数据计算得出：先把 XAU/USD 按 USD/CNY 换算成人民币每盎司，再除以 31.1034768 得到每克价格，最后与 SGE Au99.99 比较得出百分比。若某个上游抓取失败，系统会回退到上一次的有效数据，避免页面出现空白或错误数字。",
            "本站为行情聚合展示，所有价格以上海黄金交易所及相应机构官方发布为准，内容仅作信息参考，不构成投资建议或交易依据。"]},
+    {"no": "07", "h": "今日银价怎么看？三个最容易踩的单位坑",
+     "p": ["国内白银报价以「元/千克」为单位，国际白银（XAG/USD）以「美元/盎司」为单位，两者直接对比毫无意义。正确换算：国际银价 × 美元兑人民币 ÷ 31.1034768 × 1000，得到元/千克后再与 SGE Ag99.99 比较。本页「多品种国内溢价」已代你完成这一步。",
+           "第二个坑是含税口径：境内白银现货报价内含增值税因素，因此 SGE 白银对国际价的溢价天然偏高（常见 10% 以上），这不是套利机会，而是税制差异。把溢价直接理解为「白银被高估」是常见误读。",
+           "第三个坑是波动弹性：白银盘子小、工业属性强，涨跌幅通常是黄金的 1.5～3 倍。看银价别只看绝对数字，把它与金价放在一起看相对强弱，信息量更大——本页对比图已把金银铂归一化到同一坐标。"]},
+    {"no": "08", "h": "铂金多少钱一克？为什么比黄金便宜",
+     "p": ["铂金（Pt）曾是四大贵金属中最贵的一个，但近十年多数时间反而低于黄金。核心原因在需求结构：铂金约一半需求来自汽车尾气催化剂，电动车渗透率上升直接削弱了这一底仓；而黄金的货币与储备需求则持续扩张。",
+           "国内铂金现货报价看上海黄金交易所 Pt99.95（元/克），国际上看 XPT/USD（美元/盎司）。两者对比同样要先经过汇率与盎司-克换算，本页溢价表已直接给出「SGE 境内价 vs 国际折算价」的偏离程度。",
+           "铂金流动性显著弱于金银：SGE 铂金合约成交清淡，买卖价差大，实物铂金回购渠道也少。它的价格弹性虽大，但进出的摩擦成本高，把它当「便宜的黄金」来配置是一种常见误解。"]},
+    {"no": "09", "h": "Au(T+D) 延期合约是什么？和现货有何不同",
+     "p": ["Au(T+D) 是上海黄金交易所的黄金延期交收合约：约定在未来某一日期交收，但可以无限递延。它与现货最大的区别是引入了「多空双向」——可以先卖后买，也可以加保证金杠杆，因此成交远比现货活跃，是国内黄金投机的最主流工具。",
+           "延期合约的特有成本是「递延费」（延期补偿费）：当市场多空不平衡时，一方要向另一方支付一定比例的费用，方向每日都可能切换。长期持仓时递延费的累积成本不可忽视，这与持有现货完全不同。",
+           "本页行情表同时展示 Au99.99 现货、Au(T+D) 延期与 mAu(T+D) 迷你延期：三者价差通常很小，但延期合约的价格里包含了对隔夜与资金成本的定价，波动节奏也可能与现货略有不同步。"]},
+    {"no": "10", "h": "黄金 ETF、积存金与纸黄金，选哪个",
+     "p": ["黄金 ETF 在证券账户内交易，跟踪国内金价、流动性好、费率透明（管理费约 0.5%/年），适合已有证券账户、想灵活进出的投资者；缺点是需要开证券账户，且买卖时机依赖自己的判断。",
+           "银行积存金按克或按金额定期买入，门槛低、可设置自动定投，适合「无脑攒金」；但要留意银行的点差（买卖价差）与赎回规则，部分产品只能按金额赎回而不能提实物。",
+           "「纸黄金」是银行的账户黄金，报价紧跟国际金价，交易时间长；但它只是记账资产，不对应实物，也有点差成本。三者的共同点：都无法变成手里的一块金子。真要实物，请回到本页科普第 05 篇提到的加工费、保管与回购折价问题，把成本算清楚再决定。"]},
 ]
 
 
@@ -460,6 +477,7 @@ def head_html(title, desc, canonical, extra=""):
 <link rel="canonical" href="{esc(canonical)}">
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <link rel="apple-touch-icon" href="./favicon.svg">
+<link rel="manifest" href="./manifest.json">
 {ADSENSE_LOADER}
 {extra}
 <link rel="stylesheet" href="./site.css">
@@ -507,6 +525,7 @@ def nav_html(active=""):
         ("quotes", "./index.html#quotes", "实时行情"),
         ("premium", "./index.html#premium", "溢价对照"),
         ("charts", "./index.html#charts", "走势图表"),
+        ("history", "./history.html", "历史走势"),
         ("alerts", "./index.html#alerts", "价格提醒"),
         ("learn", "./index.html#learn", "黄金百科"),
         ("about", "./about.html", "关于本站"),
@@ -542,7 +561,7 @@ def footer_html():
     <div class="foot-col"><h4>行情</h4>
       <a href="./index.html#overview">行情概览</a><a href="./index.html#quotes">实时行情表</a>
       <a href="./index.html#premium">多品种溢价</a><a href="./index.html#charts">走势图表</a>
-      <a href="./index.html#alerts">价格提醒</a></div>
+      <a href="./history.html">历史走势</a><a href="./index.html#alerts">价格提醒</a></div>
     <div class="foot-col"><h4>知识</h4>
       <a href="./index.html#learn">黄金百科</a><a href="./about.html#method">指标与算法</a>
       <a href="./about.html#source">数据来源</a><a href="./about.html#faq">常见问题</a></div>
@@ -786,8 +805,8 @@ def page_index(data):
   <!-- ============ 黄金百科 ============ -->
   <section class="section" id="learn">
     <div class="section-head">
-      <div><div class="lbl">GOLD KNOWLEDGE</div><h2>黄金知识百科</h2>
-        <p>从合约代码到溢价成因，用六篇短文把金价读懂。</p></div>
+      <div><div class="lbl">GOLD KNOWLEDGE</div><h2>贵金属知识百科</h2>
+        <p>从合约代码到延期费，十篇短文把金价银价读懂。</p></div>
     </div>
     <div class="prose-grid">{article_html}</div>
     <div class="faq-list">{faq_html}</div>
@@ -956,6 +975,7 @@ FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
 def sitemap_xml(lastmod):
     urls = [
         (SITE, "hourly", "1.0"),
+        (SITE + "history.html", "daily", "0.8"),
         (SITE + "about.html", "monthly", "0.5"),
         (SITE + "privacy.html", "yearly", "0.3"),
     ]
@@ -973,6 +993,191 @@ Allow: /
 Sitemap: {SITE}sitemap.xml
 """
 
+MANIFEST = {
+    "name": "今日金价 · 实时贵金属行情",
+    "short_name": "今日金价",
+    "description": "上海黄金交易所实时行情、国际金价、白银铂金钯金与多品种国内溢价",
+    "start_url": "./",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#0e1626",
+    "theme_color": "#0e1626",
+    "icons": [
+        {"src": "./favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+        {"src": "./favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable"},
+    ],
+}
+
+
+# ---------------------------------------------------------------- 历史数据累积
+
+HIST = os.path.join(DOCS, "history.json")
+
+
+def update_history(data):
+    """把本次行情并入按日累积的 OHLC 历史（docs/history.json 随仓库提交，永久保留）。
+    当天首次记录锁定开盘价；后续构建只抬高/降低高低点并更新收盘。"""
+    hist = {}
+    try:
+        with open(HIST, encoding="utf-8") as f:
+            hist = json.load(f)
+    except Exception:
+        pass
+
+    gen = str(data.get("generated_at") or "")
+    today = gen[:10] if len(gen) >= 10 else datetime.date.today().isoformat()
+
+    def upd(key, last, series):
+        s = [float(x) for x in (series or []) if isinstance(x, (int, float))]
+        if not s:
+            if last is None:
+                return
+            s = [float(last)]
+        h = hist.setdefault(key, {})
+        day = h.get(today)
+        if day:
+            day["h"] = max(day["h"], max(s))
+            day["l"] = min(day["l"], min(s))
+            if last is not None:
+                day["c"] = float(last)
+        else:
+            h[today] = {"o": s[0], "h": max(s), "l": min(s),
+                        "c": float(last) if last is not None else s[-1]}
+
+    for it in data.get("items") or []:
+        if it.get("symbol") and it.get("last") is not None:
+            upd("SGE:" + it["symbol"], it.get("last"), it.get("series"))
+    intl = data.get("intl") or {}
+    if intl.get("xau_usd") is not None:
+        upd("INTL:XAU", intl["xau_usd"], [])
+    if intl.get("usd_cny") is not None:
+        upd("INTL:USDCNY", intl["usd_cny"], [])
+
+    hist["_updated"] = gen or datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(HIST, "w", encoding="utf-8") as f:
+        json.dump(hist, f, ensure_ascii=False, indent=2)
+    return hist
+
+
+# ---------------------------------------------------------------- 历史走势页
+
+def history_table_rows(hist, key, limit=30):
+    """key 品种的最近 N 天日线（倒序，涨跌相对前一日收盘）。"""
+    h = hist.get(key) or {}
+    days = sorted(h.keys())[-limit:][::-1]
+    rows = []
+    prev = None
+    for i, day in enumerate(days):
+        d = h[day]
+        chg = None
+        if i < len(days) - 1:
+            prev_day = days[i + 1]
+            pc = h[prev_day]["c"]
+            if pc:
+                chg = (d["c"] - pc) / pc * 100
+        cls = "up" if (chg or 0) > 0 else "down" if (chg or 0) < 0 else "flat"
+        chg_txt = ("—" if chg is None else
+                   f'<span class="chg {cls}">{("+" if chg > 0 else "")}{chg:.2f}%</span>')
+        rows.append(
+            "<tr>"
+            f'<td class="num" data-label="日期">{day}</td>'
+            f'<td class="num" data-label="开盘">{fmt(d["o"])}</td>'
+            f'<td class="num up" data-label="最高">{fmt(d["h"])}</td>'
+            f'<td class="num down" data-label="最低">{fmt(d["l"])}</td>'
+            f'<td class="num strong" data-label="收盘">{fmt(d["c"])}</td>'
+            f'<td data-label="涨跌幅">{chg_txt}</td>'
+            "</tr>")
+    return "".join(rows), len(days)
+
+
+def page_history(data, hist):
+    au_rows, n_days = history_table_rows(hist, "SGE:Au99.99")
+    if not n_days:
+        au_rows = '<tr><td colspan="6" class="alert-empty" style="justify-content:center">数据累积中，明日起逐日展示。</td></tr>'
+    hist_data = json.dumps({"au": hist.get("SGE:Au99.99") or {}, "xau": hist.get("INTL:XAU") or {}},
+                           ensure_ascii=False)
+    empty_note = "" if n_days >= 2 else (
+        '<div class="callout" style="background:var(--gold-soft);border-left:3px solid var(--gold-2);'
+        'padding:14px 18px;margin:14px 0;border-radius:0 10px 10px 0">'
+        '<p style="margin:0;color:var(--gold-ink);font-size:13px">历史数据自今日开始逐小时累积，'
+        '蜡烛图将在积累 2 天后自动出现；表格每日新增一行，30 天后趋于完整。</p></div>')
+    return f"""{head_html(
+        "金价历史走势_黄金价格日线历史 | 今日金价",
+        "上海黄金交易所 Au99.99 黄金日线历史：每日开高低收与涨跌幅，日线蜡烛图，数据逐日自动累积。",
+        SITE + "history.html")}
+<body>
+{topbar_html(data)}
+{ticker_html(data)}
+{nav_html('history')}
+<div class="wrap">
+  <div class="page-hero"><span class="eyebrow">HISTORICAL PRICES</span>
+    <h1>金价历史走势</h1>
+    <p>Au99.99 黄金合约日线：每日开盘、最高、最低、收盘与涨跌幅。数据每小时自动累积，长期保存。</p></div>
+
+  <div class="card">
+    <div class="card-head"><h3>Au99.99 日线蜡烛图</h3>
+      <div class="chip-row"><span class="badge">日 K · 自动累积</span><span class="chip">涨红 跌绿</span></div></div>
+    {empty_note}
+    <div class="chart-box tall"><canvas id="histChart"></canvas></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-head"><h3>最近 30 个交易日</h3>
+      <div class="chip-row"><span class="chip">单位 元/克</span></div></div>
+    <table>
+      <thead><tr><th>日期</th><th>开盘</th><th>最高</th><th>最低</th><th>收盘</th><th>涨跌幅</th></tr></thead>
+      <tbody id="histBody">{au_rows}</tbody>
+    </table>
+    <div class="tfoot">日线由每小时抓取的行情聚合而成（当日首笔为开盘、持续更新高低与收盘）；非交易日不产生新行。本表仅供行情参考，不构成投资建议。</div>
+  </div>
+
+  {ad_slot()}
+</div>
+{footer_html()}
+<script id="hist-data" type="application/json">{hist_data}</script>
+<script src="./vendor/chart.umd.min.js"></script>
+<script src="./vendor/chartjs-chart-financial.umd.min.js"></script>
+<script src="./ads.js"></script>
+<script>
+(function () {{
+  "use strict";
+  try {{
+    var H = JSON.parse(document.getElementById("hist-data").textContent || "{{}}");
+    var au = H.au || {{}};
+    var days = Object.keys(au).sort();
+    if (days.length < 2 || typeof Chart === "undefined") return;
+    var candles = days.map(function (d) {{
+      var x = au[d];
+      return {{ x: d, o: x.o, h: x.h, l: x.l, c: x.c }};
+    }});
+    var el = document.getElementById("histChart");
+    if (!el) return;
+    new Chart(el, {{
+      type: "candlestick",
+      data: {{ datasets: [{{ label: "Au99.99 日线", data: candles,
+        color: {{ up: "#d4380d", down: "#129b63", unchanged: "#8895a8" }} }}] }},
+      options: {{
+        responsive: true, maintainAspectRatio: false,
+        plugins: {{ legend: {{ display: false }} }},
+        scales: {{
+          x: {{ ticks: {{ color: "#77839a", font: {{ size: 10 }}, maxTicksLimit: 10 }}, grid: {{ display: false }} }},
+          y: {{ ticks: {{ color: "#77839a", font: {{ size: 10 }} }}, grid: {{ color: "#eef0f3" }} }}
+        }}
+      }}
+    }});
+    if (document.documentElement.classList.contains("dark")) {{
+      var cs = Chart.getChart("histChart");
+      if (cs) {{
+        cs.options.scales.y.grid.color = "#1b2433";
+        cs.update();
+      }}
+    }}
+  }} catch (e) {{ /* 历史数据缺失时静默 */ }}
+}})();
+</script>
+</body>
+</html>"""
+
 
 # ---------------------------------------------------------------- 入口
 
@@ -980,10 +1185,13 @@ def main():
     data = load_data()
     os.makedirs(DOCS, exist_ok=True)
 
+    hist = update_history(data)
+
     pages = [
         (os.path.join(DOCS, "index.html"), page_index(data)),
         (os.path.join(DOCS, "about.html"), page_about(data)),
         (os.path.join(DOCS, "privacy.html"), page_privacy(data)),
+        (os.path.join(DOCS, "history.html"), page_history(data, hist)),
     ]
     for path, content in pages:
         with open(path, "w", encoding="utf-8") as f:
@@ -996,19 +1204,21 @@ def main():
     with open(os.path.join(DOCS, "data.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    # SEO 三件套
+    # SEO 三件套 + PWA manifest
     gen = str(data.get("generated_at") or "")
     lastmod = (gen[:10] if len(gen) >= 10 else
-               __import__("datetime").date.today().isoformat())
+               datetime.date.today().isoformat())
     with open(os.path.join(DOCS, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(sitemap_xml(lastmod))
     with open(os.path.join(DOCS, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(ROBOTS)
     with open(os.path.join(DOCS, "favicon.svg"), "w", encoding="utf-8") as f:
         f.write(FAVICON)
+    with open(os.path.join(DOCS, "manifest.json"), "w", encoding="utf-8") as f:
+        json.dump(MANIFEST, f, ensure_ascii=False, indent=2)
 
-    print("[ok] 已生成 index/about/privacy/site.css/data.json + sitemap/robots/favicon "
-          f"（{len(data.get('items', []))} 个合约）")
+    print("[ok] 已生成 index/about/privacy/history + sitemap/robots/favicon/manifest "
+          f"（{len(data.get('items', []))} 个合约，历史 {sum(1 for k in hist if k.startswith('SGE:'))} 品种）")
 
 
 if __name__ == "__main__":
