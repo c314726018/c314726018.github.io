@@ -24,6 +24,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 import json
+import re
 import time
 import os
 import sys
@@ -198,7 +199,9 @@ def fetch_oil():
             out[key] = {"name": name, "symbol": sym, "unit": "美元/桶",
                         "last": float(last["close"]), "open": float(last["open"]),
                         "high": float(last["high"]), "low": float(last["low"]),
-                        "date": last.get("date", ""), "prev_close": prev}
+                        "date": last.get("date", ""), "prev_close": prev,
+                        # 近 30 日收盘线(供前端画走势图)
+                        "hist": [float(x["close"]) for x in arr[-30:]]}
         except Exception as e:
             print(f"[warn] 油价 {key} 抓取失败: {e}", file=sys.stderr)
             s = OIL_SEED.get(key, {})
@@ -304,6 +307,91 @@ def fetch_intl(by_symbol):
     }, fx_rates
 
 
+# ---------------- 新浪批量行情(股指/国内期货/国际贵金属/美元指数) ----------------
+# 实测格式(2026-11-11):
+#   sh000001:  f0名称 f1开 f2昨收 f3最新 f4高 f5低 f30日期 f31时间
+#   int_*:     f0名称 f1最新 f2涨跌额 f3涨跌幅%
+#   nf_AU0:    f0名称 f2开 f3高 f4低 f8最新 f10昨结 f16品种 f17日期
+#   hf_XAU:    f0现价 f4高 f5低 f6时间 f7昨收 f8开 f13名称
+#   DINIW:     f1现价 f3昨收 f5开 f6高 f7低 f9名称 f10日期
+#   fx_susdcny: f3昨收 f8现价 f9名称 f10涨跌额
+SINA_BATCH = ("https://hq.sinajs.cn/list="
+              "sh000001,sz399001,sz399006,int_hangseng,int_dji,int_nasdaq,int_sp500,"
+              "nf_AU0,nf_AG0,nf_CU0,nf_RB0,nf_SC0,"
+              "hf_XAU,hf_XAG,hf_GC,hf_SI,hf_OIL,hf_CL,DINIW")
+
+
+def _f(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def fetch_extra():
+    """新浪批量接口 → {indices, futures, intl, dxy}。失败返回空 dict(页面降级)。"""
+    out = {"indices": [], "futures": [], "intl": [], "dxy": None}
+    try:
+        raw = _get_text(SINA_BATCH, headers=SINA_HEADERS, encoding="gbk")
+    except Exception as e:
+        print(f"[warn] 新浪批量行情失败: {e}", file=sys.stderr)
+        return out
+    data = {}
+    for m in re.finditer(r'hq_str_(\w+)="([^"]*)"', raw):
+        data[m.group(1)] = m.group(2).split(",")
+
+    # 股指(A股:完整字段)
+    for code in ("sh000001", "sz399001", "sz399006"):
+        f = data.get(code) or []
+        if len(f) < 6 or not f[0]:
+            continue
+        out["indices"].append({
+            "code": code, "name": f[0], "last": _f(f[3]), "prev": _f(f[2]),
+            "open": _f(f[1]), "high": _f(f[4]), "low": _f(f[5]),
+            "date": (f[30] if len(f) > 30 else ""), "unit": "点"})
+    # 全球指数(int_ 极简:名称,最新,涨跌额,涨跌幅)
+    for code, unit in (("int_hangseng", "点"), ("int_dji", "点"),
+                       ("int_nasdaq", "点"), ("int_sp500", "点")):
+        f = data.get(code) or []
+        if len(f) < 4 or not f[0]:
+            continue
+        out["indices"].append({
+            "code": code, "name": f[0], "last": _f(f[1]), "chg": _f(f[2]),
+            "pct": _f(f[3]), "unit": unit})
+
+    # 国内期货主力(nf_ 大写+0)
+    for code, name, unit in (("nf_AU0", "沪金主力", "元/克"), ("nf_AG0", "沪银主力", "元/千克"),
+                             ("nf_CU0", "沪铜主力", "元/吨"), ("nf_RB0", "螺纹钢主力", "元/吨"),
+                             ("nf_SC0", "上海原油", "元/桶")):
+        f = data.get(code) or []
+        if len(f) < 11 or not f[0]:
+            continue
+        out["futures"].append({
+            "code": code, "name": name, "last": _f(f[8]), "prev": _f(f[10]),
+            "open": _f(f[2]), "high": _f(f[3]), "low": _f(f[4]),
+            "unit": unit, "date": (f[17] if len(f) > 17 else "")})
+
+    # 国际现货/期货(hf_ 格式)
+    for code, name, unit in (("hf_XAU", "伦敦金", "美元/盎司"), ("hf_XAG", "伦敦银", "美元/盎司"),
+                             ("hf_GC", "COMEX黄金", "美元/盎司"), ("hf_SI", "COMEX白银", "美元/盎司"),
+                             ("hf_OIL", "布伦特原油", "美元/桶"), ("hf_CL", "WTI原油", "美元/桶")):
+        f = data.get(code) or []
+        if len(f) < 9 or not f[0]:
+            continue
+        out["intl"].append({
+            "code": code, "name": name, "last": _f(f[0]), "prev": _f(f[7]),
+            "open": _f(f[8]), "high": _f(f[4]), "low": _f(f[5]),
+            "unit": unit, "date": (f[13] if len(f) > 13 and not f[13].isdigit() else (f[12] if len(f) > 12 else ""))})
+
+    # 美元指数
+    f = data.get("DINIW") or []
+    if len(f) > 9 and f[9]:
+        out["dxy"] = {"code": "DINIW", "name": "美元指数", "last": _f(f[1]), "prev": _f(f[3]),
+                      "open": _f(f[5]), "high": _f(f[6]), "low": _f(f[7]),
+                      "unit": "点", "date": (f[10] if len(f) > 10 else "")}
+    return out
+
+
 # ---------------- 实时财经快讯（华尔街见闻 lives） ----------------
 NEWS_API = "https://api-one.wallstcn.com/apiv1/content/lives?channel=global-channel&limit=30"
 
@@ -349,6 +437,19 @@ def main():
     oil = fetch_oil()
     fx_table = build_fx_table(float(intl["usd_cny"]), fx_rates)
     news = fetch_news()
+    extra = fetch_extra()
+
+    # 布伦特/WTI 升级为 hf_ 实时价(新浪外盘),保留 30 日收盘线供画图
+    intl_by_code = {x["code"]: x for x in extra.get("intl") or []}
+    for key, code in (("brent", "hf_OIL"), ("wti", "hf_CL")):
+        h = intl_by_code.get(code)
+        if h and h.get("last"):
+            oil[key]["last"] = h["last"]
+            oil[key]["prev_close"] = h.get("prev")
+            oil[key]["open"] = h.get("open")
+            oil[key]["high"] = h.get("high")
+            oil[key]["low"] = h.get("low")
+            oil[key]["date"] = h.get("date") or oil[key].get("date", "")
 
     if not items:
         print("[error] SGE 全部抓取失败，保留原缓存。", file=sys.stderr)
@@ -364,6 +465,7 @@ def main():
         "oil": oil,
         "fx": fx_table,
         "news": news,
+        "extra": extra,
     }
     with open(CACHE, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)

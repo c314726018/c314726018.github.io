@@ -582,6 +582,8 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .pill.up{background:color-mix(in srgb,var(--up) 15%,transparent);color:var(--up)}
 .pill.down{background:color-mix(in srgb,var(--down) 15%,transparent);color:var(--down)}
 .pill.flat{background:var(--surface-2);color:var(--sub)}
+.mega-table .grow td{background:var(--surface-2);color:var(--gold-ink);font-size:11.5px;font-weight:750;
+  letter-spacing:1.5px;padding:7px 10px;text-align:left;border-bottom:1px solid var(--line)}
 
 @media(max-width:1080px){
   .portal{grid-template-columns:160px minmax(0,1fr) 260px}

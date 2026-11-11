@@ -647,6 +647,8 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .pill.up{background:color-mix(in srgb,var(--up) 15%,transparent);color:var(--up)}
 .pill.down{background:color-mix(in srgb,var(--down) 15%,transparent);color:var(--down)}
 .pill.flat{background:var(--surface-2);color:var(--sub)}
+.mega-table .grow td{background:var(--surface-2);color:var(--gold-ink);font-size:11.5px;font-weight:750;
+  letter-spacing:1.5px;padding:7px 10px;text-align:left;border-bottom:1px solid var(--line)}
 
 @media(max-width:1080px){
   .portal{grid-template-columns:160px minmax(0,1fr) 260px}
@@ -1060,6 +1062,60 @@ def fx_rows(fx):
     return "".join(rows)
 
 
+def grouped_rows(data):
+    """全宽大行情表:SGE + 国内期货主力 + 全球股指 + 国际现货/能源,分组铺开(金投网式)。"""
+    def chg_cells(last, base):
+        try:
+            if last is None or base in (None, 0, ""):
+                raise ValueError
+            d = float(last) - float(base)
+            pct = d / float(base) * 100
+            cls = "up" if d > 0 else "down" if d < 0 else "flat"
+            arrow = "▲ +" if d > 0 else ("▼ " if d < 0 else "— ")
+            return (f'<td class="num strong {cls}">{d:+,.2f}</td>'
+                    f'<td><span class="pill {cls}">{arrow}{abs(pct):.2f}%</span></td>')
+        except (TypeError, ValueError):
+            return '<td class="num">—</td><td><span class="pill flat">—</span></td>'
+
+    def row(name, code, last, base, open_, high, low, unit):
+        c = chg_cells(last, base)
+        return ("<tr>"
+                f'<td class="lbl">{esc(name)}</td>'
+                f'<td class="sym">{esc(code)}</td>'
+                f'<td class="num strong">{fmt(last)}</td>{c}'
+                f'<td class="num">{fmt(open_)}</td>'
+                f'<td class="num up">{fmt(high)}</td>'
+                f'<td class="num down">{fmt(low)}</td>'
+                f'<td class="unit">{esc(unit)}</td></tr>')
+
+    rows = []
+    rows.append('<tr class="grow"><td colspan="9">◆ 上海黄金交易所 SGE</td></tr>')
+    for it in data.get("items") or []:
+        rows.append(row(it.get("label"), it.get("symbol"), it.get("last"),
+                        it.get("open"), it.get("open"), it.get("max"), it.get("min"), it.get("unit")))
+    ex = data.get("extra") or {}
+    if ex.get("futures"):
+        rows.append('<tr class="grow"><td colspan="9">◆ 国内期货主力 · 上期所 / 上期能源</td></tr>')
+        for x in ex["futures"]:
+            rows.append(row(x.get("name"), x.get("code"), x.get("last"), x.get("prev"),
+                            x.get("open"), x.get("high"), x.get("low"), x.get("unit")))
+    if ex.get("indices"):
+        rows.append('<tr class="grow"><td colspan="9">◆ 全球股指</td></tr>')
+        for x in ex["indices"]:
+            rows.append(row(x.get("name"), x.get("code"), x.get("last"), x.get("prev"),
+                            x.get("open"), x.get("high"), x.get("low"), x.get("unit") or "点"))
+    if ex.get("intl") or ex.get("dxy"):
+        rows.append('<tr class="grow"><td colspan="9">◆ 国际现货 · 能源 · 美元指数</td></tr>')
+        for x in ex.get("intl") or []:
+            rows.append(row(x.get("name"), x.get("code"), x.get("last"), x.get("prev"),
+                            x.get("open"), x.get("high"), x.get("low"), x.get("unit")))
+        D = ex.get("dxy")
+        if D:
+            rows.append(row(D.get("name"), "USD Index", D.get("last"), D.get("prev"),
+                            D.get("open"), D.get("high"), D.get("low"), D.get("unit") or "点"))
+    return "".join(rows)
+
+
 def metals_rows(intl):
     """多品种溢价对照表静态行（首屏可用，app.js 刷新后重建）。
     SGE 无成交的品种（如钯金长期休市）自动隐藏，有数据时自动出现。"""
@@ -1164,7 +1220,7 @@ def page_index(data):
   <section class="hero-wrap" id="overview" style="margin:14px 0 0">
     <div class="three-quote">
       <div class="tq" id="qm1">
-        <div class="tq-tabs"><b>贵金属</b><a class="on" data-i="0">现货黄金</a><a data-i="1">黄金延期</a><a data-i="2">国际金价</a><a data-i="3">白银</a></div>
+        <div class="tq-tabs"><b>贵金属</b><a class="on" data-i="0">现货黄金</a><a data-i="1">黄金延期</a><a data-i="2">国际板金</a><a data-i="3">白银</a></div>
         <div class="tq-body">
           <div class="tq-main">
             <div class="tq-name" id="qm1Name">现货黄金 Au99.99</div>
@@ -1221,8 +1277,8 @@ def page_index(data):
       <div class="card-head"><h3>合约行情</h3>
         <div class="chip-row"><span class="badge">◷ 每小时抓取</span><span class="chip">SGE 官方行情</span></div></div>
       <table class="mega-table">
-        <thead><tr><th>品种</th><th>合约</th><th>最新价</th><th>涨跌幅</th><th>涨跌额</th><th>今开</th><th>最高</th><th>最低</th><th>振幅</th><th>日内走势</th><th>单位</th></tr></thead>
-        <tbody id="tbody"></tbody>
+        <thead><tr><th>品种</th><th>代码</th><th>最新价</th><th>涨跌额</th><th>涨跌幅</th><th>今开</th><th>最高</th><th>最低</th><th>单位</th></tr></thead>
+        <tbody id="tbody">{grouped_rows(data)}</tbody>
       </table>
       <div class="tfoot">「今开 / 最高 / 最低」为当日（或最近交易时段）区间；「最新价」为最近一笔成交。非交易时段显示最近一次有效报价。日内走势为分时序列迷你图，仅示意节奏，不代表完整逐笔成交。</div>
     </div>
