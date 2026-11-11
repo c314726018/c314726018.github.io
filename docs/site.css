@@ -558,6 +558,9 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   border-bottom:2px solid transparent;transition:.13s}
 .tq-tabs a:hover{color:var(--ink)}
 .tq-tabs a.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:650}
+.tq-mode{margin-left:auto;display:inline-flex}
+.tq-mode a{font-size:11px;padding:9px 8px;color:var(--sub)}
+.tq-mode a.on{color:var(--ink);border-bottom-color:var(--ink)}
 .tq-top{padding:12px 14px 6px}
 .tq-name{font-size:12px;color:var(--sub);margin-bottom:3px}
 .tq-priceline{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}

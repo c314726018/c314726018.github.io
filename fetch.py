@@ -392,6 +392,38 @@ def fetch_extra():
     return out
 
 
+SINA_INNER = ("https://stock2.finance.sina.com.cn/futures/api/jsonp.php/var%20_I="
+              "/InnerFuturesNewService.getDailyKLine?symbol={sym}")
+
+
+def fetch_klines():
+    """日 K OHLC(最近 60 根,真实历史):
+    AU0 沪金主力 / AG0 沪银主力 / SC0 上海原油(InnerFutures,d/o/h/l/c)
+    XAU 伦敦金 / OIL 布伦特 / CL WTI(GlobalFutures,date/open/high/low/close)"""
+    out = {}
+
+    def norm(x):
+        if "o" in x:
+            return {"d": x.get("d"), "o": float(x["o"]), "h": float(x["h"]),
+                    "l": float(x["l"]), "c": float(x["c"])}
+        return {"d": x.get("date"), "o": float(x["open"]), "h": float(x["high"]),
+                "l": float(x["low"]), "c": float(x["close"])}
+
+    for key, sym, tpl in (("AU0", "AU0", SINA_INNER), ("AG0", "AG0", SINA_INNER),
+                          ("SC0", "SC0", SINA_INNER), ("XAU", "XAU", SINA_DAILY),
+                          ("OIL", "OIL", SINA_DAILY), ("CL", "CL", SINA_DAILY)):
+        try:
+            raw = _get_text(tpl.format(sym=sym), headers=SINA_HEADERS)
+            i, j = raw.find("("), raw.rfind(")")
+            arr = json.loads(raw[i + 1:j])
+            if not isinstance(arr, list) or not arr:
+                raise RuntimeError("空K线")
+            out[key] = [norm(x) for x in arr[-60:]]
+        except Exception as e:
+            print(f"[warn] 日K {sym} 抓取失败: {e}", file=sys.stderr)
+    return out
+
+
 # ---------------- 实时财经快讯（华尔街见闻 lives） ----------------
 NEWS_API = "https://api-one.wallstcn.com/apiv1/content/lives?channel=global-channel&limit=30"
 
@@ -438,6 +470,7 @@ def main():
     fx_table = build_fx_table(float(intl["usd_cny"]), fx_rates)
     news = fetch_news()
     extra = fetch_extra()
+    klines = fetch_klines()
 
     # 布伦特/WTI 升级为 hf_ 实时价(新浪外盘),保留 30 日收盘线供画图
     intl_by_code = {x["code"]: x for x in extra.get("intl") or []}
@@ -466,6 +499,7 @@ def main():
         "fx": fx_table,
         "news": news,
         "extra": extra,
+        "klines": klines,
     }
     with open(CACHE, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)

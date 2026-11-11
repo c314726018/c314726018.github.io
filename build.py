@@ -623,6 +623,9 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   border-bottom:2px solid transparent;transition:.13s}
 .tq-tabs a:hover{color:var(--ink)}
 .tq-tabs a.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:650}
+.tq-mode{margin-left:auto;display:inline-flex}
+.tq-mode a{font-size:11px;padding:9px 8px;color:var(--sub)}
+.tq-mode a.on{color:var(--ink);border-bottom-color:var(--ink)}
 .tq-top{padding:12px 14px 6px}
 .tq-name{font-size:12px;color:var(--sub);margin-bottom:3px}
 .tq-priceline{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
@@ -1255,7 +1258,7 @@ def page_index(data):
   <section class="hero-wrap" id="overview" style="margin:14px 0 0">
     <div class="three-quote">
       <div class="tq" id="qm1">
-        <div class="tq-tabs"><b>贵金属</b><a class="on" data-i="0">现货黄金</a><a data-i="1">黄金延期</a><a data-i="2">国际板金</a><a data-i="3">白银</a></div>
+        <div class="tq-tabs"><b>贵金属</b><a class="on" data-i="0">现货黄金</a><a data-i="1">黄金延期</a><a data-i="2">国际板金</a><a data-i="3">白银</a><span class="tq-mode"><a class="on" data-m="0">分时</a><a data-m="1">日K</a></span></div>
         <div class="tq-top">
           <div class="tq-name" id="qm1Name">现货黄金 Au99.99</div>
           <div class="tq-priceline"><span class="tq-price num" id="qm1Price">—</span><span class="tq-unit" id="qm1Unit">元/克</span><span class="tq-chg" id="qm1Chg">—</span></div>
@@ -1273,7 +1276,7 @@ def page_index(data):
         <div class="tq-spark" id="qm2Spark"></div>
       </div>
       <div class="tq" id="qm3">
-        <div class="tq-tabs"><b>能源化工</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a></div>
+        <div class="tq-tabs"><b>能源化工</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a><span class="tq-mode"><a class="on" data-m="0">走势</a><a data-m="1">日K</a></span></div>
         <div class="tq-top">
           <div class="tq-name" id="qm3Name">布伦特原油</div>
           <div class="tq-priceline"><span class="tq-price num" id="qm3Price">—</span><span class="tq-unit" id="qm3Unit">美元/桶</span><span class="tq-chg" id="qm3Chg">—</span></div>

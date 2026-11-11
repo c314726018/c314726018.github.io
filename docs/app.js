@@ -512,8 +512,9 @@
     });
   }
 
-  // ---------- 三大报价模块（金投网式,tab 切换品种 + 大图） ----------
+  // ---------- 三大报价模块（金投网式,tab 切换品种 + 分时/日K 大图） ----------
   var QM_TAB = [0, 0, 0];
+  var QM_MODE = [0, 0, 0]; // 0=分时/走势  1=日K
   var qCharts = {};
   function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
   function _pick(items, sym) {
@@ -524,6 +525,15 @@
     var arrow = ch.d > 0 ? "▲" : ch.d < 0 ? "▼" : "—";
     return '<span class="' + ch.cls + '">' + arrow + " " + fmt(Math.abs(ch.d)) +
       "  (" + (ch.pct >= 0 ? "+" : "") + fmt(ch.pct) + "%)</span>";
+  }
+  function qChartOpts(c) {
+    return { responsive: true, maintainAspectRatio: false,
+      animation: { duration: 220 },
+      plugins: { legend: { display: false }, tooltip: { intersect: false, mode: "index" } },
+      scales: {
+        x: { ticks: { maxTicksLimit: 6, color: c.sub, font: { size: 9 }, maxRotation: 0 }, grid: { display: false } },
+        y: { position: "right", ticks: { maxTicksLimit: 4, color: c.sub, font: { size: 9 } }, grid: { color: c.grid } }
+      } };
   }
   function drawQChart(id, labels, data, cls) {
     var cv = $("#" + id); if (!cv || !data || data.length < 3) return false;
@@ -536,25 +546,42 @@
       data: { labels: labels, datasets: [{ data: data, borderColor: line, borderWidth: 1.6,
         pointRadius: 0, tension: .25, fill: true,
         backgroundColor: cls === "up" ? "rgba(212,56,13,.08)" : cls === "down" ? "rgba(18,155,99,.08)" : "rgba(184,134,11,.10)" }] },
-      options: { responsive: true, maintainAspectRatio: false,
-        animation: { duration: 250 },
-        plugins: { legend: { display: false },
-          tooltip: { intersect: false, mode: "index",
-            callbacks: { label: function (ctx) { return fmt(ctx.parsed.y); } } } },
-        scales: {
-          x: { ticks: { maxTicksLimit: 6, color: c.sub, font: { size: 9 }, maxRotation: 0 }, grid: { display: false } },
-          y: { position: "right", ticks: { maxTicksLimit: 4, color: c.sub, font: { size: 9 } }, grid: { color: c.grid } }
-        } }
-    });
+      options: qChartOpts(c) });
     return true;
   }
+  // 日K（candlestick,真实 OHLC;插件缺失降级收盘折线）
+  function drawQK(id, kl, cls) {
+    var cv = $("#" + id); if (!cv || !kl || kl.length < 3) return false;
+    if (typeof Chart === "undefined") return false;
+    if (qCharts[id]) { qCharts[id].destroy(); qCharts[id] = null; }
+    var labels = kl.map(function (x) { return (x.d || "").slice(5); });
+    try {
+      qCharts[id] = new Chart(cv, {
+        type: "candlestick",
+        data: { labels: labels, datasets: [{ data: kl.map(function (x, i) {
+          return { x: i + 1, o: x.o, h: x.h, l: x.l, c: x.c }; }),
+          color: { up: "#d4380d", down: "#129b63", unchanged: "#999" } }] },
+        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 200 },
+          plugins: { legend: { display: false }, tooltip: { intersect: false, mode: "index",
+            callbacks: { label: function (ctx) {
+              var v = (ctx.raw && ctx.raw.o != null) ? ctx.raw : null;
+              return v ? ["开 " + fmt(v.o), "高 " + fmt(v.h), "低 " + fmt(v.l), "收 " + fmt(v.c)] : ""; } } } },
+          scales: { x: { ticks: { maxTicksLimit: 6, color: c.sub, font: { size: 9 }, maxRotation: 0 }, grid: { display: false } },
+            y: { position: "right", ticks: { maxTicksLimit: 4, color: c.sub, font: { size: 9 } }, grid: { color: c.grid } } } }
+      });
+      return true;
+    } catch (e) {
+      return drawQChart(id, labels, kl.map(function (x) { return x.c; }), cls);
+    }
+  }
   function renderQM(d) {
-    // 模块1 贵金属(全部走 SGE 序列,带分时大图;国际板金即 SGE 国际板合约)
+    var KL = (d.klines || {});
+    // 模块1 贵金属:分时=SGE 序列;日K=沪金主力 AU0(白银 tab 用沪银 AG0,国际板金 tab 用伦敦金 XAU)
     var defs1 = [
-      { n: "现货黄金 Au99.99", u: "元/克", it: _pick(d.items, "Au99.99") },
-      { n: "黄金延期 Au(T+D)", u: "元/克", it: _pick(d.items, "Au(T+D)") },
-      { n: "国际板金 iAu99.99", u: "元/克", it: _pick(d.items, "iAu99.99") },
-      { n: "现货白银 Ag99.99", u: "元/千克", it: _pick(d.items, "Ag99.99") }
+      { n: "现货黄金 Au99.99", u: "元/克", it: _pick(d.items, "Au99.99"), kl: KL.AU0, src: "沪金主力 AU0" },
+      { n: "黄金延期 Au(T+D)", u: "元/克", it: _pick(d.items, "Au(T+D)"), kl: KL.AU0, src: "沪金主力 AU0" },
+      { n: "国际板金 iAu99.99", u: "元/克", it: _pick(d.items, "iAu99.99"), kl: KL.XAU, src: "伦敦金 XAU·美元/盎司" },
+      { n: "现货白银 Ag99.99", u: "元/千克", it: _pick(d.items, "Ag99.99"), kl: KL.AG0, src: "沪银主力 AG0" }
     ];
     var x = defs1[QM_TAB[0]] || defs1[0];
     _set("qm1Name", x.n); _set("qm1Unit", x.u);
@@ -565,14 +592,19 @@
       var ch = changeOf(x.it);
       cls1 = ch ? ch.cls : "flat";
       if (ch1) ch1.innerHTML = _chgHtml(ch);
-      var times = (d.primary && d.primary.symbol === x.it.symbol && d.primary.time) ? d.primary.time : null;
-      ok1 = drawQChart("qm1Chart", times, x.it.series, cls1);
-      if (!ok1 && sp1) { sp1.style.display = ""; sp1.innerHTML = spark(x.it.series, cls1); }
-    } else {
-      if (ch1) ch1.innerHTML = x.cny ? '<span class="tq-sub">≈ 人民币 ' + fmt(x.cny) + " 元/克（实时折算）</span>" : '<span class="flat">—</span>';
     }
-    if (!ok1 && sp1 && !x.it) sp1.style.display = "none";
-    // 模块2 外汇牌价(无序列,图区显示美元指数信息块)
+    if (QM_MODE[0] === 1) {
+      ok1 = drawQK("qm1Chart", x.kl, cls1);
+      if (ok1 && x.it) _set("qm1Name", x.n + "  ·  日K·" + x.src);
+    } else if (x.it) {
+      ok1 = drawQChart("qm1Chart", null, x.it.series, cls1);
+    }
+    if (sp1) {
+      var showSpark = !ok1 && x.it;
+      sp1.style.display = showSpark ? "" : "none";
+      if (showSpark) sp1.innerHTML = spark(x.it.series, cls1);
+    }
+    // 模块2 外汇牌价(无K线源,图区显示美元指数块)
     var defs2 = [["USD", "美元兑人民币 USD/CNY"], ["EUR", "欧元兑人民币 EUR/CNY"],
                  ["JPY", "日元兑人民币 JPY/CNY(100)"], ["HKD", "港币兑人民币 HKD/CNY"],
                  ["GBP", "英镑兑人民币 GBP/CNY"]];
@@ -599,8 +631,9 @@
         sp2.innerHTML = "";
       }
     }
-    // 模块3 能源(布伦特/WTI 新浪实时 + 近 30 日收盘大图;SC 显示说明)
-    var defs3 = [["brent", "布伦特原油 OIL"], ["wti", "WTI原油 CL"], ["sc", "上海原油 SC"]];
+    // 模块3 能源:走势=30日收盘线;日K=真实 OHLC(OIL/CL/SC0)
+    var defs3 = [["brent", "布伦特原油 OIL", "OIL", "布伦特连续"], ["wti", "WTI原油 CL", "CL", "WTI连续"],
+                 ["sc", "上海原油 SC", "SC0", "沪原油连续"]];
     var def3 = defs3[QM_TAB[2]] || defs3[0];
     var o = (d.oil || {})[def3[0]] || {};
     _set("qm3Name", o.name || def3[1]);
@@ -619,7 +652,12 @@
       ch3.innerHTML = '<span class="flat">—</span>';
     }
     var ok3 = false;
-    if (o.hist && o.hist.length > 3) ok3 = drawQChart("qm3Chart", null, o.hist, ocls);
+    if (QM_MODE[2] === 1) {
+      ok3 = drawQK("qm3Chart", KL[def3[2]], ocls);
+      if (ok3) _set("qm3Name", (o.name || def3[1]) + "  ·  日K·" + def3[3]);
+    } else if (o.hist && o.hist.length > 3) {
+      ok3 = drawQChart("qm3Chart", null, o.hist, ocls);
+    }
     var sp3 = $("#qm3Spark");
     if (sp3) {
       sp3.style.display = ok3 ? "none" : "";
@@ -631,16 +669,23 @@
       var box = $("#" + p[0]); if (!box) return;
       box.addEventListener("click", function (e) {
         var a = e.target.closest(".tq-tabs a"); if (!a) return;
-        var idx = +a.getAttribute("data-i");
-        QM_TAB[p[1]] = idx;
-        box.querySelectorAll(".tq-tabs a").forEach(function (t) {
-          t.classList.toggle("on", +t.getAttribute("data-i") === idx);
-        });
+        var mi = a.getAttribute("data-m");
+        if (mi != null) {
+          QM_MODE[p[1]] = +mi;
+          box.querySelectorAll(".tq-mode a").forEach(function (t) {
+            t.classList.toggle("on", +t.getAttribute("data-m") === +mi);
+          });
+        } else {
+          var idx = +a.getAttribute("data-i");
+          QM_TAB[p[1]] = idx;
+          box.querySelectorAll(".tq-tabs a[data-i]").forEach(function (t) {
+            t.classList.toggle("on", +t.getAttribute("data-i") === idx);
+          });
+        }
         renderQM(DATA);
       });
     });
   }
-
   // ---------- 主题 ----------
   function bindTheme() {
     // 主题初始化与按钮交互由 common.js 统一处理；这里只负责主题变化时重绘图表配色
