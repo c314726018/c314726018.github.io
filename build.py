@@ -503,6 +503,7 @@ def nav_html(active=""):
     links = [
         ("overview", "./index.html#overview", "行情概览"),
         ("quotes", "./index.html#quotes", "实时行情"),
+        ("premium", "./index.html#premium", "溢价对照"),
         ("charts", "./index.html#charts", "走势图表"),
         ("alerts", "./index.html#alerts", "价格提醒"),
         ("learn", "./index.html#learn", "黄金百科"),
@@ -538,7 +539,8 @@ def footer_html():
     </div>
     <div class="foot-col"><h4>行情</h4>
       <a href="./index.html#overview">行情概览</a><a href="./index.html#quotes">实时行情表</a>
-      <a href="./index.html#charts">走势图表</a><a href="./index.html#alerts">价格提醒</a></div>
+      <a href="./index.html#premium">多品种溢价</a><a href="./index.html#charts">走势图表</a>
+      <a href="./index.html#alerts">价格提醒</a></div>
     <div class="foot-col"><h4>知识</h4>
       <a href="./index.html#learn">黄金百科</a><a href="./about.html#method">指标与算法</a>
       <a href="./about.html#source">数据来源</a><a href="./about.html#faq">常见问题</a></div>
@@ -567,6 +569,30 @@ def faq_ld(faq):
 
 def ad_slot():
     return '<div class="ad-slot" aria-label="广告位"></div>'
+
+
+METAL_DEFS = [("gold", "黄金", "Au99.99"), ("silver", "白银", "Ag99.99"), ("platinum", "铂金", "Pt99.95")]
+
+
+def metals_rows(intl):
+    """多品种溢价对照表静态行（首屏可用，app.js 刷新后重建）。"""
+    m = intl.get("metals") or {}
+    rows = []
+    for key, label, sge_sym in METAL_DEFS:
+        x = m.get(key) or {}
+        prem = x.get("premium_pct")
+        cls = "up" if (prem or 0) >= 0 else "down"
+        prem_txt = f"{prem:+.2f}%" if prem is not None else "—"
+        unit = esc(x.get("unit") or "")
+        rows.append(
+            "<tr>"
+            f'<td class="lbl" data-label="品种">{label} <span class="sym">{sge_sym}</span></td>'
+            f'<td class="num" data-label="境内报价">{fmt(x.get("sge"))} <span class="unit">{unit}</span></td>'
+            f'<td class="num" data-label="国际折算">{fmt(x.get("intl_cny"))} <span class="unit">{unit}</span></td>'
+            f'<td data-label="国内溢价"><span class="chg {cls}">{prem_txt}</span></td>'
+            f'<td class="unit" data-label="口径">{esc(x.get("intl_symbol") or "")} × USD/CNY</td>'
+            "</tr>")
+    return "".join(rows)
 
 
 # ---------------------------------------------------------------- 首页
@@ -599,6 +625,7 @@ def page_index(data):
     prem = intl.get("premium_pct")
     prem_cls = "up" if (prem or 0) >= 0 else "down"
     prem_txt = f"{prem:+.2f}%" if prem is not None else "—"
+    silver_usd = fmt(((intl.get("metals") or {}).get("silver") or {}).get("intl_usd"))
 
     # 主力合约日内区间（概览卡静态首屏值，app.js 会在数据刷新后覆盖）
     main_item = next((x for x in items if x.get("symbol") == "Au99.99"), None)
@@ -614,7 +641,7 @@ def page_index(data):
 
     return f"""{head_html(
         "今日金价_实时黄金价格_上海黄金交易所行情 | 国内溢价",
-        "实时黄金价格：上海黄金交易所 Au99.99 等合约最新价、国际现货黄金 XAU/USD、美元兑人民币汇率及国内溢价测算，附分时走势、K 线与黄金知识百科。",
+        "实时黄金白银铂金价格：上海黄金交易所 Au99.99、Au(T+D)、Ag99.99 等合约最新价，国际现货 XAU/XAG/XPT、美元兑人民币汇率及多品种国内溢价对照，附分时走势、K 线与贵金属知识百科。",
         SITE, ld)}
 <body>
 {topbar_html(data)}
@@ -644,9 +671,9 @@ def page_index(data):
         </div>
         <div class="hero-side">
           <div class="hs"><div class="k">◈ 国际现货黄金</div><div class="v num" id="hsXau">{fmt(intl.get('xau_usd'))}</div><div class="t">XAU/USD · 美元/盎司</div></div>
+          <div class="hs"><div class="k">◇ 国际现货白银</div><div class="v num" id="hsSilver">{silver_usd}</div><div class="t">XAG/USD · 美元/盎司</div></div>
           <div class="hs"><div class="k">⇄ 美元兑人民币</div><div class="v num" id="hsFx">{fmt(intl.get('usd_cny'), 4)}</div><div class="t">USD/CNY</div></div>
-          <div class="hs"><div class="k">≋ 国际折算价</div><div class="v num" id="hsCny">{fmt(intl.get('intl_cny_per_g'))}</div><div class="t">元/克（含金衡盎司换算）</div></div>
-          <div class="hs"><div class="k">◐ 国内溢价</div><div class="v num {prem_cls}" id="hsPrem">{prem_txt}</div><div class="t">SGE 较国际折算</div></div>
+          <div class="hs"><div class="k">◐ 黄金国内溢价</div><div class="v num {prem_cls}" id="hsPrem">{prem_txt}</div><div class="t">SGE 较国际折算</div></div>
         </div>
       </div>
     </div>
@@ -669,7 +696,7 @@ def page_index(data):
   <section class="section" id="quotes">
     <div class="section-head">
       <div><div class="lbl">MARKET QUOTES</div><h2>上海黄金交易所 · 实时行情</h2>
-        <p>六大常用合约并列对照，涨跌幅以今开为基准计算。</p></div>
+        <p>现货、延期与 100g 合约并列对照，涨跌幅以今开为基准计算。</p></div>
       <div class="side">涨 <span class="up">红</span> / 跌 <span class="down">绿</span> · 单位见每行</div>
     </div>
     <div class="card">
@@ -680,6 +707,24 @@ def page_index(data):
         <tbody id="tbody"></tbody>
       </table>
       <div class="tfoot">「今开 / 最高 / 最低」为当日（或最近交易时段）区间；「最新价」为最近一笔成交。非交易时段显示最近一次有效报价。日内走势为分时序列迷你图，仅示意节奏，不代表完整逐笔成交。</div>
+    </div>
+  </section>
+
+  <!-- ============ 多品种溢价 ============ -->
+  <section class="section" id="premium">
+    <div class="section-head">
+      <div><div class="lbl">CROSS-MARKET PREMIUM</div><h2>多品种国内溢价</h2>
+        <p>黄金、白银、铂金的境内报价与国际折算价对照，看懂内外价差。</p></div>
+      <div class="side">溢价为正 = 境内贵于国际折算</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>溢价对照</h3>
+        <div class="chip-row"><span class="chip">Au99.99 ↔ XAU</span><span class="chip">Ag99.99 ↔ XAG</span><span class="chip">Pt99.95 ↔ XPT</span></div></div>
+      <table>
+        <thead><tr><th>品种</th><th>境内报价 (SGE)</th><th>国际折算</th><th>国内溢价</th><th>口径</th></tr></thead>
+        <tbody id="metalsBody">{metals_rows(intl)}</tbody>
+      </table>
+      <div class="tfoot">国际折算 = 国际美元价 × USD/CNY ÷ 31.1034768（白银为元/千克口径，再 × 1000）。溢价 =（SGE − 折算）÷ 折算 × 100%。注意：境内白银报价含增值税因素，对国际价的溢价天然偏高；各品种口径详见「关于本站」。</div>
     </div>
   </section>
 

@@ -90,8 +90,9 @@
     }
     // Hero 右侧：国际维度（每 60s 数据刷新时同步）
     if (intl.xau_usd != null) $("#hsXau").textContent = fmt(intl.xau_usd);
+    var mets = intl.metals || {};
+    if (mets.silver && mets.silver.intl_usd != null) $("#hsSilver").textContent = fmt(mets.silver.intl_usd);
     if (intl.usd_cny != null) $("#hsFx").textContent = fmt(intl.usd_cny, 4);
-    if (intl.intl_cny_per_g != null) $("#hsCny").textContent = fmt(intl.intl_cny_per_g);
     if (intl.premium_pct != null) {
       var el = $("#hsPrem");
       el.textContent = (intl.premium_pct >= 0 ? "+" : "") + fmt(intl.premium_pct) + "%";
@@ -121,6 +122,29 @@
         '<td class="num down" data-label="最低">' + fmt(it.min) + "</td>" +
         '<td data-label="日内走势">' + spark(it.series, ch ? ch.cls : "flat") + "</td>" +
         '<td class="unit" data-label="单位">' + esc(it.unit) + "</td>" +
+        "</tr>";
+    }).join("");
+  }
+
+  // ---------- 多品种溢价对照 ----------
+  var METAL_DEFS = [["gold", "黄金", "Au99.99"], ["silver", "白银", "Ag99.99"], ["platinum", "铂金", "Pt99.95"]];
+
+  function renderMetals(d) {
+    var tb = $("#metalsBody");
+    if (!tb) return;
+    var m = (d.intl || {}).metals || {};
+    tb.innerHTML = METAL_DEFS.map(function (def) {
+      var x = m[def[0]] || {};
+      var prem = x.premium_pct;
+      var cls = prem == null ? "flat" : (prem >= 0 ? "up" : "down");
+      var premTxt = prem == null ? "—" : (prem >= 0 ? "+" : "") + fmt(prem) + "%";
+      var unit = esc(x.unit || "");
+      return "<tr>" +
+        '<td class="lbl" data-label="品种">' + def[1] + ' <span class="sym">' + def[2] + "</span></td>" +
+        '<td class="num" data-label="境内报价">' + fmt(x.sge) + ' <span class="unit">' + unit + "</span></td>" +
+        '<td class="num" data-label="国际折算">' + fmt(x.intl_cny) + ' <span class="unit">' + unit + "</span></td>" +
+        '<td data-label="国内溢价"><span class="chg ' + cls + '">' + premTxt + "</span></td>" +
+        '<td class="unit" data-label="口径">' + esc(x.intl_symbol || "") + " × USD/CNY</td>" +
         "</tr>";
     }).join("");
   }
@@ -320,6 +344,7 @@
     DATA = d;
     renderOverview(d);
     renderTable(d);
+    renderMetals(d);
     renderCharts(d);
     checkAlerts(d);
   }
