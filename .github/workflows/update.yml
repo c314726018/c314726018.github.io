@@ -21,11 +21,17 @@ jobs:
         run: |
           python fetch.py
           python build.py
+      - name: 邮件提醒比对与发信
+        env:
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          ALERT_RULES: ${{ secrets.ALERT_RULES }}
+        run: python compare_alerts.py || echo "提醒步骤失败(不影响构建)"
       - name: 提交更新
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json docs/
+          git add data.json docs/ alerts_state.json
           git commit -m "chore: 更新行情 $(date +%Y-%m-%dT%H:%M)" || echo "no changes"
           git push
       - name: IndexNow 推送（Bing / 360 / 搜狗 / Yandex 收录）

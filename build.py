@@ -1514,7 +1514,7 @@ def page_index(data):
           <div class="hint" id="copyNote">浏览器通知保存在本机；清除浏览器数据会一并删除。</div>
           <div class="mail-box" id="mailBox">
             <div class="card-head" style="margin-bottom:8px"><h3>邮件提醒（免费）</h3></div>
-            <div class="hint">触发目标价时自动发送邮件通知,无需保持页面打开。有效期 1 年,提交后 24h 内开通。</div>
+            <div class="hint">触发后 30 分钟内自动邮件送达,无需保持页面打开。有效期 1 年,提交后当天开通。</div>
             <div class="alert-row">
               <input id="mailAddr" type="email" placeholder="接收邮箱" aria-label="接收邮箱" style="flex:1 1 180px">
               <button class="btn" id="mailSubmit" type="button">提交订阅</button>
