@@ -576,26 +576,37 @@
   }
   function renderQM(d) {
     var KL = (d.klines || {});
-    // 模块1 贵金属:分时=SGE 序列;日K=沪金主力 AU0(白银 tab 用沪银 AG0,国际板金 tab 用伦敦金 XAU)
+    // 模块1 贵金属:分时=SGE 序列;日K=沪金主力 AU0(白银 AG0,国际板金 XAU,COMEX=GC/SI)
+    var INTL = ((d.extra || {}).intl) || [];
+    function pickIntl(code) {
+      return INTL.filter(function (x) { return x.code === code; })[0] || null;
+    }
     var defs1 = [
       { n: "现货黄金 Au99.99", u: "元/克", it: _pick(d.items, "Au99.99"), kl: KL.AU0, src: "沪金主力 AU0" },
       { n: "黄金延期 Au(T+D)", u: "元/克", it: _pick(d.items, "Au(T+D)"), kl: KL.AU0, src: "沪金主力 AU0" },
       { n: "国际板金 iAu99.99", u: "元/克", it: _pick(d.items, "iAu99.99"), kl: KL.XAU, src: "伦敦金 XAU·美元/盎司" },
-      { n: "现货白银 Ag99.99", u: "元/千克", it: _pick(d.items, "Ag99.99"), kl: KL.AG0, src: "沪银主力 AG0" }
+      { n: "现货白银 Ag99.99", u: "元/千克", it: _pick(d.items, "Ag99.99"), kl: KL.AG0, src: "沪银主力 AG0" },
+      { n: "COMEX黄金 GC", u: "美元/盎司", px: pickIntl("hf_GC"), kl: KL.GC, src: "COMEX GC", klOnly: true },
+      { n: "COMEX白银 SI", u: "美元/盎司", px: pickIntl("hf_SI"), kl: KL.SI, src: "COMEX SI", klOnly: true }
     ];
     var x = defs1[QM_TAB[0]] || defs1[0];
     _set("qm1Name", x.n); _set("qm1Unit", x.u);
-    _set("qm1Price", fmt(x.it ? x.it.last : x.v));
+    var px = x.px || null;
+    _set("qm1Price", fmt(x.it ? x.it.last : (px ? px.last : x.v)));
     var ch1 = $("#qm1Chg"), sp1 = $("#qm1Spark");
     var ok1 = false, cls1 = "flat";
     if (x.it) {
       var ch = changeOf(x.it);
       cls1 = ch ? ch.cls : "flat";
       if (ch1) ch1.innerHTML = _chgHtml(ch);
+    } else if (px) {
+      var pch = chgPair(px.last, px.prev);
+      cls1 = pch ? pch.cls : "flat";
+      if (ch1) ch1.innerHTML = _chgHtml(pch);
     }
-    if (QM_MODE[0] === 1) {
+    if (QM_MODE[0] === 1 || x.klOnly) {
       ok1 = drawQK("qm1Chart", x.kl, cls1);
-      if (ok1 && x.it) _set("qm1Name", x.n + "  ·  日K·" + x.src);
+      if (ok1) _set("qm1Name", x.n + "  ·  日K·" + x.src);
     } else if (x.it) {
       ok1 = drawQChart("qm1Chart", null, x.it.series, cls1);
     }

@@ -399,7 +399,7 @@ SINA_INNER = ("https://stock2.finance.sina.com.cn/futures/api/jsonp.php/var%20_I
 def fetch_klines():
     """日 K OHLC(最近 60 根,真实历史):
     AU0 沪金主力 / AG0 沪银主力 / SC0 上海原油(InnerFutures,d/o/h/l/c)
-    XAU 伦敦金 / OIL 布伦特 / CL WTI(GlobalFutures,date/open/high/low/close)"""
+    XAU 伦敦金 / GC COMEX金 / SI COMEX银 / OIL 布伦特 / CL WTI(GlobalFutures)各 120 根"""
     out = {}
 
     def norm(x):
@@ -411,6 +411,7 @@ def fetch_klines():
 
     for key, sym, tpl in (("AU0", "AU0", SINA_INNER), ("AG0", "AG0", SINA_INNER),
                           ("SC0", "SC0", SINA_INNER), ("XAU", "XAU", SINA_DAILY),
+                          ("GC", "GC", SINA_DAILY), ("SI", "SI", SINA_DAILY),
                           ("OIL", "OIL", SINA_DAILY), ("CL", "CL", SINA_DAILY)):
         try:
             raw = _get_text(tpl.format(sym=sym), headers=SINA_HEADERS)
@@ -418,7 +419,7 @@ def fetch_klines():
             arr = json.loads(raw[i + 1:j])
             if not isinstance(arr, list) or not arr:
                 raise RuntimeError("空K线")
-            out[key] = [norm(x) for x in arr[-60:]]
+            out[key] = [norm(x) for x in arr[-120:]]
         except Exception as e:
             print(f"[warn] 日K {sym} 抓取失败: {e}", file=sys.stderr)
     return out
