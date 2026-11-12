@@ -239,7 +239,7 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .foot-brand p{margin:14px 0 0;font-size:12.5px;line-height:1.9;max-width:290px}
 .foot-col h4{color:#fff;font-size:13px;margin:0 0 14px;font-weight:650}
 .foot-col a{display:block;padding:5px 0;color:#98a8c0;font-size:12.5px}
-.foot-col a:hover{color:var(--gold-2)}
+.foot-col a:hover{color:var(--gold-2);text-decoration:underline;text-underline-offset:3px}
 .foot-bottom{border-top:1px solid rgba(255,255,255,.09);padding:18px 0 26px;font-size:11.5px;
   line-height:1.85;color:#7e8ea8}
 .foot-bottom strong{color:#b9c6da}
@@ -334,6 +334,8 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 @media(max-width:360px){
   .hero-side{grid-template-columns:1fr}
 }
+button, .fbtn, .tq-tabs a, .tq-tools a, .heat{cursor:pointer}
+button:active, .fbtn:active{transform:scale(.97)}
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;transition-duration:.001ms!important}
   html{scroll-behavior:auto}
@@ -495,11 +497,11 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .subnav-links a{font-size:12px;color:var(--sub);padding:4px 11px;font-weight:500;white-space:nowrap;transition:.13s;
   border-right:1px solid var(--line)}
 .subnav-links a:last-child{border-right:none}
-.subnav-links a:hover{color:var(--gold)}
+.subnav-links a:hover{color:var(--gold);border-color:var(--gold-2);background:var(--gold-soft)}
 @media(max-width:640px){
   .subnav-inner{gap:6px;padding:5px 20px}
   .subnav-home{width:100%}
-  .subnav-links a{border-right:none;padding:4px 8px}
+  .subnav-links a{border-right:none;padding:4px 11px;border-radius:16px;background:color-mix(in srgb,var(--ink) 4%,transparent);border:1px solid transparent}
 }
 
 /* ============ 金投网式三栏门户布局 ============ */
@@ -513,9 +515,12 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .pmod-h .more:hover{color:var(--gold)}
 .pmod-b{padding:8px 10px;font-size:12.5px}
 .pmod-b .mini-list{list-style:none;margin:0;padding:0}
-.pmod-b .mini-list li{padding:6px 2px;border-bottom:1px dashed var(--line-2);line-height:1.55}
+.pmod-b .mini-list li{padding:6px 8px;border-bottom:1px dashed var(--line-2);line-height:1.55;border-radius:8px;transition:.12s}
 .pmod-b .mini-list li:last-child{border-bottom:none}
-.pmod-b .mini-list a{color:var(--ink-2);font-size:12px}
+.pmod-b .mini-list a{color:var(--ink-2);font-size:12px;transition:.12s}
+.mini-list li a::after{content:" ›";color:var(--gold-2);font-weight:700}
+.mini-list li:hover{background:var(--surface-2)}
+.mini-list li:hover a{color:var(--gold)}
 .pmod-b .mini-list a:hover{color:var(--gold)}
 .pmod-b .mini-list .t{color:var(--sub);font-size:10.5px;margin-right:6px;font-variant-numeric:tabular-nums}
 .side-nav{list-style:none;margin:0;padding:0}
@@ -554,13 +559,13 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .tq{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .tq-tabs{display:flex;align-items:center;background:var(--surface-2);border-bottom:1px solid var(--line);padding:0 4px;overflow-x:auto}
 .tq-tabs b{font-size:12.5px;color:var(--gold-ink);padding:9px 10px;letter-spacing:1px;white-space:nowrap}
-.tq-tabs a{font-size:12px;color:var(--sub);padding:9px 9px;cursor:pointer;white-space:nowrap;
-  border-bottom:2px solid transparent;transition:.13s}
-.tq-tabs a:hover{color:var(--ink)}
-.tq-tabs a.on{color:var(--gold);border-bottom-color:var(--gold);font-weight:650}
+.tq-tabs a{font-size:12px;color:var(--sub);padding:5px 10px;margin:4px 2px;cursor:pointer;white-space:nowrap;
+  border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--ink) 4%,transparent);transition:.13s}
+.tq-tabs a:hover{color:var(--gold);border-color:var(--gold-2);background:var(--gold-soft)}
+.tq-tabs a.on{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:650}
 .tq-mode{margin-left:auto;display:inline-flex}
-.tq-mode a{font-size:11px;padding:9px 8px;color:var(--sub)}
-.tq-mode a.on{color:var(--ink);border-bottom-color:var(--ink)}
+.tq-mode a{font-size:11px;padding:5px 8px;color:var(--sub)}
+.tq-mode a.on{color:#fff;background:var(--ink);border-color:var(--ink)}
 .tq-top{padding:12px 14px 6px}
 .tq-name{font-size:12px;color:var(--sub);margin-bottom:3px}
 .tq-priceline{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
@@ -637,9 +642,10 @@ main{counter-reset:secno}
 .tq-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:5px 10px 7px;border-top:1px dashed var(--line-2)}
 .tq-tools .tt-g{display:inline-flex;align-items:center;gap:2px}
 .tq-tools .tt-g::before{content:attr(data-g);font-size:9.5px;color:var(--sub);margin-right:1px;letter-spacing:.5px}
-.tq-tools a{font-size:10.5px;color:var(--sub);padding:2px 6px;border-radius:6px;cursor:pointer;transition:.12s;white-space:nowrap}
-.tq-tools a:hover{color:var(--ink);background:var(--surface-2)}
-.tq-tools a.on{color:var(--gold);background:var(--gold-soft);font-weight:650}
+.tq-tools a{font-size:10.5px;color:var(--ink-2);padding:3px 9px;border-radius:7px;cursor:pointer;transition:.12s;white-space:nowrap;
+  border:1px solid var(--line);background:var(--surface)}
+.tq-tools a:hover{color:var(--gold);border-color:var(--gold-2);background:var(--gold-soft)}
+.tq-tools a.on{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:650}
 .tq-subchart{height:96px;padding:2px 8px 6px;position:relative;border-top:1px dashed var(--line-2)}
 .tq-subchart canvas{display:block}
 #fsOverlay{position:fixed;inset:0;background:var(--brand);z-index:300;display:none;flex-direction:column;padding:18px 24px}
@@ -650,8 +656,8 @@ main{counter-reset:secno}
 #fsOverlay .fs-h a:hover{color:var(--gold)}
 #fsOverlay .fs-body{flex:1;position:relative}
 #fsOverlay canvas{display:block}
-.fav{cursor:pointer;margin-right:5px;color:var(--sub);font-size:12px;user-select:none}
-.fav:hover{color:var(--gold)}
+.fav{cursor:pointer;margin-right:6px;color:var(--sub);font-size:14px;user-select:none;padding:2px 4px;border-radius:6px;transition:.12s;display:inline-block}
+.fav:hover{color:var(--gold);background:var(--gold-soft);transform:scale(1.15)}
 .fav.on{color:var(--gold)}
 
 .pmod-b .mini-list .mini-sub{font-size:10.5px;color:var(--sub);line-height:1.6;margin-top:2px}
