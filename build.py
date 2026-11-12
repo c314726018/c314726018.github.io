@@ -1051,13 +1051,15 @@ def ticker_html(data):
 NAV_SECTIONS = [
     ("quotes", "行情中心", "./index.html", [
         ("行情概览", "./index.html#overview"),
+        ("价格提醒", "./index.html#alerts"),
         ("实时行情", "./index.html#quotes"),
+        ("涨跌热力图", "./index.html#heat"),
         ("溢价对照", "./index.html#premium"),
         ("实物金价", "./index.html#physical"),
         ("油价汇率", "./index.html#energy"),
         ("工具计算", "./index.html#tools"),
         ("走势图表", "./index.html#charts"),
-        ("价格提醒", "./index.html#alerts"),
+        ("留言反馈", "./feedback.html"),
     ]),
     ("data", "数据中心", "./data.html", [
         ("关键指标", "./data.html#indicators"),
