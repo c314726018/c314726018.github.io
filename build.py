@@ -17,6 +17,49 @@
 import json
 import os
 import datetime
+from feedback_page import main_html as feedback_main
+
+def page_feedback(data):
+    """留言页:复用全站包装,内核由 feedback_page.main_html 提供(拼接式,无 f-string 转义)。"""
+    fb = feedback_main()
+    s = head_html(
+        "留言反馈 - 意见建议与需求沟通 - 金潮网",
+        "向金潮网发送意见、建议与功能需求,直达站长邮箱。",
+        SITE + "feedback.html")
+    s += topbar_html(data)
+    s += ticker_html(data)
+    s += nav_html("feedback")
+    s += subnav_html("feedback")
+    s += '<div class="wrap"><div class="portal">'
+    s += side_left("feedback")
+    s += '<div class="portal-main">'
+    s += fb
+    s += '</div>'
+    s += side_right(data)
+    s += '</div></div>'
+    s += footer_html()
+    s += '<script id="app-data" type="application/json">{}</script>'
+    s += '<script src="./ads.js"></script>'
+    s += '<script src="./common.js?v=' + TS + '"></script>'
+    s += '<script src="./app.js?v=' + TS + '"></script>'
+    s += '<script>(function(){'
+    s += 'var s=document.getElementById("fbSubmit");'
+    s += 'if(!s)return;'
+    s += 's.addEventListener("click",function(){'
+    s += 'var body=(document.getElementById("fbBody")||{}).value||"";'
+    s += 'var name=(document.getElementById("fbName")||{}).value||"匿名";'
+    s += 'var mail=(document.getElementById("fbMail")||{}).value||"未填写";'
+    s += 'if(!body.trim()){alert("请填写留言内容");return;}'
+    s += 'var full="称呼:"+name+"\\n联系邮箱:"+mail+"\\n\\n留言内容:\\n"+body+"\\n\\n时间:"+new Date().toLocaleString();'
+    s += 'window.location.href="mailto:"+(window.DATA&&window.DATA.alert_mail||"314726018@qq.com")'
+    s += '+("?subject="+encodeURIComponent("【金潮网】用户留言 - "+name))'
+    s += '+("&body="+encodeURIComponent(full));'
+    s += 'var n=document.getElementById("fbNote");'
+    s += 'if(n)n.innerHTML="已唤起邮件客户端,请点击发送完成留言。";'
+    s += '});})();</script>'
+    s += '</body></html>'
+    return s
+
 import html as _html
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -247,6 +290,12 @@ tbody tr:last-child td{border-bottom:none}
 /* 提醒 */
 .alert-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
 .alert-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sym-multi{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0;max-height:132px;overflow-y:auto;scrollbar-width:thin;
+  padding:8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface-2)}
+.sym-multi .sp{font-size:11px;color:var(--ink-2);padding:3px 9px;border-radius:14px;cursor:pointer;
+  border:1px solid var(--line);background:var(--surface);transition:.12s;white-space:nowrap;user-select:none}
+.sym-multi .sp:hover{color:var(--gold);border-color:var(--gold-2)}
+.sym-multi .sp.on{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:650}
 .mail-box{margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface-2)}
 .mail-box .hint{margin-bottom:8px}
 .alert-row select,.alert-row input{background:var(--surface-2);border:1px solid var(--line);
@@ -1137,7 +1186,7 @@ def footer_html():
       <a href="./calendar.html#cb">央行决议</a><a href="./news.html">7×24 快讯</a></div>
     <div class="foot-col"><h4>投资学院</h4>
       <a href="./academy.html#articles">科普文章</a><a href="./academy.html#glossary">术语速查</a>
-      <a href="./academy.html#faq">常见问题</a><a href="./about.html">关于本站</a>
+      <a href="./academy.html#faq">常见问题</a><a href="./feedback.html">留言反馈</a><a href="./about.html">关于本站</a>
       <a href="./privacy.html">隐私政策</a></div>
   </div>
   <div class="wrap foot-bottom">
@@ -1365,9 +1414,23 @@ def page_index(data):
     prim = data.get("primary") or {}
     sym = prim.get("symbol") or "Au99.99"
 
-    sym_opts = "".join(
-        f'<option value="{esc(it.get("symbol"))}">{esc(it.get("label"))} {esc(it.get("symbol"))}</option>'
-        for it in items)
+    sym_pool = []
+    for it in items:
+        sym_pool.append((it.get("symbol"), it.get("label") + " " + it.get("symbol")))
+    for k, nm in (("BRENT", "布伦特原油"), ("WTI", "WTI原油"), ("SC", "上海原油")):
+        sym_pool.append((k, nm))
+    for x in (data.get("extra") or {}).get("futures") or []:
+        sym_pool.append((x.get("code"), x.get("name")))
+    for x in (data.get("extra") or {}).get("indices") or []:
+        sym_pool.append((x.get("code"), x.get("name")))
+    for x in (data.get("extra") or {}).get("intl") or []:
+        sym_pool.append((x.get("code"), x.get("name")))
+    D = (data.get("extra") or {}).get("dxy")
+    if D:
+        sym_pool.append(("DINIW", "美元指数"))
+    sym_pills = "".join(
+        f'<a class="sp" data-v="{esc(sv)}" title="点击选中/取消">{esc(sl)}</a>'
+        for sv, sl in sym_pool)
 
     faq_html = "".join(
         f'<details><summary>{esc(f["q"])}</summary><div class="ans">{esc(f["a"])}</div></details>'
@@ -1503,9 +1566,10 @@ def page_index(data):
         <div>
           <div class="card-head" style="margin-bottom:10px"><h3>设置邮件提醒</h3></div>
           <ol class="steps"><li>选择品种与方向（高于 / 低于），填写目标价</li><li>填写接收邮箱，提交订阅</li><li>触发后自动发信，30 分钟内送达</li></ol>
+          <div class="sym-multi" id="alertSymBox" aria-label="选择品种(可多选)">{sym_pills}</div>
+          <div class="hint" style="margin:4px 2px">可多选品种;每个品种将分别建立提醒规则。</div>
           <div class="alert-row">
-            <select id="alertSym" aria-label="选择品种">{sym_opts}</select>
-            <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option></select>
+            <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option><option value="equal">= 等于</option></select>
             <input id="alertVal" type="number" step="0.01" placeholder="目标价格" aria-label="目标价格">
           </div>
           <div class="alert-row">
@@ -2624,6 +2688,7 @@ def main():
         (os.path.join(DOCS, "news.html"), page_news(data)),
         (os.path.join(DOCS, "academy.html"), page_academy(data)),
         (os.path.join(DOCS, "about.html"), page_about(data)),
+        (os.path.join(DOCS, "feedback.html"), page_feedback(data)),
         (os.path.join(DOCS, "privacy.html"), page_privacy(data)),
         (os.path.join(DOCS, "history.html"), page_history(data, hist)),
     ]

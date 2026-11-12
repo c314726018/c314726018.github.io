@@ -180,6 +180,12 @@ tbody tr:last-child td{border-bottom:none}
 /* 提醒 */
 .alert-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
 .alert-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sym-multi{display:flex;flex-wrap:wrap;gap:5px;margin:4px 0;max-height:132px;overflow-y:auto;scrollbar-width:thin;
+  padding:8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface-2)}
+.sym-multi .sp{font-size:11px;color:var(--ink-2);padding:3px 9px;border-radius:14px;cursor:pointer;
+  border:1px solid var(--line);background:var(--surface);transition:.12s;white-space:nowrap;user-select:none}
+.sym-multi .sp:hover{color:var(--gold);border-color:var(--gold-2)}
+.sym-multi .sp.on{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:650}
 .mail-box{margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface-2)}
 .mail-box .hint{margin-bottom:8px}
 .alert-row select,.alert-row input{background:var(--surface-2);border:1px solid var(--line);

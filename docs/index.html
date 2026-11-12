@@ -22,8 +22,8 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "今日金价是多少？", "acceptedAnswer": {"@type": "Answer", "text": "本页实时展示上海黄金交易所 Au99.99 等合约最新价，以及国际现货黄金（XAU/USD）折算人民币后的价格与国内溢价。数据每小时自动更新，页面每 60 秒检查一次新数据。"}}, {"@type": "Question", "name": "Au99.99 是什么？和 Au99.95 有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "Au99.99 是上海黄金交易所纯度 99.99% 的现货黄金合约，单位元/克，是国内黄金现货最主要的基准报价。Au99.95 纯度为 99.95%，成交活跃度较低，两者价格通常相差很小。iAu99.99 是国际板合约，以人民币计价但面向国际投资者，可观察境内外价差。"}}, {"@type": "Question", "name": "国内溢价怎么算？为什么会是负数？", "acceptedAnswer": {"@type": "Answer", "text": "国内溢价 =（SGE Au99.99 元/克 − 国际金价折算元/克）÷ 国际金价折算元/克 × 100%。国际折算价 = XAU/USD × USD/CNY ÷ 31.1034768。溢价为正说明国内比国际贵，常见于实物需求旺盛或进口配额紧张；为负说明国内贴水，可能与人民币汇率预期、境内供给充裕或国际金价短期快速上涨有关。"}}, {"@type": "Question", "name": "一盎司黄金等于多少克？", "acceptedAnswer": {"@type": "Answer", "text": "金衡盎司（troy ounce）是国际贵金属计价单位，1 金衡盎司 = 31.1034768 克。注意它与日常用的常衡盎司（28.3495 克）不同。把国际金价换算成人民币每克，需要先乘以美元兑人民币汇率，再除以 31.1034768。"}}, {"@type": "Question", "name": "账户黄金和实物黄金有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "账户黄金（如 SGE 现货合约、银行积存金）不提取实物，交易便捷、买卖价差小；实物黄金（金条、金币、首饰）需额外考虑加工费、保管、鉴定与回购折价，实际买入成本通常显著高于交易所报价。"}}, {"@type": "Question", "name": "数据多久更新一次？非交易时段显示什么？", "acceptedAnswer": {"@type": "Answer", "text": "站点每小时抓取一次上海黄金交易所官方行情、国际现货金价与美元兑人民币汇率。非交易时段（夜间、周末、节假日）会显示最近一次有效报价，不会用空值或 0 填充。分时图展示的是最近一个交易时段采集到的价格序列。"}}, {"@type": "Question", "name": "价格提醒会上传到服务器吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会。提醒规则只保存在你当前浏览器的 localStorage 中，页面每 60 秒用本地数据比对一次，触发时通过浏览器桌面通知提示。我们不会收集你的邮箱、价格目标或任何个人信息。"}}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "金潮网", "url": "https://c314726018.github.io/", "description": "实时黄金价格、上海黄金交易所行情、国际金价与国内溢价", "inLanguage": "zh-CN"}</script>
-<link rel="stylesheet" href="./site.css?v=202611121533">
-<script src="./common.js?v=202611121533"></script>
+<link rel="stylesheet" href="./site.css?v=202611121552">
+<script src="./common.js?v=202611121552"></script>
 </head>
 
 <body>
@@ -120,9 +120,10 @@
         <div>
           <div class="card-head" style="margin-bottom:10px"><h3>设置邮件提醒</h3></div>
           <ol class="steps"><li>选择品种与方向（高于 / 低于），填写目标价</li><li>填写接收邮箱，提交订阅</li><li>触发后自动发信，30 分钟内送达</li></ol>
+          <div class="sym-multi" id="alertSymBox" aria-label="选择品种(可多选)"><a class="sp" data-v="Au99.99" title="点击选中/取消">黄金 Au99.99</a><a class="sp" data-v="Au99.95" title="点击选中/取消">黄金 Au99.95</a><a class="sp" data-v="Au100g" title="点击选中/取消">黄金100g Au100g</a><a class="sp" data-v="iAu99.99" title="点击选中/取消">国际板金 iAu99.99</a><a class="sp" data-v="Au(T+D)" title="点击选中/取消">黄金延期 Au(T+D)</a><a class="sp" data-v="mAu(T+D)" title="点击选中/取消">迷你金延期 mAu(T+D)</a><a class="sp" data-v="Ag99.99" title="点击选中/取消">白银 Ag99.99</a><a class="sp" data-v="Ag(T+D)" title="点击选中/取消">白银延期 Ag(T+D)</a><a class="sp" data-v="Pt99.95" title="点击选中/取消">铂金 Pt99.95</a><a class="sp" data-v="BRENT" title="点击选中/取消">布伦特原油</a><a class="sp" data-v="WTI" title="点击选中/取消">WTI原油</a><a class="sp" data-v="SC" title="点击选中/取消">上海原油</a><a class="sp" data-v="nf_AU0" title="点击选中/取消">沪金主力</a><a class="sp" data-v="nf_AG0" title="点击选中/取消">沪银主力</a><a class="sp" data-v="nf_CU0" title="点击选中/取消">沪铜主力</a><a class="sp" data-v="nf_AL0" title="点击选中/取消">沪铝主力</a><a class="sp" data-v="nf_ZN0" title="点击选中/取消">沪锌主力</a><a class="sp" data-v="nf_NI0" title="点击选中/取消">沪镍主力</a><a class="sp" data-v="nf_SN0" title="点击选中/取消">沪锡主力</a><a class="sp" data-v="nf_RB0" title="点击选中/取消">螺纹钢主力</a><a class="sp" data-v="nf_SC0" title="点击选中/取消">上海原油</a><a class="sp" data-v="nf_M0" title="点击选中/取消">豆粕主力</a><a class="sp" data-v="nf_I0" title="点击选中/取消">铁矿石主力</a><a class="sp" data-v="nf_C0" title="点击选中/取消">玉米主力</a><a class="sp" data-v="nf_CF0" title="点击选中/取消">棉花主力</a><a class="sp" data-v="sh000001" title="点击选中/取消">上证指数</a><a class="sp" data-v="sz399001" title="点击选中/取消">深证成指</a><a class="sp" data-v="sz399006" title="点击选中/取消">创业板指</a><a class="sp" data-v="int_hangseng" title="点击选中/取消">恒生指数</a><a class="sp" data-v="int_dji" title="点击选中/取消">道琼斯</a><a class="sp" data-v="int_nasdaq" title="点击选中/取消">纳斯达克</a><a class="sp" data-v="int_sp500" title="点击选中/取消">标普指数</a><a class="sp" data-v="hf_XAU" title="点击选中/取消">伦敦金</a><a class="sp" data-v="hf_XAG" title="点击选中/取消">伦敦银</a><a class="sp" data-v="hf_GC" title="点击选中/取消">COMEX黄金</a><a class="sp" data-v="hf_SI" title="点击选中/取消">COMEX白银</a><a class="sp" data-v="hf_OIL" title="点击选中/取消">布伦特原油</a><a class="sp" data-v="hf_CL" title="点击选中/取消">WTI原油</a><a class="sp" data-v="DINIW" title="点击选中/取消">美元指数</a></div>
+          <div class="hint" style="margin:4px 2px">可多选品种;每个品种将分别建立提醒规则。</div>
           <div class="alert-row">
-            <select id="alertSym" aria-label="选择品种"><option value="Au99.99">黄金 Au99.99</option><option value="Au99.95">黄金 Au99.95</option><option value="Au100g">黄金100g Au100g</option><option value="iAu99.99">国际板金 iAu99.99</option><option value="Au(T+D)">黄金延期 Au(T+D)</option><option value="mAu(T+D)">迷你金延期 mAu(T+D)</option><option value="Ag99.99">白银 Ag99.99</option><option value="Ag(T+D)">白银延期 Ag(T+D)</option><option value="Pt99.95">铂金 Pt99.95</option></select>
-            <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option></select>
+            <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option><option value="equal">= 等于</option></select>
             <input id="alertVal" type="number" step="0.01" placeholder="目标价格" aria-label="目标价格">
           </div>
           <div class="alert-row">
@@ -386,7 +387,7 @@
       <a href="./calendar.html#cb">央行决议</a><a href="./news.html">7×24 快讯</a></div>
     <div class="foot-col"><h4>投资学院</h4>
       <a href="./academy.html#articles">科普文章</a><a href="./academy.html#glossary">术语速查</a>
-      <a href="./academy.html#faq">常见问题</a><a href="./about.html">关于本站</a>
+      <a href="./academy.html#faq">常见问题</a><a href="./feedback.html">留言反馈</a><a href="./about.html">关于本站</a>
       <a href="./privacy.html">隐私政策</a></div>
   </div>
   <div class="wrap foot-bottom">
@@ -402,6 +403,6 @@
 <script src="./vendor/chart.umd.min.js"></script>
 <script src="./vendor/chartjs-chart-financial.umd.min.js"></script>
 <script src="./ads.js"></script>
-<script src="./app.js?v=202611121533"></script>
+<script src="./app.js?v=202611121552"></script>
 </body>
 </html>
