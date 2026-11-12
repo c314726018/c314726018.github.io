@@ -331,7 +331,7 @@
         '<td class="lbl" data-label="币种">' + esc(r.name) + "</td>" +
         '<td class="sym" data-label="代码">' + esc(r.code) + "</td>" +
         '<td class="num strong" data-label="兑人民币">' + unitNote + " " + esc(r.code) + " = " + fmt(r.cny, 4) + "</td>" +
-        '<td class="num" data-label="人民币兑">1 CNY = ' + fmt(r.per_cny, 4) + "</td>" +
+        '<td class="unit" data-label="计价单位">' + unitNote + " 外币</td>" +
         "</tr>";
     }).join("");
   }
@@ -956,10 +956,20 @@
   }
 
   // ---------- 数据刷新 ----------
+  function renderDeriv(d) {
+    var intl = d.intl || {};
+    var xau = intl.xau_usd, xag = (intl.metals || {}).silver || {}, xpt = (intl.metals || {}).platinum || {};
+    var oil = ((d.oil || {}).brent || {}).last;
+    var g1 = $("#drGoldSilver"), g2 = $("#drGoldOil"), g3 = $("#drGoldPlat");
+    if (g1 && xau && xag.intl_usd) g1.textContent = fmt(xau / xag.intl_usd, 1);
+    if (g2 && xau && oil) g2.textContent = fmt(xau / oil, 1);
+    if (g3 && xau && xpt.intl_usd) g3.textContent = fmt(xau / xpt.intl_usd, 1);
+  }
   function renderAll(d) {
     DATA = d;
     renderOverview(d);
     renderQM(d);
+    renderDeriv(d);
     renderTable(d);
     renderMetals(d);
     renderEnergy(d);

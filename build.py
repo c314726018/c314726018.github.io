@@ -711,6 +711,16 @@ main{counter-reset:secno}
 
 .pmod-b .mini-list .mini-sub{font-size:10.5px;color:var(--sub);line-height:1.6;margin-top:2px}
 
+.pmod-b .mini-list .mini-sub{font-size:10.5px;color:var(--sub);line-height:1.6;margin-top:2px}
+
+/* ============ 溢价衍生指标卡 ============ */
+.deriv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.dcard{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.dcard .dk{font-size:12px;color:var(--sub);margin-bottom:4px}
+.dcard .dv{font-size:24px;font-weight:750;color:var(--gold);font-variant-numeric:tabular-nums}
+.dcard .dn{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.6}
+@media(max-width:720px){.deriv-grid{grid-template-columns:1fr}}
+
 /* ============ 全品种涨跌热力图 ============ */
 .heat-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
 .heat{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:8px;text-decoration:none;
@@ -740,12 +750,8 @@ main{counter-reset:secno}
   background:var(--surface);cursor:pointer;transition:.12s}
 .fbtn:hover{color:var(--gold);border-color:var(--gold-2)}
 .fbtn.on{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:650}
-.news-timeline{position:relative;padding-left:18px}
-.news-timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
-.nl-item{position:relative;padding:10px 0 12px;border-bottom:1px dashed var(--line-2)}
-.nl-item:last-child{border-bottom:none}
-.nl-dot{position:absolute;left:-18px;top:16px;width:10px;height:10px;border-radius:50%;
-  background:var(--surface);border:2px solid var(--gold-2)}
+.news-timeline{position:relative;padding-left:0;display:flex;flex-direction:column;gap:10px}
+.nl-item{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px 12px 16px;margin-bottom:10px;transition:.12s}.nl-item:hover{border-color:var(--gold-2);box-shadow:var(--shadow)}
 .nl-time{font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums;margin-bottom:4px}
 .nl-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px}
 .nl-tag{font-size:10.5px;padding:2px 8px;border-radius:10px;font-weight:650;white-space:nowrap;flex:0 0 auto}
@@ -1176,7 +1182,7 @@ def fx_rows(fx):
             f'<td class="lbl" data-label="币种">{esc(r.get("name"))}</td>'
             f'<td class="sym" data-label="代码">{esc(r.get("code"))}</td>'
             f'<td class="num strong" data-label="兑人民币">{unit_note} {esc(r.get("code"))} = {fmt(r.get("cny"), 4)}</td>'
-            f'<td class="num" data-label="人民币兑">1 CNY = {fmt(r.get("per_cny"), 4)}</td>'
+            f'<td class="unit" data-label="计价单位">{unit_note} 外币</td>'
             "</tr>")
     return "".join(rows)
 
@@ -1288,8 +1294,8 @@ def metals_rows(intl):
     rows = []
     for key, label, sge_sym in METAL_DEFS:
         x = m.get(key) or {}
-        if x.get("sge") is None and x.get("premium_pct") is None:
-            continue  # 境内无报价，整行隐藏
+        if x.get("sge") is None and x.get("premium_pct") is None and x.get("intl_cny") is None:
+            continue  # 境内与国际均无报价才隐藏（钯金保留国际折算）
         prem = x.get("premium_pct")
         cls = "up" if (prem or 0) >= 0 else "down"
         prem_txt = f"{prem:+.2f}%" if prem is not None else "—"
@@ -1297,9 +1303,9 @@ def metals_rows(intl):
         rows.append(
             "<tr>"
             f'<td class="lbl" data-label="品种">{label} <span class="sym">{sge_sym}</span></td>'
-            f'<td class="num" data-label="境内报价">{fmt(x.get("sge"))} <span class="unit">{unit}</span></td>'
+            f'<td class="num" data-label="境内报价">{"—" if x.get("sge") is None else fmt(x.get("sge"))} <span class="unit">{unit}</span></td>'
             f'<td class="num" data-label="国际折算">{fmt(x.get("intl_cny"))} <span class="unit">{unit}</span></td>'
-            f'<td data-label="国内溢价"><span class="chg {cls}">{prem_txt}</span></td>'
+            f'<td data-label="国内溢价">{"—" if prem is None else '<span class="chg {cls}">{prem_txt}</span>'}</td>'
             f'<td class="unit" data-label="口径">{esc(x.get("intl_symbol") or "")} × USD/CNY</td>'
             "</tr>")
     return "".join(rows)
@@ -1479,6 +1485,11 @@ def page_index(data):
         <thead><tr><th>品种</th><th>境内报价 (SGE)</th><th>国际折算</th><th>国内溢价</th><th>口径</th></tr></thead>
         <tbody id="metalsBody">{metals_rows(intl)}</tbody>
       </table>
+      <div class="deriv-grid">
+        <div class="dcard"><div class="dk">金银比</div><div class="dv" id="drGoldSilver">—</div><div class="dn">XAU ÷ XAG,历史均值约 70-80,极端高低常对应情绪拐点</div></div>
+        <div class="dcard"><div class="dk">金油比</div><div class="dv" id="drGoldOil">—</div><div class="dn">1 盎司黄金可兑换的布伦特原油桶数</div></div>
+        <div class="dcard"><div class="dk">金铂比</div><div class="dv" id="drGoldPlat">—</div><div class="dn">XAU ÷ XPT,观察铂金相对强弱</div></div>
+      </div>
       <div class="tfoot">国际折算 = 国际美元价 × USD/CNY ÷ 31.1034768（白银为元/千克口径，再 × 1000）。溢价 =（SGE − 折算）÷ 折算 × 100%。注意：境内白银报价含增值税因素，对国际价的溢价天然偏高；各品种口径详见「关于本站」。</div>
     </div>
   </section>
@@ -1559,7 +1570,7 @@ def page_index(data):
       <div class="card"><div class="card-head"><h3>人民币汇率</h3>
         <div class="chip-row"><span class="chip">USD/CNY {fmt(intl.get('usd_cny'), 4)}</span></div></div>
         <table class="mega-table">
-          <thead><tr><th>币种</th><th>代码</th><th>兑人民币</th><th>人民币兑</th></tr></thead>
+          <thead><tr><th>币种</th><th>代码</th><th>兑人民币</th><th>计价单位</th></tr></thead>
           <tbody id="fxBody">{fx_rows(fx)}</tbody>
         </table>
         <div class="tfoot">汇率取自公开汇率接口的 1 美元折算口径，与银行柜台实时牌价存在点差；日元 / 韩元 / 泰铢按 100 单位展示。</div>
