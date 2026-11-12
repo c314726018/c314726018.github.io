@@ -623,9 +623,9 @@ button:active, .fbtn:active{transform:scale(.97)}
 /* ============ 三大报价模块(金投网式,tab 切换品种) ============ */
 .three-quote{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
 .tq{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
-.tq-tabs{display:flex;align-items:center;background:var(--surface-2);border-bottom:1px solid var(--line);padding:0 4px;overflow-x:auto}
-.tq-tabs b{font-size:12.5px;color:var(--gold-ink);padding:9px 10px;letter-spacing:1px;white-space:nowrap}
-.tq-tabs a{font-size:12px;color:var(--sub);padding:5px 10px;margin:4px 2px;cursor:pointer;white-space:nowrap;
+.tq-tabs{display:flex;flex-wrap:wrap;align-items:center;background:var(--surface-2);border-bottom:1px solid var(--line);padding:3px 6px 2px;row-gap:2px}
+.tq-tabs b{font-size:12.5px;color:var(--gold-ink);padding:4px 8px;letter-spacing:1px;white-space:nowrap}
+.tq-tabs a{font-size:11.5px;color:var(--sub);padding:4px 9px;margin:2px 2px;cursor:pointer;white-space:nowrap;
   border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--ink) 4%,transparent);transition:.13s}
 .tq-tabs a:hover{color:var(--gold);border-color:var(--gold-2);background:var(--gold-soft)}
 .tq-tabs a.on{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:650}
