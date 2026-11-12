@@ -636,6 +636,16 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .tq-chg .down{color:var(--down)}
 .tq-chart{height:132px;padding:2px 8px 8px;position:relative}
 .tq-chart canvas{display:block}
+.tq-fxinfo{display:flex;flex-direction:column;justify-content:center;gap:8px;background:var(--surface-2)}
+.fxline{display:flex;align-items:baseline;gap:10px;font-size:13px;color:var(--ink)}
+.fxline.sub{font-size:11.5px;color:var(--sub)}
+.fxline.sub b{color:var(--ink);font-variant-numeric:tabular-nums}
+.fxk{font-size:12px;color:var(--sub)}
+.fxv{font-size:20px;font-weight:750;color:var(--ink);font-variant-numeric:tabular-nums}
+.fxchg{font-size:12px;font-weight:650}
+.fxchg.up{color:var(--up)}
+.fxchg.down{color:var(--down)}
+.fxnote{font-size:10.5px;color:var(--sub);line-height:1.5;border-top:1px dashed var(--line-2);padding-top:6px}
 .tq-spark{flex:0 0 118px;text-align:right}
 .tq-spark svg{width:118px;height:46px}
 .tq-sub{font-size:11px;color:var(--sub);line-height:1.6}
@@ -689,10 +699,10 @@ main{counter-reset:secno}
 .section{counter-increment:secno}
 .section.no-num{counter-increment:none}
 /* ============ 图表工具行/副图/全屏/自选 ============ */
-.tq-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 12px 8px;border-top:1px dashed var(--line-2)}
+.tq-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:5px 10px 7px;border-top:1px dashed var(--line-2)}
 .tq-tools .tt-g{display:inline-flex;align-items:center;gap:2px}
-.tq-tools .tt-g::before{content:attr(data-g);font-size:10px;color:var(--sub);margin-right:2px;letter-spacing:1px}
-.tq-tools a{font-size:11px;color:var(--sub);padding:3px 8px;border-radius:6px;cursor:pointer;transition:.12s}
+.tq-tools .tt-g::before{content:attr(data-g);font-size:9.5px;color:var(--sub);margin-right:1px;letter-spacing:.5px}
+.tq-tools a{font-size:10.5px;color:var(--sub);padding:2px 6px;border-radius:6px;cursor:pointer;transition:.12s;white-space:nowrap}
 .tq-tools a:hover{color:var(--ink);background:var(--surface-2)}
 .tq-tools a.on{color:var(--gold);background:var(--gold-soft);font-weight:650}
 .tq-subchart{height:96px;padding:2px 8px 6px;position:relative;border-top:1px dashed var(--line-2)}
@@ -1436,8 +1446,12 @@ def page_index(data):
           <div class="tq-name" id="qm2Name">美元兑人民币 USD/CNY</div>
           <div class="tq-priceline"><span class="tq-price num" id="qm2Price">—</span><span class="tq-unit" id="qm2Unit">人民币</span><span class="tq-chg" id="qm2Chg">—</span></div>
         </div>
-        <div class="tq-chart" id="qm2ChartBox" style="display:none"><canvas id="qm2Chart" height="132"></canvas></div>
-        <div class="tq-spark" id="qm2Spark"></div>
+        <div class="tq-chart tq-fxinfo">
+          <div class="fxline"><span class="fxk">美元指数 DXY</span><span class="fxv" id="qm2Dxy">—</span><span class="fxchg" id="qm2DxyChg">—</span></div>
+          <div class="fxline sub"><span>日内高 <b id="qm2DxyH">—</b></span><span>日内低 <b id="qm2DxyL">—</b></span></div>
+          <div class="fxline sub"><span>1 CNY ≈ <b id="qm2Inv">—</b> USD</span></div>
+          <div class="fxnote">外汇为银行中间价口径,无分时/K线数据;切换上方币种查看对应牌价</div>
+        </div>
       </div>
       <div class="tq" id="qm3">
         <div class="tq-tabs"><b>能源与商品</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a><a data-i="3">沪铜</a><a data-i="4">沪铝</a><a data-i="5">沪锌</a><a data-i="6">沪镍</a><a data-i="7">沪锡</a><a data-i="8">螺纹钢</a><a data-i="9">豆粕</a><a data-i="10">铁矿石</a><a data-i="11">玉米</a><a data-i="12">棉花</a><span class="tq-mode"><a class="on" data-m="0">走势</a><a data-m="1">日K</a></span></div>

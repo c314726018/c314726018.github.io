@@ -724,7 +724,7 @@
       if (ok1) _set("qm1Name", x.n + "  ·  " + (QM_MODE[0] === 1 ? "日K·" : QM_MODE[0] === 2 ? "周K·" : "月K·") + x.src);
       drawSub("qm1Sub", cfg1.sub, x.kl, cfg1);
     } else if (x.it) {
-      ok1 = drawQChart("qm1Chart", null, x.it.series, cls1, true);
+      ok1 = drawQChart("qm1Chart", x.it.series.map(function (_, i) { return i + 1; }), x.it.series, cls1, true);
       hideSub("qm1SubBox");
     }
     syncTools("qm1Tools", cfg1, QM_MODE[0]);
@@ -747,19 +747,18 @@
       if (ch2) ch2.innerHTML = '<span class="flat">1 CNY = ' + fmt(fx.per_cny, 4) + " " + fx.code + "</span>";
     }
     var dxy = ((d.extra || {}).dxy) || null;
-    var sp2 = $("#qm2Spark");
-    if (sp2) {
-      if (dxy) {
-        var dch = chgPair(dxy.last, dxy.prev);
-        var dcls = dch ? dch.cls : "flat";
-        sp2.innerHTML = '<div class="tq-sub" style="text-align:left">美元指数&nbsp;&nbsp;<b style="font-size:16px">' +
-          fmt(dxy.last) + '</b> <span class="' + dcls + '">' +
-          (dch ? (dch.d > 0 ? "▲ +" : "▼ ") + fmt(dch.pct) + "%" : "—") +
-          '</span><br><span style="opacity:.7">高 ' + fmt(dxy.high) + " · 低 " + fmt(dxy.low) + "</span></div>";
-      } else {
-        sp2.innerHTML = "";
+    var dE = $("#qm2Dxy"), cE = $("#qm2DxyChg"), hE = $("#qm2DxyH"), lE = $("#qm2DxyL");
+    if (dxy && dE) {
+      _set("qm2Dxy", fmt(dxy.last));
+      var dch = chgPair(dxy.last, dxy.prev);
+      if (cE) {
+        cE.className = "fxchg " + (dch ? dch.cls : "flat");
+        cE.textContent = dch ? (dch.d > 0 ? "▲ +" : "▼ ") + fmt(dch.pct) + "%" : "—";
       }
+      _set("qm2DxyH", fmt(dxy.high)); _set("qm2DxyL", fmt(dxy.low));
     }
+    var inv = $("#qm2Inv");
+    if (inv && fx) inv.textContent = fmt(fx.per_cny, 4);
     // 模块3 能源与商品:走势=收盘折线;日K=真实 OHLC+均线
     var FUT = ((d.extra || {}).futures) || [];
     function pickFut(code) {
@@ -799,7 +798,7 @@
       if (ok3) _set("qm3Name", (o.name || def3.n) + "  ·  " + (QM_MODE[2] === 1 ? "日K·" : QM_MODE[2] === 2 ? "周K·" : "月K·") + def3.ksrc);
       drawSub("qm3Sub", cfg3.sub, kl3, cfg3);
     } else if (kl3 && kl3.length > 3) {
-      ok3 = drawQChart("qm3Chart", null, kl3.map(function (x) { return x.c; }), ocls);
+      ok3 = drawQChart("qm3Chart", kl3.map(function (x) { return (x.d || "").slice(5); }), kl3.map(function (x) { return x.c; }), ocls);
       hideSub("qm3SubBox");
     }
     syncTools("qm3Tools", cfg3, QM_MODE[2]);
