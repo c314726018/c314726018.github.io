@@ -317,7 +317,8 @@ def fetch_intl(by_symbol):
 #   fx_susdcny: f3昨收 f8现价 f9名称 f10涨跌额
 SINA_BATCH = ("https://hq.sinajs.cn/list="
               "sh000001,sz399001,sz399006,int_hangseng,int_dji,int_nasdaq,int_sp500,"
-              "nf_AU0,nf_AG0,nf_CU0,nf_RB0,nf_SC0,"
+              "nf_AU0,nf_AG0,nf_CU0,nf_RB0,nf_SC0,nf_AL0,nf_ZN0,nf_NI0,nf_SN0,"
+              "nf_M0,nf_I0,nf_C0,nf_CF0,"
               "hf_XAU,hf_XAG,hf_GC,hf_SI,hf_OIL,hf_CL,DINIW")
 
 
@@ -361,8 +362,12 @@ def fetch_extra():
 
     # 国内期货主力(nf_ 大写+0)
     for code, name, unit in (("nf_AU0", "沪金主力", "元/克"), ("nf_AG0", "沪银主力", "元/千克"),
-                             ("nf_CU0", "沪铜主力", "元/吨"), ("nf_RB0", "螺纹钢主力", "元/吨"),
-                             ("nf_SC0", "上海原油", "元/桶")):
+                             ("nf_CU0", "沪铜主力", "元/吨"), ("nf_AL0", "沪铝主力", "元/吨"),
+                             ("nf_ZN0", "沪锌主力", "元/吨"), ("nf_NI0", "沪镍主力", "元/吨"),
+                             ("nf_SN0", "沪锡主力", "元/吨"), ("nf_RB0", "螺纹钢主力", "元/吨"),
+                             ("nf_SC0", "上海原油", "元/桶"), ("nf_M0", "豆粕主力", "元/吨"),
+                             ("nf_I0", "铁矿石主力", "元/吨"), ("nf_C0", "玉米主力", "元/吨"),
+                             ("nf_CF0", "棉花主力", "元/吨")):
         f = data.get(code) or []
         if len(f) < 11 or not f[0]:
             continue
@@ -404,14 +409,25 @@ def fetch_klines():
 
     def norm(x):
         if "o" in x:
-            return {"d": x.get("d"), "o": float(x["o"]), "h": float(x["h"]),
-                    "l": float(x["l"]), "c": float(x["c"])}
-        return {"d": x.get("date"), "o": float(x["open"]), "h": float(x["high"]),
-                "l": float(x["low"]), "c": float(x["close"])}
+            r = {"d": x.get("d"), "o": float(x["o"]), "h": float(x["h"]),
+                 "l": float(x["l"]), "c": float(x["c"])}
+        else:
+            r = {"d": x.get("date"), "o": float(x["open"]), "h": float(x["high"]),
+                 "l": float(x["low"]), "c": float(x["close"])}
+        try:
+            if x.get("v"):
+                r["v"] = float(x["v"])
+        except (TypeError, ValueError):
+            pass
+        return r
 
     for key, sym, tpl in (("AU0", "AU0", SINA_INNER), ("AG0", "AG0", SINA_INNER),
                           ("SC0", "SC0", SINA_INNER), ("CU0", "CU0", SINA_INNER),
-                          ("RB0", "RB0", SINA_INNER), ("XAU", "XAU", SINA_DAILY),
+                          ("AL0", "AL0", SINA_INNER), ("ZN0", "ZN0", SINA_INNER),
+                          ("NI0", "NI0", SINA_INNER), ("SN0", "SN0", SINA_INNER),
+                          ("RB0", "RB0", SINA_INNER), ("M0", "M0", SINA_INNER),
+                          ("I0", "I0", SINA_INNER), ("C0", "C0", SINA_INNER),
+                          ("CF0", "CF0", SINA_INNER), ("XAU", "XAU", SINA_DAILY),
                           ("GC", "GC", SINA_DAILY), ("SI", "SI", SINA_DAILY),
                           ("OIL", "OIL", SINA_DAILY), ("CL", "CL", SINA_DAILY)):
         try:
@@ -420,7 +436,7 @@ def fetch_klines():
             arr = json.loads(raw[i + 1:j])
             if not isinstance(arr, list) or not arr:
                 raise RuntimeError("空K线")
-            out[key] = [norm(x) for x in arr[-120:]]
+            out[key] = [norm(x) for x in arr[-250:]]
         except Exception as e:
             print(f"[warn] 日K {sym} 抓取失败: {e}", file=sys.stderr)
     return out
@@ -457,7 +473,7 @@ def fetch_news():
             if not title:
                 # 快讯多为纯内容，无标题时取首句
                 title = (text.split("。")[0] if text else "快讯")[:40]
-            out.append({"title": title, "text": text[:180], "time": tstr,
+            out.append({"title": title, "text": text[:500], "time": tstr,
                         "source": "华尔街见闻", "uri": it.get("uri") or ""})
         return out
     except Exception as e:

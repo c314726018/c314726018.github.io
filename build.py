@@ -92,7 +92,7 @@ a{color:inherit;text-decoration:none}
 a:hover{color:var(--gold)}
 button,input,select{font:inherit}
 .num,.ov-val,.hero-price,.tk-v{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+.wrap{max-width:1660px;margin:0 auto;padding:0 24px}
 .up{color:var(--up)}.down{color:var(--down)}.flat{color:var(--sub)}
 
 /* 顶部信息条 */
@@ -568,7 +568,7 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 }
 
 /* ============ 金投网式三栏门户布局 ============ */
-.portal{display:grid;grid-template-columns:180px minmax(0,1fr) 300px;gap:14px;align-items:start;margin:16px 0}
+.portal{display:grid;grid-template-columns:210px minmax(0,1fr) 360px;gap:16px;align-items:start;margin:16px 0}
 .portal-l, .portal-r{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px}
 .pmod{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .pmod-h{padding:8px 12px;font-size:13px;font-weight:750;color:var(--ink);background:var(--surface-2);
@@ -688,6 +688,27 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 main{counter-reset:secno}
 .section{counter-increment:secno}
 .section.no-num{counter-increment:none}
+/* ============ 图表工具行/副图/全屏/自选 ============ */
+.tq-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 12px 8px;border-top:1px dashed var(--line-2)}
+.tq-tools .tt-g{display:inline-flex;align-items:center;gap:2px}
+.tq-tools .tt-g::before{content:attr(data-g);font-size:10px;color:var(--sub);margin-right:2px;letter-spacing:1px}
+.tq-tools a{font-size:11px;color:var(--sub);padding:3px 8px;border-radius:6px;cursor:pointer;transition:.12s}
+.tq-tools a:hover{color:var(--ink);background:var(--surface-2)}
+.tq-tools a.on{color:var(--gold);background:var(--gold-soft);font-weight:650}
+.tq-subchart{height:96px;padding:2px 8px 6px;position:relative;border-top:1px dashed var(--line-2)}
+.tq-subchart canvas{width:100%!important;height:100%!important}
+#fsOverlay{position:fixed;inset:0;background:var(--brand);z-index:300;display:none;flex-direction:column;padding:18px 24px}
+#fsOverlay.open{display:flex}
+#fsOverlay .fs-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#fsOverlay .fs-h b{color:#fff;font-size:15px}
+#fsOverlay .fs-h a{color:var(--sub);cursor:pointer;font-size:13px}
+#fsOverlay .fs-h a:hover{color:var(--gold)}
+#fsOverlay .fs-body{flex:1;position:relative}
+#fsOverlay canvas{width:100%!important;height:100%!important}
+.fav{cursor:pointer;margin-right:5px;color:var(--sub);font-size:12px;user-select:none}
+.fav:hover{color:var(--gold)}
+.fav.on{color:var(--gold)}
+
 /* ============ 移动端适配覆盖(置于所有主定义之后,确保生效) ============ */
   .portal-main table,.portal table{min-width:0}
   .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
@@ -1153,6 +1174,52 @@ def grouped_rows(data):
     return "".join(rows)
 
 
+def heat_grid(data):
+    """全品种涨跌热力图:SGE+期货+股指+国际现货,色阶映射涨跌幅。"""
+    def cell(name, last, base, link="./index.html#quotes"):
+        try:
+            if last is None or base in (None, 0, ""):
+                raise ValueError
+            d = float(last) - float(base)
+            pct = d / float(base) * 100
+        except (TypeError, ValueError):
+            return ('<a class="heat flat" href="' + link + '"><span class="h-n">' + esc(name) +
+                    '</span><span class="h-v">—</span></a>')
+        cls = "up" if d > 0 else "down" if d < 0 else "flat"
+        a = abs(pct)
+        lv = "lv4" if a >= 4 else "lv3" if a >= 2 else "lv2" if a >= 1 else "lv1"
+        arrow = "▲" if d > 0 else "▼" if d < 0 else "—"
+        return ('<a class="heat ' + cls + ' ' + lv + '" href="' + link + '" title="' + esc(name) +
+                ' ' + ("+" if d > 0 else "") + fmt(d) + '">' +
+                '<span class="h-n">' + esc(name) + '</span>' +
+                '<span class="h-v">' + arrow + ' ' + ("+" if pct > 0 else "") + fmt(pct) + '%</span></a>')
+
+    cells = []
+    for it in data.get("items") or []:
+        cells.append(cell(it.get("label"), it.get("last"), it.get("open")))
+    ex = data.get("extra") or {}
+    for x in ex.get("futures") or []:
+        cells.append(cell(x.get("name"), x.get("last"), x.get("prev")))
+    for x in ex.get("indices") or []:
+        if x.get("chg") is not None and x.get("pct") is not None:
+            dd, pct = x["chg"], x["pct"]
+            cls = "up" if dd > 0 else "down" if dd < 0 else "flat"
+            a = abs(pct or 0)
+            lv = "lv4" if a >= 4 else "lv3" if a >= 2 else "lv2" if a >= 1 else "lv1"
+            arrow = "▲" if dd > 0 else "▼" if dd < 0 else "—"
+            cells.append('<a class="heat ' + cls + ' ' + lv + '" href="./index.html#quotes" title="' + esc(x.get("name")) +
+                         '"><span class="h-n">' + esc(x.get("name")) + '</span>' +
+                         '<span class="h-v">' + arrow + ' ' + ("+" if pct > 0 else "") + fmt(abs(pct)) + '%</span></a>')
+        else:
+            cells.append(cell(x.get("name"), x.get("last"), x.get("prev")))
+    for x in ex.get("intl") or []:
+        cells.append(cell(x.get("name"), x.get("last"), x.get("prev")))
+    D = ex.get("dxy")
+    if D:
+        cells.append(cell("美元指数", D.get("last"), D.get("prev")))
+    return '<div class="heat-grid">' + "".join(cells) + '</div>'
+
+
 def metals_rows(intl):
     """多品种溢价对照表静态行（首屏可用，app.js 刷新后重建）。
     SGE 无成交的品种（如钯金长期休市）自动隐藏，有数据时自动出现。"""
@@ -1239,6 +1306,8 @@ def page_index(data):
     except (TypeError, ValueError, ZeroDivisionError, KeyError):
         ov_range = "—"
 
+    heat = heat_grid(data)
+
     data_json = json.dumps(data, ensure_ascii=False)
 
     return f"""{head_html(
@@ -1253,6 +1322,9 @@ def page_index(data):
 
 <div class="wrap">
 
+  <div class="portal">{side_left('quotes')}
+  <div class="portal-main">
+
   <!-- ============ 三大报价模块（金投网式,tab 切换） ============ -->
   <section class="hero-wrap" id="overview" style="margin:14px 0 0">
     <div class="three-quote">
@@ -1263,6 +1335,8 @@ def page_index(data):
           <div class="tq-priceline"><span class="tq-price num" id="qm1Price">—</span><span class="tq-unit" id="qm1Unit">元/克</span><span class="tq-chg" id="qm1Chg">—</span></div>
         </div>
         <div class="tq-chart"><canvas id="qm1Chart" height="132"></canvas></div>
+        <div class="tq-subchart" id="qm1SubBox" style="display:none"><canvas id="qm1Sub" height="90"></canvas></div>
+        <div class="tq-tools" id="qm1Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm1Spark" style="display:none"></div>
       </div>
       <div class="tq" id="qm2">
@@ -1275,12 +1349,14 @@ def page_index(data):
         <div class="tq-spark" id="qm2Spark"></div>
       </div>
       <div class="tq" id="qm3">
-        <div class="tq-tabs"><b>能源与商品</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a><a data-i="3">沪铜</a><a data-i="4">螺纹钢</a><span class="tq-mode"><a class="on" data-m="0">走势</a><a data-m="1">日K</a></span></div>
+        <div class="tq-tabs"><b>能源与商品</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a><a data-i="3">沪铜</a><a data-i="4">沪铝</a><a data-i="5">沪锌</a><a data-i="6">沪镍</a><a data-i="7">沪锡</a><a data-i="8">螺纹钢</a><a data-i="9">豆粕</a><a data-i="10">铁矿石</a><a data-i="11">玉米</a><a data-i="12">棉花</a><span class="tq-mode"><a class="on" data-m="0">走势</a><a data-m="1">日K</a></span></div>
         <div class="tq-top">
           <div class="tq-name" id="qm3Name">布伦特原油</div>
           <div class="tq-priceline"><span class="tq-price num" id="qm3Price">—</span><span class="tq-unit" id="qm3Unit">美元/桶</span><span class="tq-chg" id="qm3Chg">—</span></div>
         </div>
         <div class="tq-chart"><canvas id="qm3Chart" height="132"></canvas></div>
+        <div class="tq-subchart" id="qm3SubBox" style="display:none"><canvas id="qm3Sub" height="90"></canvas></div>
+        <div class="tq-tools" id="qm3Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm3Spark" style="display:none"></div>
       </div>
     </div>
@@ -1317,8 +1393,16 @@ def page_index(data):
     </div>
   </section>
 
-  <div class="portal">{side_left('quotes')}
-  <div class="portal-main">
+
+  <!-- ============ 全品种涨跌热力图 ============ -->
+  <section class="section" id="heat">
+    <div class="mbox-h"><span class="mh-l">全品种涨跌热力图</span>
+      <span class="more">红涨绿跌 · 色深代表幅度 · 覆盖 36 个品种</span></div>
+    <div class="card" style="padding:12px">
+      {heat}
+    </div>
+    <div class="mbox-note">覆盖上海黄金交易所、国内期货主力、全球股指、国际现货与美元指数;涨跌幅口径:SGE 以今开为基准,期货以昨结,现货与指数以昨收。</div>
+  </section>
 
   <!-- ============ 多品种溢价 ============ -->
   <section class="section" id="premium">
@@ -1881,57 +1965,105 @@ def page_history(data, hist):
 
 
 # ---------------------------------------------------------------- 金融快讯
+def _news_tag(t):
+    """按关键词给快讯分类(用于过滤与标签)。"""
+    import re as _re
+    s = (t.get("title") or "") + (t.get("text") or "")
+    if _re.search(r"黄金|白银|贵金属|金价|金饰|铂金|钯金|金条", s):
+        return "贵金属"
+    if _re.search(r"美联储|FOMC|利率|央行|货币政策|LPR|降准|降息|MLF|通胀|CPI|PPI|GDP", s, _re.I):
+        return "宏观央行"
+    if _re.search(r"原油|OPEC|油价|天然气|煤炭|能源|成品油", s, _re.I):
+        return "能源"
+    if _re.search(r"美元|汇率|人民币|日元|欧元|英镑|外汇|离岸", s):
+        return "外汇"
+    if _re.search(r"A股|港股|美股|沪指|创业板|指数|IPO|市值|股市|纳指|道琼|上市公司|财报", s):
+        return "股市"
+    return "综合"
+
+
 def page_news(data):
     news = data.get("news") or []
     if news:
-        items_html = "".join(
-            f'<div class="news-item"><div class="n-time">{esc(n.get("time"))}</div>'
-            f'<div class="n-body"><div class="n-title">{esc(n.get("title"))}</div>'
-            f'<div class="n-text">{esc(n.get("text"))}</div></div>'
-            f'<div class="n-src">{esc(n.get("source"))}</div></div>'
-            for n in news)
+        top = news[0]
+        tag0 = _news_tag(top)
+        hero = (
+            '<div class="news-hero" data-cat="' + tag0 + '">'
+            '<div class="nh-top"><span class="nl-tag t-' + tag0 + '">' + esc(tag0) + '</span>'
+            '<span class="nh-time">◷ ' + esc(top.get("time")) + ' · ' + esc(top.get("source")) + '</span></div>'
+            '<div class="nh-title">' + esc(top.get("title")) + '</div>'
+            '<div class="nh-text">' + esc(top.get("text")) + '</div>'
+            '<div class="nh-foot">快讯持续滚动更新,更多内容见下方时间轴 · 数据源:' + esc(top.get("source")) + '公开资讯流</div>'
+            '</div>')
+        items_html = ""
+        for n in news[1:]:
+            tg = _news_tag(n)
+            items_html += (
+                '<div class="nl-item" data-cat="' + tg + '">'
+                '<div class="nl-time">' + esc((n.get("time") or "")[5:16]) + '</div>'
+                '<div class="nl-dot"></div>'
+                '<div class="nl-body">'
+                '<div class="nl-head"><span class="nl-tag t-' + tg + '">' + esc(tg) + '</span>'
+                '<span class="nl-title">' + esc(n.get("title")) + '</span></div>'
+                '<div class="nl-text">' + esc(n.get("text")) + '</div>'
+                '<div class="nl-meta">' + esc(n.get("source")) + '</div>'
+                '</div></div>')
+        if not items_html:
+            items_html = '<div class="news-empty">今日暂无更多快讯。</div>'
     else:
-        items_html = '<div class="news-empty">快讯数据加载中，请稍候刷新。</div>'
+        hero = '<div class="news-empty">快讯数据加载中,请稍候刷新。</div>'
+        items_html = ""
     head = head_html(
         "财经快讯 - 7×24 实时金融快讯 - 金潮网",
-        "7×24 小时实时财经快讯流，覆盖贵金属、汇率、央行政策、全球宏观。数据来自华尔街见闻公开资讯流。",
+        "7×24 小时实时财经快讯:覆盖贵金属、宏观央行、能源商品、外汇与全球股市,按分类筛选阅读,30 分钟随数据管道自动更新。",
         SITE + "news.html")
     body = f"""{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("news")}
 {subnav_html("news")}
-<div class="wrap"><div class="portal">{side_left('news')}<div class="portal-main">
+<div class="wrap"><div class="portal">{side_left("news")}<div class="portal-main">
+<main>
   <section class="section" id="live">
-    <div class="section-head">
-      <div><div class="lbl">NEWS · 金融快讯</div><h2>7×24 实时财经快讯</h2>
-        <p>覆盖贵金属、央行政策、汇率与全球宏观。每 30 分钟随数据管道自动更新。</p></div>
-      <div class="side">数据源：华尔街见闻</div>
-    </div>
-    <div class="card">
-      <div class="card-head"><h3>最新快讯</h3>
-        <div class="chip-row"><span class="badge">◷ 自动更新</span><span class="chip">{len(news)} 条</span></div></div>
-      <div class="news-list">{items_html}</div>
-    </div>
-    <div class="note-strip" style="margin-top:18px">
-      <div class="ni">◈</div>
-      <div class="nt"><strong>资讯来源说明</strong>
-        <span>快讯内容来自华尔街见闻公开资讯流，由本站聚合展示；版权归原发布方所有。本站不对资讯内容作任何投资建议。</span></div>
-      <a class="btn ghost" href="./calendar.html">看财经日历 →</a>
-    </div>
+    <div class="mbox-h"><span class="mh-l">7×24 实时快讯</span>
+      <div class="news-filter" id="newsFilter">
+        <button class="fbtn on" data-cat="all">全部</button>
+        <button class="fbtn" data-cat="贵金属">贵金属</button>
+        <button class="fbtn" data-cat="宏观央行">宏观央行</button>
+        <button class="fbtn" data-cat="能源">能源</button>
+        <button class="fbtn" data-cat="外汇">外汇</button>
+        <button class="fbtn" data-cat="股市">股市</button>
+        <button class="fbtn" data-cat="综合">综合</button>
+      </div></div>
+    {hero}
+    <div class="news-timeline">{items_html}</div>
+    <div class="mbox-note"><b>资讯说明:</b>快讯由华尔街见闻公开资讯流聚合展示,版权归原发布方所有;分类标签由本站按关键词自动归档,仅供筛选阅读。内容不构成任何投资建议。</div>
   </section>
+</main>
 </div>{side_right(data)}</div></div>
 {footer_html()}
-<script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1"></script>
+<script id="app-data" type="application/json">{{}}</script>
 <script src="./ads.js"></script>
 <script src="./common.js"></script>
 <script src="./app.js"></script>
+<script>
+(function(){{
+  var f = document.getElementById("newsFilter");
+  if (!f) return;
+  f.addEventListener("click", function (e) {{
+    var b = e.target.closest(".fbtn"); if (!b) return;
+    f.querySelectorAll(".fbtn").forEach(function (x) {{ x.classList.remove("on"); }});
+    b.classList.add("on");
+    var cat = b.getAttribute("data-cat");
+    document.querySelectorAll(".news-hero, .nl-item").forEach(function (it) {{
+      it.style.display = (cat === "all" || it.getAttribute("data-cat") === cat) ? "" : "none";
+    }});
+  }});
+}})();
+</script>
 </body></html>"""
     return head + body
 
 
-# ---------------------------------------------------------------- 财经日历
 # 2026 年 FOMC 议息日程（来源：美联储官网 fomccalendars.htm）
 FOMC_2026 = [
     ("1月27-28日", "1月28日", False, "1月27-28日议息会议"),
@@ -1944,23 +2076,23 @@ FOMC_2026 = [
     ("12月8-9日", "12月9日", True, "含经济预测与点阵图"),
 ]
 
-# 近期重点经济事件（来源：美联储官网 + 交易商公开日历，均经核实；时间均为北京时间）
+# 近期重点经济事件(均经核实;时间为北京时间)
 ECON_EVENTS = [
-    ("2026-12-04 周五 21:30", "美国 11 月非农就业人口", "高", "约 +2.9 万（10月）", "美国劳工统计局每月首个周五公布，直接影响美联储政策预期"),
-    ("2026-12-08-09 周二三", "美联储 FOMC 议息会议（12月）", "高", "3.75-4.00%（10月）", "12月 8-9 日召开，9 日 03:00 公布利率决议，含经济预测与点阵图"),
-    ("2026-12-10 周四 21:30", "美国 11 月 CPI 同比", "高", "3.7%（10月）", "通胀核心指标，直接牵引利率预期与金价"),
-    ("2026-12-17 周四", "欧洲央行利率决议", "中", "2.50%", "欧元区政策利率，影响美元指数与金价"),
+    ("2026-12-04 周五 21:30", "美国 11 月非农就业人口", "高", "约 +2.9 万(10月)", "美国劳工统计局每月首个周五公布,直接影响美联储政策预期"),
+    ("2026-12-08-09 周二三", "美联储 FOMC 议息会议(12月)", "高", "3.75-4.00%(10月)", "12月 8-9 日召开,9 日 03:00 公布利率决议,含经济预测与点阵图"),
+    ("2026-12-10 周四 21:30", "美国 11 月 CPI 同比", "高", "3.7%(10月)", "通胀核心指标,直接牵引利率预期与金价"),
+    ("2026-12-17 周四", "欧洲央行利率决议", "中", "2.50%", "欧元区政策利率,影响美元指数与金价"),
     ("2026-12-18 周五", "日本央行利率决议", "中", "1.25%", "影响日元汇率与全球套息交易"),
     ("2027-01-22 周五", "日本央行利率决议", "中", "—", "2027 年首次议息"),
-    ("2027-01-27-28 周三四", "美联储 FOMC 议息会议（2027年1月）", "高", "—", "2027 年首次议息，含经济预测"),
+    ("2027-01-27-28 周三四", "美联储 FOMC 议息会议(2027年1月)", "高", "—", "2027 年首次议息,含经济预测"),
 ]
 
-# 各国央行利率决议节奏（来源：各国央行官网公开日历）
+# 各国央行利率决议节奏(来源:各国央行官网公开日历)
 CENTRAL_BANKS = [
-    ("美联储 FED", "每年 8 次议息（1/3/4/6/7/9/10/12 月）", "3.75-4.00%", "2025-12-10 降 25bp"),
-    ("欧洲央行 ECB", "每年约 8 次，通常 1/3/4/6/7/9/10/12 月", "2.50%", "2025-09-10 降 25bp"),
-    ("日本央行 BOJ", "每年约 8 次，季度末含展望报告", "1.25%", "2026-09-18 加 25bp"),
-    ("中国人民银行 PBOC", "每月 20 日公布 LPR；MLF/逆回购每日操作", "1 年 LPR 3.0%", "2025-05-20 调降"),
+    ("美联储 FED", "每年 8 次议息(1/3/4/6/7/9/10/12 月)", "3.75-4.00%", "2025-12-10 降 25bp"),
+    ("欧洲央行 ECB", "每年约 8 次,通常 1/3/4/6/7/9/10/12 月", "2.50%", "2025-09-10 降 25bp"),
+    ("日本央行 BOJ", "每年约 8 次,季度末含展望报告", "1.25%", "2026-09-18 加 25bp"),
+    ("中国人民银行 PBOC", "每月 20 日公布 LPR;MLF/逆回购每日操作", "1 年 LPR 3.0%", "2025-05-20 调降"),
     ("英国央行 BOE", "每年 8 次议息", "3.75%", "2025-12-18 降 25bp"),
 ]
 

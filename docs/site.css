@@ -27,7 +27,7 @@ a{color:inherit;text-decoration:none}
 a:hover{color:var(--gold)}
 button,input,select{font:inherit}
 .num,.ov-val,.hero-price,.tk-v{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+.wrap{max-width:1660px;margin:0 auto;padding:0 24px}
 .up{color:var(--up)}.down{color:var(--down)}.flat{color:var(--sub)}
 
 /* 顶部信息条 */
@@ -503,7 +503,7 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 }
 
 /* ============ 金投网式三栏门户布局 ============ */
-.portal{display:grid;grid-template-columns:180px minmax(0,1fr) 300px;gap:14px;align-items:start;margin:16px 0}
+.portal{display:grid;grid-template-columns:210px minmax(0,1fr) 360px;gap:16px;align-items:start;margin:16px 0}
 .portal-l, .portal-r{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px}
 .pmod{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .pmod-h{padding:8px 12px;font-size:13px;font-weight:750;color:var(--ink);background:var(--surface-2);
@@ -623,6 +623,27 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 main{counter-reset:secno}
 .section{counter-increment:secno}
 .section.no-num{counter-increment:none}
+/* ============ 图表工具行/副图/全屏/自选 ============ */
+.tq-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:6px 12px 8px;border-top:1px dashed var(--line-2)}
+.tq-tools .tt-g{display:inline-flex;align-items:center;gap:2px}
+.tq-tools .tt-g::before{content:attr(data-g);font-size:10px;color:var(--sub);margin-right:2px;letter-spacing:1px}
+.tq-tools a{font-size:11px;color:var(--sub);padding:3px 8px;border-radius:6px;cursor:pointer;transition:.12s}
+.tq-tools a:hover{color:var(--ink);background:var(--surface-2)}
+.tq-tools a.on{color:var(--gold);background:var(--gold-soft);font-weight:650}
+.tq-subchart{height:96px;padding:2px 8px 6px;position:relative;border-top:1px dashed var(--line-2)}
+.tq-subchart canvas{width:100%!important;height:100%!important}
+#fsOverlay{position:fixed;inset:0;background:var(--brand);z-index:300;display:none;flex-direction:column;padding:18px 24px}
+#fsOverlay.open{display:flex}
+#fsOverlay .fs-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#fsOverlay .fs-h b{color:#fff;font-size:15px}
+#fsOverlay .fs-h a{color:var(--sub);cursor:pointer;font-size:13px}
+#fsOverlay .fs-h a:hover{color:var(--gold)}
+#fsOverlay .fs-body{flex:1;position:relative}
+#fsOverlay canvas{width:100%!important;height:100%!important}
+.fav{cursor:pointer;margin-right:5px;color:var(--sub);font-size:12px;user-select:none}
+.fav:hover{color:var(--gold)}
+.fav.on{color:var(--gold)}
+
 /* ============ 移动端适配覆盖(置于所有主定义之后,确保生效) ============ */
   .portal-main table,.portal table{min-width:0}
   .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
