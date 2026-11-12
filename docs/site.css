@@ -2,12 +2,12 @@
 :root{
   --bg:#f4f6f9; --surface:#fff; --surface-2:#fafbfd; --ink:#111827; --ink-2:#3b4658;
   --sub:#77839a; --line:#e7ebf1; --line-2:#f0f2f6;
-  --gold:#a9780f; --gold-2:#d9a92b; --gold-soft:#fdf7e7; --gold-ink:#8a6210;
+  --gold:#a9780f; --gold-2:#d9a92b; --gold-soft:#f6f1e6; --gold-ink:#8a6210;
   --up:#d4380d; --down:#129b63; --accent:#2f6fed;
   --brand:#0e1626; --brand-2:#16233b;
   --shadow:0 1px 2px rgba(16,24,40,.04),0 10px 28px rgba(16,24,40,.055);
   --shadow-lg:0 18px 48px rgba(10,18,34,.14);
-  --r:16px; --r-sm:10px;
+  --r:10px; --r-sm:7px;
 }
 html.dark{
   --bg:#0a0e16; --surface:#121a27; --surface-2:#0e1521; --ink:#e9eef7; --ink-2:#c4cede;
@@ -142,7 +142,7 @@ header.nav{position:sticky;top:0;z-index:60;background:var(--surface);
 .section{padding-top:38px}
 .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
 .section-head .lbl{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);font-weight:700}
-.section-head h2{font-size:21px;margin:5px 0 0;letter-spacing:-.3px;font-weight:700}
+.section-head h2{letter-spacing:.5px;font-size:21px;margin:5px 0 0;letter-spacing:-.3px;font-weight:700}
 .section-head p{color:var(--sub);font-size:13px;margin:5px 0 0}
 .section-head .side{color:var(--sub);font-size:12px}
 
@@ -180,6 +180,8 @@ tbody tr:last-child td{border-bottom:none}
 /* 提醒 */
 .alert-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
 .alert-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.mail-box{margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface-2)}
+.mail-box .hint{margin-bottom:8px}
 .alert-row select,.alert-row input{background:var(--surface-2);border:1px solid var(--line);
   color:var(--ink);border-radius:var(--r-sm);padding:9px 11px;font-size:13.5px;min-width:0}
 .alert-row input{width:126px}
@@ -501,12 +503,14 @@ button:active, .fbtn:active{transform:scale(.97)}
 @media(max-width:640px){
   .subnav-inner{gap:6px;padding:5px 20px}
   .subnav-home{width:100%}
-  .subnav-links a{border-right:none;padding:4px 11px;border-radius:16px;background:color-mix(in srgb,var(--ink) 4%,transparent);border:1px solid transparent}
+  .subnav-links a{border-right:none;padding:4px 11px;border-radius:9px;background:color-mix(in srgb,var(--ink) 4%,transparent);border:1px solid transparent}
 }
 
 /* ============ 金投网式三栏门户布局 ============ */
 .portal{display:grid;grid-template-columns:210px minmax(0,1fr) 360px;gap:16px;align-items:start;margin:16px 0}
-.portal-l, .portal-r{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px}
+.portal-l, .portal-r{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px;
+  max-height:calc(100vh - 24px);overflow-y:auto;scrollbar-width:thin;
+  scrollbar-color:var(--line) transparent;padding-right:2px}
 .pmod{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .pmod-h{padding:8px 12px;font-size:13px;font-weight:750;color:var(--ink);background:var(--surface-2);
   border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
@@ -560,7 +564,7 @@ button:active, .fbtn:active{transform:scale(.97)}
 .tq-tabs{display:flex;flex-wrap:wrap;align-items:center;background:var(--surface-2);border-bottom:1px solid var(--line);padding:3px 6px 2px;row-gap:2px}
 .tq-tabs b{font-size:12.5px;color:var(--gold-ink);padding:4px 8px;letter-spacing:1px;white-space:nowrap}
 .tq-tabs a{font-size:11.5px;color:var(--sub);padding:4px 9px;margin:2px 2px;cursor:pointer;white-space:nowrap;
-  border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--ink) 4%,transparent);transition:.13s}
+  border:1px solid var(--line);border-radius:9px;background:color-mix(in srgb,var(--ink) 4%,transparent);transition:.13s}
 .tq-tabs a:hover{color:var(--gold);border-color:var(--gold-2);background:var(--gold-soft)}
 .tq-tabs a.on{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:650}
 .tq-mode{margin-left:auto;display:inline-flex}

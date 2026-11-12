@@ -26,6 +26,7 @@ OUT = os.path.join(DOCS, "index.html")
 
 SITE = "https://c314726018.github.io/"
 TS = datetime.datetime.now().strftime("%Y%m%d%H%M")  # 构建时间戳(资源版本号)
+ALERT_MAIL = ""  # 站长接收邮箱:填写后邮件订阅按钮将唤起邮件客户端预填订阅信息
 
 # AdSense 网站代码 —— 直接写入生成页的 <head>，确保验证时原始 HTML 抓取也能命中
 ADSENSE_LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>'
@@ -68,12 +69,12 @@ CSS = r"""
 :root{
   --bg:#f4f6f9; --surface:#fff; --surface-2:#fafbfd; --ink:#111827; --ink-2:#3b4658;
   --sub:#77839a; --line:#e7ebf1; --line-2:#f0f2f6;
-  --gold:#a9780f; --gold-2:#d9a92b; --gold-soft:#fdf7e7; --gold-ink:#8a6210;
+  --gold:#a9780f; --gold-2:#d9a92b; --gold-soft:#f6f1e6; --gold-ink:#8a6210;
   --up:#d4380d; --down:#129b63; --accent:#2f6fed;
   --brand:#0e1626; --brand-2:#16233b;
   --shadow:0 1px 2px rgba(16,24,40,.04),0 10px 28px rgba(16,24,40,.055);
   --shadow-lg:0 18px 48px rgba(10,18,34,.14);
-  --r:16px; --r-sm:10px;
+  --r:10px; --r-sm:7px;
 }
 html.dark{
   --bg:#0a0e16; --surface:#121a27; --surface-2:#0e1521; --ink:#e9eef7; --ink-2:#c4cede;
@@ -208,7 +209,7 @@ header.nav{position:sticky;top:0;z-index:60;background:var(--surface);
 .section{padding-top:38px}
 .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
 .section-head .lbl{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);font-weight:700}
-.section-head h2{font-size:21px;margin:5px 0 0;letter-spacing:-.3px;font-weight:700}
+.section-head h2{letter-spacing:.5px;font-size:21px;margin:5px 0 0;letter-spacing:-.3px;font-weight:700}
 .section-head p{color:var(--sub);font-size:13px;margin:5px 0 0}
 .section-head .side{color:var(--sub);font-size:12px}
 
@@ -246,6 +247,8 @@ tbody tr:last-child td{border-bottom:none}
 /* 提醒 */
 .alert-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
 .alert-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.mail-box{margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface-2)}
+.mail-box .hint{margin-bottom:8px}
 .alert-row select,.alert-row input{background:var(--surface-2);border:1px solid var(--line);
   color:var(--ink);border-radius:var(--r-sm);padding:9px 11px;font-size:13.5px;min-width:0}
 .alert-row input{width:126px}
@@ -567,12 +570,14 @@ button:active, .fbtn:active{transform:scale(.97)}
 @media(max-width:640px){
   .subnav-inner{gap:6px;padding:5px 20px}
   .subnav-home{width:100%}
-  .subnav-links a{border-right:none;padding:4px 11px;border-radius:16px;background:color-mix(in srgb,var(--ink) 4%,transparent);border:1px solid transparent}
+  .subnav-links a{border-right:none;padding:4px 11px;border-radius:9px;background:color-mix(in srgb,var(--ink) 4%,transparent);border:1px solid transparent}
 }
 
 /* ============ 金投网式三栏门户布局 ============ */
 .portal{display:grid;grid-template-columns:210px minmax(0,1fr) 360px;gap:16px;align-items:start;margin:16px 0}
-.portal-l, .portal-r{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px}
+.portal-l, .portal-r{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px;
+  max-height:calc(100vh - 24px);overflow-y:auto;scrollbar-width:thin;
+  scrollbar-color:var(--line) transparent;padding-right:2px}
 .pmod{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .pmod-h{padding:8px 12px;font-size:13px;font-weight:750;color:var(--ink);background:var(--surface-2);
   border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
@@ -626,7 +631,7 @@ button:active, .fbtn:active{transform:scale(.97)}
 .tq-tabs{display:flex;flex-wrap:wrap;align-items:center;background:var(--surface-2);border-bottom:1px solid var(--line);padding:3px 6px 2px;row-gap:2px}
 .tq-tabs b{font-size:12.5px;color:var(--gold-ink);padding:4px 8px;letter-spacing:1px;white-space:nowrap}
 .tq-tabs a{font-size:11.5px;color:var(--sub);padding:4px 9px;margin:2px 2px;cursor:pointer;white-space:nowrap;
-  border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--ink) 4%,transparent);transition:.13s}
+  border:1px solid var(--line);border-radius:9px;background:color-mix(in srgb,var(--ink) 4%,transparent);transition:.13s}
 .tq-tabs a:hover{color:var(--gold);border-color:var(--gold-2);background:var(--gold-soft)}
 .tq-tabs a.on{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:650}
 .tq-mode{margin-left:auto;display:inline-flex}
@@ -1415,8 +1420,9 @@ def page_index(data):
         ov_range = "—"
 
     heat = heat_grid(data)
-
-    data_json = json.dumps(data, ensure_ascii=False)
+    payload = dict(data)
+    payload["alert_mail"] = ALERT_MAIL
+    data_json = json.dumps(payload, ensure_ascii=False)
 
     return f"""{head_html(
         "金潮网 - 贵金属行情门户 | 今日金价_上海黄金交易所_国际金价_财经日历_金融快讯",
@@ -1486,6 +1492,44 @@ def page_index(data):
   </section>
 
   <!-- ============ 行情表 ============ -->
+  <!-- ============ 价格提醒 ============ -->
+  <section class="section" id="alerts">
+    <div class="section-head">
+      <div><div class="lbl">PRICE ALERTS</div><h2>价格提醒 · 免费</h2>
+        <p>两种提醒方式:①浏览器通知(即时,保持页面打开) ②邮件提醒(免费,触发自动发信,无需挂机)。可同时使用。</p></div>
+    </div>
+    <div class="card">
+      <div class="alert-grid">
+        <div>
+          <div class="card-head" style="margin-bottom:10px"><h3>设置提醒</h3></div>
+          <ol class="steps"><li>选择合约与方向（高于 / 低于）</li><li>填写目标价格并添加</li><li>开启浏览器通知权限，保持页面打开即可</li></ol>
+          <div class="alert-row">
+            <select id="alertSym" aria-label="选择合约">{sym_opts}</select>
+            <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option></select>
+            <input id="alertVal" type="number" step="0.01" placeholder="目标价格" aria-label="目标价格">
+            <button class="btn" id="alertAdd" type="button">添加提醒</button>
+            <button class="btn ghost" id="notifyBtn" type="button">开启通知</button>
+          </div>
+          <button class="btn ghost" id="copyQuote" type="button" style="margin-top:4px">⧉ 复制当前行情摘要</button>
+          <div class="hint" id="copyNote">浏览器通知保存在本机；清除浏览器数据会一并删除。</div>
+          <div class="mail-box" id="mailBox">
+            <div class="card-head" style="margin-bottom:8px"><h3>邮件提醒（免费）</h3></div>
+            <div class="hint">触发目标价时自动发送邮件通知,无需保持页面打开。有效期 1 年,提交后 24h 内开通。</div>
+            <div class="alert-row">
+              <input id="mailAddr" type="email" placeholder="接收邮箱" aria-label="接收邮箱" style="flex:1 1 180px">
+              <button class="btn" id="mailSubmit" type="button">提交订阅</button>
+            </div>
+            <div class="hint" id="mailNote">按上方选择的品种/方向/目标价开通;邮箱仅用于发送提醒,不公开。</div>
+          </div>
+        </div>
+        <div>
+          <div class="card-head" style="margin-bottom:10px"><h3>我的提醒</h3></div>
+          <ul id="alertList"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="quotes">
     <div class="section-head">
       <div><div class="lbl">MARKET QUOTES</div><h2>上海黄金交易所 · 实时行情</h2>
@@ -1679,35 +1723,6 @@ def page_index(data):
   </section>
 
   {ad_slot()}
-
-  <!-- ============ 价格提醒 ============ -->
-  <section class="section" id="alerts">
-    <div class="section-head">
-      <div><div class="lbl">PRICE ALERTS</div><h2>价格提醒 · 免费</h2>
-        <p>设定目标价，浏览器会在价格触发时通知你。规则只存在本机，不上传。</p></div>
-    </div>
-    <div class="card">
-      <div class="alert-grid">
-        <div>
-          <div class="card-head" style="margin-bottom:10px"><h3>设置提醒</h3></div>
-          <ol class="steps"><li>选择合约与方向（高于 / 低于）</li><li>填写目标价格并添加</li><li>开启浏览器通知权限，保持页面打开即可</li></ol>
-          <div class="alert-row">
-            <select id="alertSym" aria-label="选择合约">{sym_opts}</select>
-            <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option></select>
-            <input id="alertVal" type="number" step="0.01" placeholder="目标价格" aria-label="目标价格">
-            <button class="btn" id="alertAdd" type="button">添加提醒</button>
-            <button class="btn ghost" id="notifyBtn" type="button">开启通知</button>
-          </div>
-          <button class="btn ghost" id="copyQuote" type="button" style="margin-top:4px">⧉ 复制当前行情摘要</button>
-          <div class="hint" id="copyNote">提醒数据保存在浏览器 localStorage；清除浏览器数据会一并删除。页面每 60 秒检查一次最新行情并比对规则。</div>
-        </div>
-        <div>
-          <div class="card-head" style="margin-bottom:10px"><h3>我的提醒</h3></div>
-          <ul id="alertList"></ul>
-        </div>
-      </div>
-    </div>
-  </section>
 
 </div>{side_right(data)}</div>
 

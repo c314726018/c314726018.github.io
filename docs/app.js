@@ -508,6 +508,27 @@
 
   function bindAlerts() {
     var add = $("#alertAdd"); if (add) add.addEventListener("click", addAlert);
+    var ms = $("#mailSubmit");
+    if (ms) ms.addEventListener("click", function () {
+      var addr = ($("#mailAddr") || {}).value || "";
+      var symEl = $("#alertSym"), dirEl = $("#alertDir"), valEl = $("#alertVal");
+      var sym = symEl ? symEl.value : "", dir = dirEl ? dirEl.value : "above", val = valEl ? valEl.value : "";
+      var note = $("#mailNote");
+      if (addr.indexOf("@") < 0 || addr.indexOf(".") < 0) { alert("请填写有效的接收邮箱"); return; }
+      if (!val) { alert("请先在上方填写目标价格"); return; }
+      var box = DATA && DATA.alert_mail;
+      if (!box) {
+        if (note) note.innerHTML = '邮件订阅通道即将开放——可先使用浏览器通知(免费、即时)。';
+        return;
+      }
+      var body = "订阅类型:邮件价格提醒(免费 1 年)\n品种:" + sym +
+        "\n方向:" + (dir === "above" ? "高于" : "低于") + "\n目标价:" + val +
+        "\n接收邮箱:" + addr + "\n提交时间:" + new Date().toLocaleString();
+      window.location.href = "mailto:" + box + "?subject=" +
+        encodeURIComponent("【金潮网】邮件提醒订阅 - " + sym + " " + (dir === "above" ? "高于" : "低于") + " " + val) +
+        "&body=" + encodeURIComponent(body);
+      if (note) note.innerHTML = '已唤起邮件客户端,请点击发送完成订阅;我们会在 24h 内开通。';
+    });
     renderAlerts();
     var nb = $("#notifyBtn");
     if (nb) nb.addEventListener("click", function () {
