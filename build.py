@@ -901,7 +901,7 @@ GLOSSARY = [
 # ---------------------------------------------------------------- 页面骨架
 
 def head_html(title, desc, canonical, extra=""):
-    ts = datetime.now().strftime("%Y%m%d%H%M")
+    ts = datetime.datetime.now().strftime("%Y%m%d%H%M")
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
