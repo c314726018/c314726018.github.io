@@ -1287,15 +1287,15 @@ def heat_grid(data):
     return '<div class="heat-grid">' + "".join(cells) + '</div>'
 
 
-def metals_rows(intl):
+def metals_rows(intl, data=None):
     """多品种溢价对照表静态行（首屏可用，app.js 刷新后重建）。
     SGE 无成交的品种（如钯金长期休市）自动隐藏，有数据时自动出现。"""
     m = intl.get("metals") or {}
     rows = []
     for key, label, sge_sym in METAL_DEFS:
         x = m.get(key) or {}
-        if x.get("sge") is None and x.get("premium_pct") is None and x.get("intl_cny") is None:
-            continue  # 境内与国际均无报价才隐藏（钯金保留国际折算）
+        if x.get("sge") is None and x.get("premium_pct") is None:
+            continue  # 境内无报价且无溢价（钯金关注度低,由 Au(T+D) 递延溢价替代）
         prem = x.get("premium_pct")
         cls = "up" if (prem or 0) >= 0 else "down"
         prem_txt = f"{prem:+.2f}%" if prem is not None else "—"
@@ -1308,6 +1308,30 @@ def metals_rows(intl):
             f'<td data-label="国内溢价">{"—" if prem is None else '<span class="chg {cls}">{prem_txt}</span>'}</td>'
             f'<td class="unit" data-label="口径">{esc(x.get("intl_symbol") or "")} × USD/CNY</td>'
             "</tr>")
+    # 黄金延期 Au(T+D) 递延溢价（多空失衡核心指标）
+    try:
+        autd = None
+        for it in (data or {}).get("items") or []:
+            if it.get("symbol") == "Au(T+D)":
+                autd = it
+                break
+        g = m.get("gold") or {}
+        if autd and autd.get("last") is not None and g.get("intl_cny"):
+            base = float(g["intl_cny"])
+            d = float(autd["last"]) - base
+            pct = d / base * 100
+            cls = "up" if d > 0 else "down" if d < 0 else "flat"
+            prem_txt = f"{pct:+.2f}%"
+            rows.append(
+                "<tr>"
+                f'<td class="lbl" data-label="品种">黄金延期（递延溢价） <span class="sym">Au(T+D)</span></td>'
+                f'<td class="num" data-label="境内报价">{fmt(autd.get("last"))} <span class="unit">元/克</span></td>'
+                f'<td class="num" data-label="国际折算">{fmt(base)}</td>'
+                f'<td data-label="国内溢价"><span class="chg {cls}">{prem_txt}</span></td>'
+                f'<td class="unit" data-label="口径">Au(T+D) 相对国际金 · 递延费方向</td>'
+                "</tr>")
+    except (TypeError, ValueError):
+        pass
     return "".join(rows)
 
 
@@ -1483,7 +1507,7 @@ def page_index(data):
         <div class="chip-row"><span class="chip">Au99.99 ↔ XAU</span><span class="chip">Ag99.99 ↔ XAG</span><span class="chip">Pt99.95 ↔ XPT</span></div></div>
       <table class="mega-table">
         <thead><tr><th>品种</th><th>境内报价 (SGE)</th><th>国际折算</th><th>国内溢价</th><th>口径</th></tr></thead>
-        <tbody id="metalsBody">{metals_rows(intl)}</tbody>
+        <tbody id="metalsBody">{metals_rows(intl, data)}</tbody>
       </table>
       <div class="deriv-grid">
         <div class="dcard"><div class="dk">金银比</div><div class="dv" id="drGoldSilver">—</div><div class="dn">XAU ÷ XAG,历史均值约 70-80,极端高低常对应情绪拐点</div></div>
