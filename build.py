@@ -26,7 +26,7 @@ OUT = os.path.join(DOCS, "index.html")
 
 SITE = "https://c314726018.github.io/"
 TS = datetime.datetime.now().strftime("%Y%m%d%H%M")  # 构建时间戳(资源版本号)
-ALERT_MAIL = ""  # 站长接收邮箱:填写后邮件订阅按钮将唤起邮件客户端预填订阅信息
+ALERT_MAIL = "314726018@qq.com"  # 站长接收邮箱:填写后邮件订阅按钮将唤起邮件客户端预填订阅信息
 
 # AdSense 网站代码 —— 直接写入生成页的 <head>，确保验证时原始 HTML 抓取也能命中
 ADSENSE_LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>'
