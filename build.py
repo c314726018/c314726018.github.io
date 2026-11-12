@@ -635,7 +635,7 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
 .tq-chg .up{color:var(--up)}
 .tq-chg .down{color:var(--down)}
 .tq-chart{height:132px;padding:2px 8px 8px;position:relative}
-.tq-chart canvas{width:100%!important;height:100%!important}
+.tq-chart canvas{display:block}
 .tq-spark{flex:0 0 118px;text-align:right}
 .tq-spark svg{width:118px;height:46px}
 .tq-sub{font-size:11px;color:var(--sub);line-height:1.6}
@@ -696,7 +696,7 @@ main{counter-reset:secno}
 .tq-tools a:hover{color:var(--ink);background:var(--surface-2)}
 .tq-tools a.on{color:var(--gold);background:var(--gold-soft);font-weight:650}
 .tq-subchart{height:96px;padding:2px 8px 6px;position:relative;border-top:1px dashed var(--line-2)}
-.tq-subchart canvas{width:100%!important;height:100%!important}
+.tq-subchart canvas{display:block}
 #fsOverlay{position:fixed;inset:0;background:var(--brand);z-index:300;display:none;flex-direction:column;padding:18px 24px}
 #fsOverlay.open{display:flex}
 #fsOverlay .fs-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -704,12 +704,69 @@ main{counter-reset:secno}
 #fsOverlay .fs-h a{color:var(--sub);cursor:pointer;font-size:13px}
 #fsOverlay .fs-h a:hover{color:var(--gold)}
 #fsOverlay .fs-body{flex:1;position:relative}
-#fsOverlay canvas{width:100%!important;height:100%!important}
+#fsOverlay canvas{display:block}
 .fav{cursor:pointer;margin-right:5px;color:var(--sub);font-size:12px;user-select:none}
 .fav:hover{color:var(--gold)}
 .fav.on{color:var(--gold)}
 
+.pmod-b .mini-list .mini-sub{font-size:10.5px;color:var(--sub);line-height:1.6;margin-top:2px}
+
+/* ============ 全品种涨跌热力图 ============ */
+.heat-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.heat{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:8px;text-decoration:none;
+  border:1px solid var(--line);background:var(--surface);transition:.12s;line-height:1.3}
+.heat:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.heat .h-n{font-size:11.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.heat .h-v{font-size:13.5px;font-weight:750;font-variant-numeric:tabular-nums}
+.heat.up .h-v{color:var(--up)}
+.heat.down .h-v{color:var(--down)}
+.heat.flat .h-v{color:var(--sub)}
+.heat.up{background:color-mix(in srgb,var(--up) calc(var(--lv,1)*6%),var(--surface));border-color:color-mix(in srgb,var(--up) calc(var(--lv,1)*18%),var(--line))}
+.heat.down{background:color-mix(in srgb,var(--down) calc(var(--lv,1)*6%),var(--surface));border-color:color-mix(in srgb,var(--down) calc(var(--lv,1)*18%),var(--line))}
+.heat.lv1{--lv:1}.heat.lv2{--lv:2}.heat.lv3{--lv:3}.heat.lv4{--lv:4}
+.heat.up.lv4{background:color-mix(in srgb,var(--up) 22%,var(--surface))}
+.heat.down.lv4{background:color-mix(in srgb,var(--down) 22%,var(--surface))}
+
+/* ============ 快讯页:头条卡/时间轴/过滤 ============ */
+.news-hero{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:var(--r-sm);
+  background:var(--surface);padding:16px 18px;margin-bottom:16px}
+.news-hero .nh-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.news-hero .nh-time{font-size:11.5px;color:var(--sub)}
+.news-hero .nh-title{font-size:17px;font-weight:750;color:var(--ink);margin-bottom:8px;line-height:1.5}
+.news-hero .nh-text{font-size:13.5px;color:var(--ink-2);line-height:1.85}
+.news-hero .nh-foot{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line-2);font-size:11px;color:var(--sub)}
+.news-filter{display:flex;gap:6px;flex-wrap:wrap}
+.fbtn{font-size:11.5px;color:var(--sub);padding:4px 12px;border-radius:14px;border:1px solid var(--line);
+  background:var(--surface);cursor:pointer;transition:.12s}
+.fbtn:hover{color:var(--gold);border-color:var(--gold-2)}
+.fbtn.on{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:650}
+.news-timeline{position:relative;padding-left:18px}
+.news-timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.nl-item{position:relative;padding:10px 0 12px;border-bottom:1px dashed var(--line-2)}
+.nl-item:last-child{border-bottom:none}
+.nl-dot{position:absolute;left:-18px;top:16px;width:10px;height:10px;border-radius:50%;
+  background:var(--surface);border:2px solid var(--gold-2)}
+.nl-time{font-size:11px;color:var(--sub);font-variant-numeric:tabular-nums;margin-bottom:4px}
+.nl-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px}
+.nl-tag{font-size:10.5px;padding:2px 8px;border-radius:10px;font-weight:650;white-space:nowrap;flex:0 0 auto}
+.nl-tag.t-贵金属{background:var(--gold-soft);color:var(--gold-ink)}
+.nl-tag.t-宏观央行{background:color-mix(in srgb,#4a90e2 14%,transparent);color:#2f6fd0}
+.nl-tag.t-能源{background:color-mix(in srgb,#e67e22 14%,transparent);color:#c9661a}
+.nl-tag.t-外汇{background:color-mix(in srgb,#16a085 14%,transparent);color:#118a6f}
+.nl-tag.t-股市{background:color-mix(in srgb,#8e44ad 13%,transparent);color:#7d3ca8}
+.nl-tag.t-综合{background:var(--surface-2);color:var(--sub)}
+.nl-title{font-size:14px;font-weight:700;color:var(--ink);line-height:1.5}
+.nl-text{font-size:12.5px;color:var(--ink-2);line-height:1.8;margin-bottom:6px}
+.nl-meta{font-size:10.5px;color:var(--sub)}
+.news-empty{padding:20px;text-align:center;color:var(--sub);font-size:12.5px}
+@media(max-width:720px){
+  .heat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .news-hero{padding:13px 14px}
+  .news-hero .nh-title{font-size:15px}
+}
+
 /* ============ 移动端适配覆盖(置于所有主定义之后,确保生效) ============ */
+@media(max-width:720px){
   .portal-main table,.portal table{min-width:0}
   .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
   .table-scroll .mega-table{display:table;min-width:660px;width:max-content}
@@ -729,6 +786,7 @@ main{counter-reset:secno}
   .tq-spark svg{width:84px;height:38px}
   .tq-price{font-size:27px}
   .tq-body{padding:12px 12px}
+}
 @media(max-width:900px) and (min-width:721px){
   .tq-price{font-size:26px}
   .tq-spark{flex:0 0 96px}
@@ -997,23 +1055,26 @@ def side_left(active):
 
 def side_right(data):
     """三栏布局右栏：快讯 / 财经日历 / 投资学院 / 术语速查（金投网式侧栏）。"""
-    news = (data.get("news") or [])[:6]
+    news = (data.get("news") or [])[:10]
     if news:
         news_li = "".join(
             f'<li><span class="t">{esc((n.get("time") or "")[5:16])}</span>'
-            f'<a href="./news.html">{esc(n.get("title"))}</a></li>'
+            f'<a href="./news.html">{esc(n.get("title"))}</a>'
+            f'<div class="mini-sub">{esc((n.get("text") or "")[:64])}…</div></li>'
             for n in news)
     else:
         news_li = '<li><a href="./news.html">快讯加载中，点击查看 →</a></li>'
     ev_li = "".join(
-        f'<li><span class="t">{esc(d[0][5:10])}</span><a href="./calendar.html">{esc(d[1])}</a></li>'
-        for d in ECON_EVENTS[:5])
+        f'<li><span class="t">{esc(d[0][5:10])}</span><a href="./calendar.html">{esc(d[1])}</a>'
+        f'<div class="mini-sub">{esc(d[3])}</div></li>'
+        for d in ECON_EVENTS[:7])
     ac_li = "".join(
-        f'<li><a href="./academy.html#articles">{esc(a["h"])}</a></li>'
-        for a in ACAD_ARTICLES[:5])
+        f'<li><a href="./academy.html#articles">{esc(a["h"])}</a>'
+        f'<div class="mini-sub">{esc(a["p"][0][:56])}…</div></li>'
+        for a in ACAD_ARTICLES[:6])
     gl_li = "".join(
-        f'<li><a href="./academy.html#glossary"><b>{esc(g["t"])}</b> {esc(g["d"][:26])}…</a></li>'
-        for g in GLOSSARY[:5])
+        f'<li><a href="./academy.html#glossary"><b>{esc(g["t"])}</b> {esc(g["d"][:40])}…</a></li>'
+        for g in GLOSSARY[:8])
     return f"""<aside class="portal-r">
   <div class="pmod"><div class="pmod-h">实时快讯<a class="more" href="./news.html">更多 »</a></div>
     <div class="pmod-b"><ul class="mini-list">{news_li}</ul></div></div>
@@ -1986,13 +2047,17 @@ def page_news(data):
     news = data.get("news") or []
     if news:
         top = news[0]
+        top_title = top.get("title") or ""
+        top_text = top.get("text") or ""
+        if top_title and top_text.startswith(top_title):
+            top_text = top_text[len(top_title):].strip() or top_text
         tag0 = _news_tag(top)
         hero = (
             '<div class="news-hero" data-cat="' + tag0 + '">'
             '<div class="nh-top"><span class="nl-tag t-' + tag0 + '">' + esc(tag0) + '</span>'
             '<span class="nh-time">◷ ' + esc(top.get("time")) + ' · ' + esc(top.get("source")) + '</span></div>'
             '<div class="nh-title">' + esc(top.get("title")) + '</div>'
-            '<div class="nh-text">' + esc(top.get("text")) + '</div>'
+            '<div class="nh-text">' + esc(top_text) + '</div>'
             '<div class="nh-foot">快讯持续滚动更新,更多内容见下方时间轴 · 数据源:' + esc(top.get("source")) + '公开资讯流</div>'
             '</div>')
         items_html = ""
