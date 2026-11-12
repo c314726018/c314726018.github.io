@@ -321,7 +321,7 @@ footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5
   td::before{content:attr(data-label);color:var(--sub);font-size:12px;font-weight:600;text-align:left;flex:0 0 auto}
   td.lbl,td.sym{text-align:right}
   .spark{width:64px}
-
+}
 
 @media(max-width:420px){
   .hero-side{grid-template-columns:1fr 1fr;gap:9px}
@@ -643,7 +643,6 @@ main{counter-reset:secno}
   .tq-spark svg{width:84px;height:38px}
   .tq-price{font-size:27px}
   .tq-body{padding:12px 12px}
-}
 @media(max-width:900px) and (min-width:721px){
   .tq-price{font-size:26px}
   .tq-spark{flex:0 0 96px}

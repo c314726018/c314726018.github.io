@@ -528,7 +528,7 @@
   }
   function qChartOpts(c) {
     return { responsive: true, maintainAspectRatio: false,
-      animation: { duration: 220 },
+      animation: false,
       plugins: { legend: { display: false }, tooltip: { intersect: false, mode: "index" } },
       scales: {
         x: { ticks: { maxTicksLimit: 6, color: c.sub, font: { size: 9 }, maxRotation: 0 }, grid: { display: false } },
@@ -541,13 +541,15 @@
     var c = themeColors();
     var line = cls === "up" ? "#d4380d" : cls === "down" ? "#129b63" : c.gold;
     if (qCharts[id]) { qCharts[id].destroy(); qCharts[id] = null; }
-    qCharts[id] = new Chart(cv, {
-      type: "line",
-      data: { labels: labels, datasets: [{ data: data, borderColor: line, borderWidth: 1.6,
-        pointRadius: 0, tension: .25, fill: true,
-        backgroundColor: cls === "up" ? "rgba(212,56,13,.08)" : cls === "down" ? "rgba(18,155,99,.08)" : "rgba(184,134,11,.10)" }] },
-      options: qChartOpts(c) });
-    return true;
+    try {
+      qCharts[id] = new Chart(cv, {
+        type: "line",
+        data: { labels: labels, datasets: [{ data: data, borderColor: line, borderWidth: 1.6,
+          pointRadius: 0, tension: .25, fill: true,
+          backgroundColor: cls === "up" ? "rgba(212,56,13,.08)" : cls === "down" ? "rgba(18,155,99,.08)" : "rgba(184,134,11,.10)" }] },
+        options: qChartOpts(c) });
+      return true;
+    } catch (e) { return false; }
   }
   // 日K（candlestick,真实 OHLC;插件缺失降级收盘折线）
   function drawQK(id, kl, cls) {
@@ -561,7 +563,7 @@
         data: { labels: labels, datasets: [{ data: kl.map(function (x, i) {
           return { x: i + 1, o: x.o, h: x.h, l: x.l, c: x.c }; }),
           color: { up: "#d4380d", down: "#129b63", unchanged: "#999" } }] },
-        options: { responsive: true, maintainAspectRatio: false, animation: { duration: 200 },
+        options: { responsive: true, maintainAspectRatio: false, animation: false,
           plugins: { legend: { display: false }, tooltip: { intersect: false, mode: "index",
             callbacks: { label: function (ctx) {
               var v = (ctx.raw && ctx.raw.o != null) ? ctx.raw : null;
