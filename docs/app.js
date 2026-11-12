@@ -443,69 +443,6 @@
 
   // ---------- 价格提醒 ----------
   var ALERT_KEY = "gold_alerts_v1";
-  var notified = {}; // 本次页面会话内同一规则只提醒一次，避免每 60s 反复弹窗
-
-  function getAlerts() {
-    try { return JSON.parse(localStorage.getItem(ALERT_KEY) || "[]"); } catch (e) { return []; }
-  }
-  function saveAlerts(a) { localStorage.setItem(ALERT_KEY, JSON.stringify(a)); }
-
-  function renderAlerts() {
-    var box = $("#alertList");
-    if (!box) return;
-    var list = getAlerts();
-    if (!list.length) {
-      box.innerHTML = '<li class="alert-empty">还没有提醒。在上方设置「价格 高于/低于 某值」时通知我。</li>';
-    } else {
-      box.innerHTML = list.map(function (a, i) {
-        return '<li><span class="a-sym">' + a.sym + '</span> ' +
-          '<span class="a-cond">' + (a.dir === "above" ? "≥" : "≤") + "</span> " +
-          '<span class="a-val">' + fmt(a.target) + "</span>" +
-          '<button class="a-del" data-i="' + i + '" aria-label="删除">✕</button></li>';
-      }).join("");
-    }
-    $all(".a-del").forEach(function (b) {
-      b.addEventListener("click", function () {
-        var i = +b.getAttribute("data-i");
-        var l = getAlerts(); l.splice(i, 1); saveAlerts(l); renderAlerts();
-      });
-    });
-  }
-
-  function addAlert() {
-    var sym = $("#alertSym").value;
-    var dir = $("#alertDir").value;
-    var target = parseFloat($("#alertVal").value);
-    if (!sym || isNaN(target)) { alert("请填写有效的合约与目标价格"); return; }
-    var l = getAlerts();
-    l.push({ sym: sym, dir: dir, target: target });
-    saveAlerts(l); renderAlerts();
-    $("#alertVal").value = "";
-  }
-
-  function checkAlerts(d) {
-    var l = getAlerts();
-    if (!l.length) return;
-    var bySym = {};
-    (d.items || []).forEach(function (it) { bySym[it.symbol] = it.last; });
-    l.forEach(function (a) {
-      var cur = bySym[a.sym];
-      if (cur == null) return;
-      var key = a.sym + "|" + a.dir + "|" + a.target;
-      var hit = (a.dir === "above" && cur >= a.target) || (a.dir === "below" && cur <= a.target);
-      if (!hit) { delete notified[key]; return; }  // 价格回到区间内后可再次提醒
-      if (notified[key]) return;
-      notified[key] = true;
-      var msg = a.sym + " 已" + (a.dir === "above" ? "涨破" : "跌破") + " " + fmt(a.target) + "（当前 " + fmt(cur) + "）";
-      if (window.Notification && Notification.permission === "granted") {
-        try { new Notification("金价提醒", { body: msg }); } catch (e) { /* 忽略 */ }
-      } else if (document.visibilityState === "visible") {
-        // 未授权桌面通知时只在页面可见时提示，避免后台反复 alert
-        window.alert("金价提醒：" + msg);
-      }
-    });
-  }
-
   function bindAlerts() {
     var add = $("#alertAdd"); if (add) add.addEventListener("click", addAlert);
     var ms = $("#mailSubmit");
@@ -518,7 +455,7 @@
       if (!val) { alert("请先在上方填写目标价格"); return; }
       var box = DATA && DATA.alert_mail;
       if (!box) {
-        if (note) note.innerHTML = '邮件订阅通道即将开放——可先使用浏览器通知(免费、即时)。';
+        if (note) note.innerHTML = '邮件订阅通道即将开放。';
         return;
       }
       var body = "订阅类型:邮件价格提醒(免费 1 年)\n品种:" + sym +
@@ -527,15 +464,7 @@
       window.location.href = "mailto:" + box + "?subject=" +
         encodeURIComponent("【金潮网】邮件提醒订阅 - " + sym + " " + (dir === "above" ? "高于" : "低于") + " " + val) +
         "&body=" + encodeURIComponent(body);
-      if (note) note.innerHTML = '已唤起邮件客户端,请点击发送完成订阅;我们会在 24h 内开通。';
-    });
-    renderAlerts();
-    var nb = $("#notifyBtn");
-    if (nb) nb.addEventListener("click", function () {
-      if (!("Notification" in window)) { alert("当前浏览器不支持桌面通知"); return; }
-      Notification.requestPermission().then(function (p) {
-        nb.textContent = p === "granted" ? "通知已开启 ✓" : "通知未授权";
-      });
+      if (note) note.innerHTML = '已唤起邮件客户端,请点击发送完成订阅;开通后触发时 30 分钟内自动送达。';
     });
   }
 
@@ -996,7 +925,6 @@
     renderFx(d);
     renderPhysical(d);
     renderCharts(d);
-    checkAlerts(d);
   }
 
   function loadData() {

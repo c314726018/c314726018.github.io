@@ -1496,35 +1496,34 @@ def page_index(data):
   <section class="section" id="alerts">
     <div class="section-head">
       <div><div class="lbl">PRICE ALERTS</div><h2>价格提醒 · 免费</h2>
-        <p>两种提醒方式:①浏览器通知(即时,保持页面打开) ②邮件提醒(免费,触发自动发信,无需挂机)。可同时使用。</p></div>
+        <p>选择品种、设定目标价,触发后 30 分钟内自动发送邮件通知。无需挂机,免费 1 年。</p></div>
     </div>
     <div class="card">
       <div class="alert-grid">
         <div>
-          <div class="card-head" style="margin-bottom:10px"><h3>设置提醒</h3></div>
-          <ol class="steps"><li>选择合约与方向（高于 / 低于）</li><li>填写目标价格并添加</li><li>开启浏览器通知权限，保持页面打开即可</li></ol>
+          <div class="card-head" style="margin-bottom:10px"><h3>设置邮件提醒</h3></div>
+          <ol class="steps"><li>选择品种与方向（高于 / 低于），填写目标价</li><li>填写接收邮箱，提交订阅</li><li>触发后自动发信，30 分钟内送达</li></ol>
           <div class="alert-row">
-            <select id="alertSym" aria-label="选择合约">{sym_opts}</select>
+            <select id="alertSym" aria-label="选择品种">{sym_opts}</select>
             <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option></select>
             <input id="alertVal" type="number" step="0.01" placeholder="目标价格" aria-label="目标价格">
-            <button class="btn" id="alertAdd" type="button">添加提醒</button>
-            <button class="btn ghost" id="notifyBtn" type="button">开启通知</button>
           </div>
+          <div class="alert-row">
+            <input id="mailAddr" type="email" placeholder="接收邮箱" aria-label="接收邮箱" style="flex:1 1 180px">
+            <button class="btn" id="mailSubmit" type="button">提交订阅</button>
+          </div>
+          <div class="hint" id="mailNote">邮箱仅用于发送提醒,不公开;当日重复触发不重复发送。</div>
           <button class="btn ghost" id="copyQuote" type="button" style="margin-top:4px">⧉ 复制当前行情摘要</button>
-          <div class="hint" id="copyNote">浏览器通知保存在本机；清除浏览器数据会一并删除。</div>
-          <div class="mail-box" id="mailBox">
-            <div class="card-head" style="margin-bottom:8px"><h3>邮件提醒（免费）</h3></div>
-            <div class="hint">触发后 30 分钟内自动邮件送达,无需保持页面打开。有效期 1 年,提交后当天开通。</div>
-            <div class="alert-row">
-              <input id="mailAddr" type="email" placeholder="接收邮箱" aria-label="接收邮箱" style="flex:1 1 180px">
-              <button class="btn" id="mailSubmit" type="button">提交订阅</button>
-            </div>
-            <div class="hint" id="mailNote">按上方选择的品种/方向/目标价开通;邮箱仅用于发送提醒,不公开。</div>
-          </div>
         </div>
         <div>
-          <div class="card-head" style="margin-bottom:10px"><h3>我的提醒</h3></div>
-          <ul id="alertList"></ul>
+          <div class="card-head" style="margin-bottom:10px"><h3>服务说明</h3></div>
+          <ol class="steps">
+            <li>覆盖 SGE 合约、国内期货主力、全球股指、国际现货与能源,共 40+ 品种</li>
+            <li>行情每 30 分钟更新一次,触发后 30 分钟内邮件送达</li>
+            <li>免费 1 年;当日同一规则重复触发不重复发送</li>
+            <li>退订:回复提醒邮件即可</li>
+          </ol>
+          <div class="hint">邮件通过本站通知通道发送;订阅邮箱仅用于提醒,不用于其他用途。</div>
         </div>
       </div>
     </div>
