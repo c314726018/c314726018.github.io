@@ -25,6 +25,7 @@ DOCS = os.path.join(HERE, "docs")
 OUT = os.path.join(DOCS, "index.html")
 
 SITE = "https://c314726018.github.io/"
+TS = datetime.datetime.now().strftime("%Y%m%d%H%M")  # 构建时间戳(资源版本号)
 
 # AdSense 网站代码 —— 直接写入生成页的 <head>，确保验证时原始 HTML 抓取也能命中
 ADSENSE_LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>'
@@ -901,7 +902,6 @@ GLOSSARY = [
 # ---------------------------------------------------------------- 页面骨架
 
 def head_html(title, desc, canonical, extra=""):
-    ts = datetime.datetime.now().strftime("%Y%m%d%H%M")
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -925,8 +925,8 @@ def head_html(title, desc, canonical, extra=""):
 <link rel="manifest" href="./manifest.json">
 {ADSENSE_LOADER}
 {extra}
-<link rel="stylesheet" href="./site.css?v={ts}">
-<script src="./common.js?v={ts}"></script>
+<link rel="stylesheet" href="./site.css?v={TS}">
+<script src="./common.js?v={TS}"></script>
 </head>
 """
 
@@ -1713,7 +1713,7 @@ def page_index(data):
 <script src="./vendor/chart.umd.min.js"></script>
 <script src="./vendor/chartjs-chart-financial.umd.min.js"></script>
 <script src="./ads.js"></script>
-<script src="./app.js?v={ts}"></script>
+<script src="./app.js?v={TS}"></script>
 </body>
 </html>"""
 
@@ -2158,8 +2158,8 @@ def page_news(data):
 {footer_html()}
 <script id="app-data" type="application/json">{{}}</script>
 <script src="./ads.js"></script>
-<script src="./common.js?v={ts}"></script>
-<script src="./app.js?v={ts}"></script>
+<script src="./common.js?v={TS}"></script>
+<script src="./app.js?v={TS}"></script>
 <script>
 (function(){{
   var f = document.getElementById("newsFilter");
@@ -2295,8 +2295,8 @@ def page_calendar(data):
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script src="./ads.js"></script>
-<script src="./common.js?v={ts}"></script>
-<script src="./app.js?v={ts}"></script>
+<script src="./common.js?v={TS}"></script>
+<script src="./app.js?v={TS}"></script>
 </body></html>"""
     return head + body
 
@@ -2428,7 +2428,7 @@ def page_academy(data):
 {footer_html()}
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="./ads.js"></script>
-<script src="./common.js?v={ts}"></script>
+<script src="./common.js?v={TS}"></script>
 <script>
 (function(){{
   var cats=document.getElementById('acadCats');
@@ -2583,8 +2583,8 @@ def page_data(data, hist):
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script src="./ads.js"></script>
-<script src="./common.js?v={ts}"></script>
-<script src="./app.js?v={ts}"></script>
+<script src="./common.js?v={TS}"></script>
+<script src="./app.js?v={TS}"></script>
 </body></html>"""
     return head + body
 
