@@ -901,6 +901,7 @@ GLOSSARY = [
 # ---------------------------------------------------------------- 页面骨架
 
 def head_html(title, desc, canonical, extra=""):
+    ts = datetime.now().strftime("%Y%m%d%H%M")
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -924,8 +925,8 @@ def head_html(title, desc, canonical, extra=""):
 <link rel="manifest" href="./manifest.json">
 {ADSENSE_LOADER}
 {extra}
-<link rel="stylesheet" href="./site.css">
-<script src="./common.js"></script>
+<link rel="stylesheet" href="./site.css?v={ts}">
+<script src="./common.js?v={ts}"></script>
 </head>
 """
 
@@ -1712,7 +1713,7 @@ def page_index(data):
 <script src="./vendor/chart.umd.min.js"></script>
 <script src="./vendor/chartjs-chart-financial.umd.min.js"></script>
 <script src="./ads.js"></script>
-<script src="./app.js"></script>
+<script src="./app.js?v={ts}"></script>
 </body>
 </html>"""
 
@@ -2157,8 +2158,8 @@ def page_news(data):
 {footer_html()}
 <script id="app-data" type="application/json">{{}}</script>
 <script src="./ads.js"></script>
-<script src="./common.js"></script>
-<script src="./app.js"></script>
+<script src="./common.js?v={ts}"></script>
+<script src="./app.js?v={ts}"></script>
 <script>
 (function(){{
   var f = document.getElementById("newsFilter");
@@ -2294,8 +2295,8 @@ def page_calendar(data):
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script src="./ads.js"></script>
-<script src="./common.js"></script>
-<script src="./app.js"></script>
+<script src="./common.js?v={ts}"></script>
+<script src="./app.js?v={ts}"></script>
 </body></html>"""
     return head + body
 
@@ -2427,7 +2428,7 @@ def page_academy(data):
 {footer_html()}
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="./ads.js"></script>
-<script src="./common.js"></script>
+<script src="./common.js?v={ts}"></script>
 <script>
 (function(){{
   var cats=document.getElementById('acadCats');
@@ -2582,8 +2583,8 @@ def page_data(data, hist):
 <script id="app-data" type="application/json">{json.dumps({}, ensure_ascii=False)}</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <script src="./ads.js"></script>
-<script src="./common.js"></script>
-<script src="./app.js"></script>
+<script src="./common.js?v={ts}"></script>
+<script src="./app.js?v={ts}"></script>
 </body></html>"""
     return head + body
 
