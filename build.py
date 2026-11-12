@@ -1275,7 +1275,7 @@ def page_index(data):
         <div class="tq-spark" id="qm2Spark"></div>
       </div>
       <div class="tq" id="qm3">
-        <div class="tq-tabs"><b>能源化工</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a><span class="tq-mode"><a class="on" data-m="0">走势</a><a data-m="1">日K</a></span></div>
+        <div class="tq-tabs"><b>能源与商品</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a><a data-i="3">沪铜</a><a data-i="4">螺纹钢</a><span class="tq-mode"><a class="on" data-m="0">走势</a><a data-m="1">日K</a></span></div>
         <div class="tq-top">
           <div class="tq-name" id="qm3Name">布伦特原油</div>
           <div class="tq-priceline"><span class="tq-price num" id="qm3Price">—</span><span class="tq-unit" id="qm3Unit">美元/桶</span><span class="tq-chg" id="qm3Chg">—</span></div>

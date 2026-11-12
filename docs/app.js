@@ -551,29 +551,53 @@
       return true;
     } catch (e) { return false; }
   }
-  // 日K（candlestick,真实 OHLC;插件缺失降级收盘折线）
+  // 日K（candlestick + MA5/10/20 均线;插件缺失降级收盘折线）
+  function maArr(closes, n) {
+    var out = [];
+    for (var i = 0; i < closes.length; i++) {
+      if (i < n - 1) { out.push(null); continue; }
+      var s = 0;
+      for (var j = i - n + 1; j <= i; j++) s += closes[j];
+      out.push(+(s / n).toFixed(2));
+    }
+    return out;
+  }
   function drawQK(id, kl, cls) {
     var cv = $("#" + id); if (!cv || !kl || kl.length < 3) return false;
     if (typeof Chart === "undefined") return false;
+    var c = themeColors();
     if (qCharts[id]) { qCharts[id].destroy(); qCharts[id] = null; }
     var labels = kl.map(function (x) { return (x.d || "").slice(5); });
+    var closes = kl.map(function (x) { return x.c; });
+    var maLine = function (data, color, label) {
+      return { type: "line", label: label, data: data, borderColor: color,
+        borderWidth: 1.2, pointRadius: 0, tension: .3 };
+    };
     try {
       qCharts[id] = new Chart(cv, {
         type: "candlestick",
-        data: { labels: labels, datasets: [{ data: kl.map(function (x, i) {
-          return { x: i + 1, o: x.o, h: x.h, l: x.l, c: x.c }; }),
-          color: { up: "#d4380d", down: "#129b63", unchanged: "#999" } }] },
+        data: { labels: labels, datasets: [
+          { label: "K线", data: kl.map(function (x, i) {
+              return { x: i + 1, o: x.o, h: x.h, l: x.l, c: x.c }; }),
+            color: { up: "#d4380d", down: "#129b63", unchanged: "#999" } },
+          maLine(maArr(closes, 5), "#f5a623", "MA5"),
+          maLine(maArr(closes, 10), "#4a90e2", "MA10"),
+          maLine(maArr(closes, 20), "#b07de8", "MA20")
+        ] },
         options: { responsive: true, maintainAspectRatio: false, animation: false,
-          plugins: { legend: { display: false }, tooltip: { intersect: false, mode: "index",
-            callbacks: { label: function (ctx) {
-              var v = (ctx.raw && ctx.raw.o != null) ? ctx.raw : null;
-              return v ? ["开 " + fmt(v.o), "高 " + fmt(v.h), "低 " + fmt(v.l), "收 " + fmt(v.c)] : ""; } } } },
+          plugins: { legend: { display: true, position: "top", labels: {
+              color: c.sub, font: { size: 10 }, boxWidth: 14, boxHeight: 8 } },
+            tooltip: { intersect: false, mode: "index",
+              callbacks: { label: function (ctx) {
+                if (ctx.dataset.type === "line") return ctx.dataset.label + " " + fmt(ctx.parsed.y);
+                var v = (ctx.raw && ctx.raw.o != null) ? ctx.raw : null;
+                return v ? ["开 " + fmt(v.o), "高 " + fmt(v.h), "低 " + fmt(v.l), "收 " + fmt(v.c)] : ""; } } } },
           scales: { x: { ticks: { maxTicksLimit: 6, color: c.sub, font: { size: 9 }, maxRotation: 0 }, grid: { display: false } },
             y: { position: "right", ticks: { maxTicksLimit: 4, color: c.sub, font: { size: 9 } }, grid: { color: c.grid } } } }
       });
       return true;
     } catch (e) {
-      return drawQChart(id, labels, kl.map(function (x) { return x.c; }), cls);
+      return drawQChart(id, labels, closes, cls);
     }
   }
   function renderQM(d) {
@@ -644,16 +668,26 @@
         sp2.innerHTML = "";
       }
     }
-    // 模块3 能源:走势=30日收盘线;日K=真实 OHLC(OIL/CL/SC0)
-    var defs3 = [["brent", "布伦特原油 OIL", "OIL", "布伦特连续"], ["wti", "WTI原油 CL", "CL", "WTI连续"],
-                 ["sc", "上海原油 SC", "SC0", "沪原油连续"]];
+    // 模块3 能源与商品:走势=收盘折线;日K=真实 OHLC+均线
+    var FUT = ((d.extra || {}).futures) || [];
+    function pickFut(code) {
+      return FUT.filter(function (x) { return x.code === code; })[0] || null;
+    }
+    var defs3 = [
+      { key: "brent", n: "布伦特原油 OIL", kl: "OIL", ksrc: "布伦特连续", oil: true },
+      { key: "wti", n: "WTI原油 CL", kl: "CL", ksrc: "WTI连续", oil: true },
+      { key: "sc", n: "上海原油 SC", kl: "SC0", ksrc: "沪原油连续", oil: true },
+      { key: "cu", n: "沪铜主力 CU", kl: "CU0", ksrc: "沪铜连续", fut: "nf_CU0" },
+      { key: "rb", n: "螺纹钢主力 RB", kl: "RB0", ksrc: "螺纹钢连续", fut: "nf_RB0" }
+    ];
     var def3 = defs3[QM_TAB[2]] || defs3[0];
-    var o = (d.oil || {})[def3[0]] || {};
-    _set("qm3Name", o.name || def3[1]);
+    var o = def3.oil ? ((d.oil || {})[def3.key] || {}) : (pickFut(def3.fut) || {});
+    if (!o.name) o.name = def3.n;
+    var prev = o.prev_close || o.prev || o.prev_settle;
+    _set("qm3Name", o.name || def3.n);
     _set("qm3Price", fmt(o.last));
     _set("qm3Unit", o.unit || "");
     var ch3 = $("#qm3Chg");
-    var prev = o.prev_close || o.prev_settle;
     var ocls = "flat";
     if (prev && o.last != null) {
       var pct = (o.last - prev) / prev * 100;
@@ -664,12 +698,13 @@
     } else if (ch3) {
       ch3.innerHTML = '<span class="flat">—</span>';
     }
+    var kl3 = KL[def3.kl] || null;
     var ok3 = false;
     if (QM_MODE[2] === 1) {
-      ok3 = drawQK("qm3Chart", KL[def3[2]], ocls);
-      if (ok3) _set("qm3Name", (o.name || def3[1]) + "  ·  日K·" + def3[3]);
-    } else if (o.hist && o.hist.length > 3) {
-      ok3 = drawQChart("qm3Chart", null, o.hist, ocls);
+      ok3 = drawQK("qm3Chart", kl3, ocls);
+      if (ok3) _set("qm3Name", (o.name || def3.n) + "  ·  日K·" + def3.ksrc);
+    } else if (kl3 && kl3.length > 3) {
+      ok3 = drawQChart("qm3Chart", null, kl3.map(function (x) { return x.c; }), ocls);
     }
     var sp3 = $("#qm3Spark");
     if (sp3) {

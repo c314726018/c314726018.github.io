@@ -410,7 +410,8 @@ def fetch_klines():
                 "l": float(x["low"]), "c": float(x["close"])}
 
     for key, sym, tpl in (("AU0", "AU0", SINA_INNER), ("AG0", "AG0", SINA_INNER),
-                          ("SC0", "SC0", SINA_INNER), ("XAU", "XAU", SINA_DAILY),
+                          ("SC0", "SC0", SINA_INNER), ("CU0", "CU0", SINA_INNER),
+                          ("RB0", "RB0", SINA_INNER), ("XAU", "XAU", SINA_DAILY),
                           ("GC", "GC", SINA_DAILY), ("SI", "SI", SINA_DAILY),
                           ("OIL", "OIL", SINA_DAILY), ("CL", "CL", SINA_DAILY)):
         try:
