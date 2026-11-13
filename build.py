@@ -1119,7 +1119,8 @@ NAV_SECTIONS = [
         ("实时行情", "./index.html#quotes"),
         ("涨跌热力图", "./index.html#heat"),
         ("溢价对照", "./index.html#premium"),
-        ("油价汇率", "./index.html#energy"),
+        ("国际原油", "./index.html#oil"),
+        ("人民币汇率", "./index.html#fx"),
         ("工具计算", "./index.html#tools"),
         ("走势图表", "./index.html#charts"),
         ("留言反馈", "./feedback.html"),
@@ -2048,11 +2049,12 @@ def page_index(data):
   </section>
 
   <!-- ============ 油价与汇率 ============ -->
-  <section class="section" id="energy">
+  <!-- ============ 国际原油(P0 拆分) ============ -->
+  <section class="section" id="oil">
     <div class="section-head">
-      <div><div class="lbl">OIL &amp; FX</div><h2>国际油价 · 人民币汇率</h2>
-        <p>布伦特、WTI 与上海原油对照；主流货币兑人民币实时汇率。</p></div>
-      <div class="side">油价涨红 跌绿 · 汇率为 1 美元折算口径</div>
+      <div><div class="lbl">CRUDE OIL · 国际原油</div><h2>国际原油行情</h2>
+        <p>布伦特、WTI 与上海原油三大基准对照;原油到成品油的换算与联动关系一页看懂。</p></div>
+      <div class="side">油价涨红 跌绿 · 布伦特为全球 2/3 原油定价参考</div>
     </div>
     <div class="charts">
       <div class="card"><div class="card-head"><h3>国际与境内油价</h3>
@@ -2075,6 +2077,33 @@ def page_index(data):
         </div>
       </div>
       </div>
+      <div class="card">
+        <div class="card-head"><h3>原油换算器</h3><span class="chip">美元/桶 ⇄ 元/升</span></div>
+        <div class="assume-row">
+          <div class="a-item"><label>原油价格(美元/桶)</label><input id="ocUsd" type="number" step="0.01" value="96"></div>
+          <div class="a-item"><label>USD/CNY 汇率</label><input id="ocFx" type="number" step="0.0001" value="6.6851"></div>
+        </div>
+        <div class="phys-card" style="margin:10px 0"><div class="pk">折算结果</div><div class="pv" id="ocOut">—<span class="pu">元/升</span></div><div class="pn">美元/桶 × 汇率 ÷ 158.97(1 桶 = 158.97 升),原料成本口径,不含税费与炼化</div></div>
+        <div class="card-head" style="margin:14px 0 8px"><h3>三大原油基准</h3></div>
+        <ol class="steps">
+          <li><b>布伦特 Brent(北海)</b>:全球约 2/3 原油现货的定价基准,反映欧洲与亚洲市场</li>
+          <li><b>WTI(美国西德州)</b>:北美市场基准,受美国库存与管道运输影响</li>
+          <li><b>上海原油 SC</b>:中国唯一国际化期货品种,人民币计价,叠加汇率因素</li>
+          <li><b>换算常识</b>:1 桶 = 158.97 升;原油每变动 1 美元/桶 ≈ 成品油 0.06 元/升(税前)</li>
+        </ol>
+        <div class="hint">国内成品油零售价(见汽柴油板块)= 原料成本 + 炼化 + 税费(消费税/增值税)+ 流通费用,与原油联动但不同步。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 人民币汇率(P0 拆分) ============ -->
+  <section class="section" id="fx">
+    <div class="section-head">
+      <div><div class="lbl">CNY FX · 人民币汇率</div><h2>人民币汇率</h2>
+        <p>主流货币兑人民币实时汇率与双向换算器;中间价、在岸/离岸口径一次讲清。</p></div>
+      <div class="side">汇率为 1 单位外币折算人民币</div>
+    </div>
+    <div class="charts">
       <div class="card"><div class="card-head"><h3>人民币汇率</h3>
         <div class="chip-row"><span class="chip">USD/CNY {fmt(intl.get('usd_cny'), 4)}</span></div></div>
         <table class="mega-table">
@@ -2082,6 +2111,22 @@ def page_index(data):
           <tbody id="fxBody">{fx_rows(fx)}</tbody>
         </table>
         <div class="tfoot">汇率取自公开汇率接口的 1 美元折算口径，与银行柜台实时牌价存在点差；日元 / 韩元 / 泰铢按 100 单位展示。</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>外币 ⇄ 人民币 换算器</h3><span class="chip">双向实时换算</span></div>
+        <div class="assume-row">
+          <div class="a-item"><label>金额</label><input id="fcAmt" type="number" step="0.01" value="1000"></div>
+          <div class="a-item"><label>币种</label><select id="fcCur"><option value="USD">美元 USD</option><option value="EUR">欧元 EUR</option><option value="JPY">日元 JPY</option><option value="HKD">港币 HKD</option><option value="GBP">英镑 GBP</option></select></div>
+        </div>
+        <div class="phys-card" style="margin:10px 0"><div class="pk">换算结果</div><div class="pv" id="fcOut">—<span class="pu">元</span></div><div class="pn" id="fcRate">汇率:—</div></div>
+        <div class="card-head" style="margin:14px 0 8px"><h3>汇率口径说明</h3></div>
+        <ol class="steps">
+          <li><b>中间价</b>:央行每日 9:15 公布,银行挂牌价围绕其波动(±2%)</li>
+          <li><b>在岸 CNY</b>:境内银行间市场汇率;离岸 CNH:香港市场汇率,两者偶有价差</li>
+          <li><b>换算提示</b>:结果为中间价口径,实际兑换需加银行买卖点差(约 0.3%~0.5%)</li>
+          <li><b>对金价</b>:人民币贬值时,以人民币计价的国际金价被动走高——这就是看 USD/CNY 的原因</li>
+        </ol>
+        <div class="hint">汇率数据来源于公开行情接口,每 30 分钟更新。</div>
       </div>
     </div>
   </section>

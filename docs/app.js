@@ -568,6 +568,39 @@
     });
   }
 
+  // ---------- 换算器:油价折算 + 外币⇄人民币 ----------
+  function bindConverters() {
+    var ocUsd = document.getElementById("ocUsd"), ocFx = document.getElementById("ocFx"), ocOut = document.getElementById("ocOut");
+    function oc() {
+      if (!ocOut) return;
+      var u = parseFloat(ocUsd.value), f = parseFloat(ocFx.value);
+      if (isFinite(u) && isFinite(f) && u > 0 && f > 0) {
+        var v = u * f / 158.97;
+        ocOut.innerHTML = fmt(v) + '<span class="pu">元/升</span>';
+      } else ocOut.innerHTML = '—<span class="pu">元/升</span>';
+    }
+    if (ocUsd) ocUsd.addEventListener("input", oc);
+    if (ocFx) ocFx.addEventListener("input", oc);
+    oc();
+
+    var fx = (window.DATA && window.DATA.fx) || [];
+    var RATE = {};
+    fx.forEach(function (r) { RATE[r.code] = { v: r.cny, note: r.unit || "" }; });
+    var fcAmt = document.getElementById("fcAmt"), fcCur = document.getElementById("fcCur"), fcOut = document.getElementById("fcOut"), fcRate = document.getElementById("fcRate");
+    function fc() {
+      if (!fcOut) return;
+      var amt = parseFloat(fcAmt.value), cur = fcCur.value;
+      var r = RATE[cur];
+      if (!isFinite(amt) || !r) { fcOut.innerHTML = '—<span class="pu">元</span>'; fcRate.textContent = "汇率:—"; return; }
+      var v = (cur === "JPY") ? amt / 100 * r.v : amt * r.v;
+      fcOut.innerHTML = fmt(v) + '<span class="pu">元</span>';
+      fcRate.textContent = "汇率:1 " + cur + " = " + r.v + " 元" + (cur === "JPY" ? "(100 口径:100 JPY = " + r.v + " 元)" : "");
+    }
+    if (fcAmt) fcAmt.addEventListener("input", fc);
+    if (fcCur) fcCur.addEventListener("change", fc);
+    fc();
+  }
+
   // ---------- 涨跌热力图:周期切换(今日/5/20/60 日) ----------
   function bindHeat() {
     var tabs = document.getElementById("heatTabs");
@@ -1099,6 +1132,7 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
     bindQM();
     bindFuel();
     bindHeat();
+    bindConverters();
     renderAll(DATA);
     loadData();                 // 拉取最新 baked 数据
     setInterval(loadData, 60000); // 每 60s 检查一次（新构建发布即更新）
