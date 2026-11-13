@@ -682,7 +682,7 @@ button:active, .fbtn:active{transform:scale(.97)}
 .ov-strip b{margin-left:4px;font-variant-numeric:tabular-nums}
 
 /* ============ 三大报价模块(金投网式,tab 切换品种) ============ */
-.three-quote{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.three-quote{display:grid;grid-template-columns:1fr;gap:16px;margin-top:14px}
 .three-quote>*{min-width:0}.tq-chart canvas,.tq-subchart canvas{max-width:100%!important}
 .tq{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
 .tq-tabs{display:flex;flex-wrap:wrap;align-items:center;background:var(--surface-2);border-bottom:1px solid var(--line);padding:3px 6px 2px;row-gap:2px}
@@ -1664,17 +1664,6 @@ def page_index(data):
         <div class="tq-tools" id="qm3Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm3Spark" style="display:none"></div>
       </div>
-    </div>
-    <div class="ov-strip">
-      <span>主力 <b id="ovSge">—</b><span id="ovSgeUnit" style="font-size:10.5px">元/克</span> <span class="hero-chg" id="heroChg">—</span> <i id="ovSgeTime" style="font-style:normal">—</i></span>
-      <span>国际金 <b id="hsXau">—</b> 美元/盎司</span>
-      <span>国际银 <b id="hsSilver">—</b></span>
-      <span>USD/CNY <b id="hsFx">—</b></span>
-      <span>国内溢价 <span class="v num up" id="hsPrem">—</span></span>
-      <span>今开 <b id="ovOpen">—</b></span>
-      <span>最高 <b id="ovHigh">—</b></span>
-      <span>最低 <b id="ovLow">—</b></span>
-      <span>振幅 <b id="ovRange">—</b></span>
     </div>
   </section>
 

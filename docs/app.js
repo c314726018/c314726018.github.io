@@ -70,15 +70,15 @@
     var it = (d.items || []).filter(function (x) { return x.symbol === "Au99.99"; })[0];
     var intl = d.intl || {};
     if (it) {
-      $("#ovSge").textContent = fmt(it.last);
-      $("#ovSgeUnit").textContent = it.unit || "元/克";
-      $("#ovSgeTime").textContent = it.update ? "更新 " + it.update : "更新 —";
+      _sv("ovSge", fmt(it.last));
+      _sv("ovSgeUnit", it.unit || "元/克");
+      _sv("ovSgeTime", it.update ? "更新 " + it.update : "更新 —");
       // 概览卡：主力日内区间
-      $("#ovOpen").textContent = fmt(it.open);
-      $("#ovHigh").textContent = fmt(it.max);
-      $("#ovLow").textContent = fmt(it.min);
+      _sv("ovOpen", fmt(it.open));
+      _sv("ovHigh", fmt(it.max));
+      _sv("ovLow", fmt(it.min));
       var amp = (Number(it.max) - Number(it.min)) / Number(it.open) * 100;
-      $("#ovRange").textContent = isFinite(amp) ? fmt(amp) + "%" : "—";
+      _sv("ovRange", isFinite(amp) ? fmt(amp) + "%" : "—");
       var ch = changeOf(it);
       var hc = $("#heroChg");
       if (hc && ch) {
@@ -89,10 +89,10 @@
       } else if (hc) { hc.className = "hero-chg"; hc.textContent = "—"; }
     }
     // Hero 右侧：国际维度（每 60s 数据刷新时同步）
-    if (intl.xau_usd != null) $("#hsXau").textContent = fmt(intl.xau_usd);
+    if (intl.xau_usd != null) _sv("hsXau", fmt(intl.xau_usd));
     var mets = intl.metals || {};
-    if (mets.silver && mets.silver.intl_usd != null) $("#hsSilver").textContent = fmt(mets.silver.intl_usd);
-    if (intl.usd_cny != null) $("#hsFx").textContent = fmt(intl.usd_cny, 4);
+    if (mets.silver && mets.silver.intl_usd != null) _sv("hsSilver", fmt(mets.silver.intl_usd));
+    if (intl.usd_cny != null) _sv("hsFx", fmt(intl.usd_cny, 4));
     if (intl.premium_pct != null) {
       var el = $("#hsPrem");
       el.textContent = (intl.premium_pct >= 0 ? "+" : "") + fmt(intl.premium_pct) + "%";
@@ -517,7 +517,8 @@
     if (i >= 0) FAVS.splice(i, 1); else FAVS.push(code);
     saveFavs();
   }
-  function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
+    function _sv(id, txt) { var e = document.getElementById(id); if (e) e.textContent = txt; }
+function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
   function _pick(items, sym) {
     return (items || []).filter(function (x) { return x.symbol === sym; })[0];
   }
