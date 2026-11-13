@@ -51,8 +51,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json docs/ alerts_state.json
-          git commit -m "chore: 更新行情 $(date +%Y-%m-%dT%H:%M)" || echo "no changes"
+          git add data.json docs/
+          [ -f alerts_state.json ] && git add alerts_state.json || true
+          (git diff --cached --quiet || git commit -m "chore: 更新行情 $(date +%Y-%m-%dT%H:%M)")
           git push
       - name: IndexNow 推送（Bing / 360 / 搜狗 / Yandex 收录）
         run: |

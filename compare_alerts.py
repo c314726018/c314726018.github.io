@@ -53,17 +53,25 @@ def send_mail(to, subject, body):
         s.sendmail(MAIL_USER, [to], msg.as_string())
 
 
+def _save_state(state):
+    with open(STATE_PATH, "w", encoding="utf-8") as f:
+        json.dump(state, f, ensure_ascii=False, indent=1)
+
+
 def main():
-    if not (MAIL_USER and MAIL_PASS):
-        print("[alerts] MAIL_USER/MAIL_PASS 未配置,跳过")
-        return
     try:
         rules = json.loads(ALERT_RULES or "[]")
     except json.JSONDecodeError:
         print("[alerts] ALERT_RULES 解析失败,跳过")
+        _save_state({})
+        return
+    if not (MAIL_USER and MAIL_PASS):
+        print("[alerts] MAIL_USER/MAIL_PASS 未配置,跳过(state 已初始化)")
+        _save_state({})
         return
     if not rules:
-        print("[alerts] 无订阅规则")
+        _save_state({})
+        print("[alerts] 无订阅规则(state 已初始化)")
         return
 
     with open(DATA_PATH, encoding="utf-8") as f:
@@ -109,8 +117,7 @@ def main():
         except Exception as e:
             print(f"[alerts] 发信失败 {rh}: {e}")
 
-    with open(STATE_PATH, "w", encoding="utf-8") as f:
-        json.dump(state, f, ensure_ascii=False, indent=1)
+    _save_state(state)
     print(f"[alerts] 完成:发送 {sent} 封 / 规则 {len(rules)} 条")
 
 
