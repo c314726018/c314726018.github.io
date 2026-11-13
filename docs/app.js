@@ -95,8 +95,10 @@
     if (intl.usd_cny != null) _sv("hsFx", fmt(intl.usd_cny, 4));
     if (intl.premium_pct != null) {
       var el = $("#hsPrem");
-      el.textContent = (intl.premium_pct >= 0 ? "+" : "") + fmt(intl.premium_pct) + "%";
-      el.className = "v num " + (intl.premium_pct >= 0 ? "up" : "down");
+      if (el) {
+        el.textContent = (intl.premium_pct >= 0 ? "+" : "") + fmt(intl.premium_pct) + "%";
+        el.className = "v num " + (intl.premium_pct >= 0 ? "up" : "down");
+      }
     }
     var gt = $("#genTime");
     if (gt) gt.textContent = "数据生成：" + (d.generated_at || "—");
