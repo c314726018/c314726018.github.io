@@ -445,6 +445,28 @@
 
   // ---------- 价格提醒 ----------
   var ALERT_KEY = "gold_alerts_v1";
+  function bindFuel() {
+    var sel = $("#fuelProv");
+    if (!sel) return;
+    var nr = (DATA && DATA.oil_retail && DATA.oil_retail.national) || {};
+    var pv = (DATA && DATA.oil_retail && DATA.oil_retail.provinces) || {};
+    function render() {
+      var p = sel.value || "全国平均";
+      var row = pv[p] || {};
+      [["92", "fp92", "fd92"], ["95", "fp95", "fd95"], ["98", "fp98", "fd98"], ["0", "fp0", "fd0"]].forEach(function (t) {
+        var k = t[0], pe = $("#" + t[1]), de = $("#" + t[2]);
+        var v = row[k];
+        if (pe) pe.textContent = v ? fmt(v) + " 元/升" : "—";
+        if (de && v && nr[k]) {
+          var dd = v - nr[k];
+          var cls = dd > 0.005 ? "up" : dd < -0.005 ? "down" : "flat";
+          de.innerHTML = '<span class="' + cls + '">' + (dd > 0 ? "+" : "") + fmt(dd) + "</span>";
+        } else if (de) de.textContent = "—";
+      });
+    }
+    sel.addEventListener("change", render);
+    render();
+  }
   function bindAlerts() {
     var box = $("#alertSymBox");
     if (box) box.addEventListener("click", function (e) {
@@ -950,6 +972,7 @@
     bindPhysical();
     bindTools();
     bindQM();
+    bindFuel();
     renderAll(DATA);
     loadData();                 // 拉取最新 baked 数据
     setInterval(loadData, 60000); // 每 60s 检查一次（新构建发布即更新）

@@ -69,7 +69,14 @@ OUT = os.path.join(DOCS, "index.html")
 
 SITE = "https://c314726018.github.io/"
 TS = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y%m%d%H%M")  # 构建时间戳(资源版本号)
-ALERT_MAIL = "314726018@qq.com"  # 站长接收邮箱:填写后邮件订阅按钮将唤起邮件客户端预填订阅信息
+ALERT_MAIL = "314726018@qq.com"
+
+# 成品油零售参考价(调价日当日实时更新,平日每日凌晨;数据口径:三桶油挂牌均价)
+try:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", "oil_retail.json"), encoding="utf-8") as _f:
+        OIL_RETAIL = json.load(_f)
+except Exception:
+    OIL_RETAIL = {"national": {}, "provinces": {}, "next_adjust": {}, "history": [], "updated": ""}  # 站长接收邮箱:填写后邮件订阅按钮将唤起邮件客户端预填订阅信息
 
 # AdSense 网站代码 —— 直接写入生成页的 <head>，确保验证时原始 HTML 抓取也能命中
 ADSENSE_LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>'
@@ -788,6 +795,21 @@ main{counter-reset:secno}
 .oe-spark{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 @media(max-width:720px){.oe-grid{grid-template-columns:1fr}}
 
+.core-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0}
+.ccard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden}
+.ccard.cc-link{cursor:pointer;transition:.15s}
+.ccard.cc-link:hover{border-color:var(--gold-2);transform:translateY(-2px)}
+.cc-k{font-size:12px;color:var(--sub);margin-bottom:6px}
+.cc-sym{color:var(--gold-2);font-size:11px;margin-left:4px}
+.cc-v{font-size:28px;font-weight:780;letter-spacing:-1px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.1}
+.cc-f{font-size:11px;color:var(--sub);margin-top:6px}
+.fuel-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.fuel-adjust{display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-top:14px}
+@media(max-width:1080px){.core-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.core-cards{grid-template-columns:1fr 1fr}.fuel-adjust{grid-template-columns:1fr}}
+@media(max-width:420px){.core-cards{grid-template-columns:1fr}}
+
 /* ============ 溢价衍生指标卡 ============ */
 .deriv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
 .dcard{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
@@ -849,8 +871,9 @@ main{counter-reset:secno}
 /* ============ 移动端适配覆盖(置于所有主定义之后,确保生效) ============ */
 @media(max-width:720px){
   .portal-main table,.portal table{min-width:0}
-  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
+  .table-scroll{position:relative;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
   .table-scroll .mega-table{display:table;min-width:660px;width:max-content}
+  .table-scroll .mega-table thead th{position:sticky;top:0;z-index:2;background:var(--surface-2)}
   .mega-table thead{display:table-header-group}
   .mega-table tbody,.mega-table tr,.mega-table td,.mega-table th{display:table-cell}
   .mega-table tbody tr{border:none;border-bottom:1px solid var(--line-2);border-radius:0;margin:0;padding:0;background:transparent;display:table-row}
@@ -1055,11 +1078,12 @@ def ticker_html(data):
 NAV_SECTIONS = [
     ("quotes", "行情中心", "./index.html", [
         ("行情概览", "./index.html#overview"),
+        ("实物金价", "./index.html#physical"),
+        ("汽柴油", "./index.html#fuel"),
         ("价格提醒", "./index.html#alerts"),
         ("实时行情", "./index.html#quotes"),
         ("涨跌热力图", "./index.html#heat"),
         ("溢价对照", "./index.html#premium"),
-        ("实物金价", "./index.html#physical"),
         ("油价汇率", "./index.html#energy"),
         ("工具计算", "./index.html#tools"),
         ("走势图表", "./index.html#charts"),
@@ -1463,8 +1487,45 @@ def page_index(data):
                 f'<polyline points="{_poly}" fill="none" stroke="{_color}" stroke-width="2"/></svg>'
                 f'<div style="font-size:10.5px;color:var(--sub)">{esc(_pts[0]["d"])} → {esc(_pts[-1]["d"])} · {fmt(_vals[0])} → {fmt(_vals[-1])} 美元/桶</div>')
     _bl_html = fmt(brent_l, 2) if brent_l else "—"
+    # 核心价格卡片数据
+    gen_time = data.get("generated_at") or ""
+    au_item = next((it for it in items if it.get("symbol") == "Au99.99"), None)
+    _au_last = au_item.get("last") if au_item else None
+    _au_open = au_item.get("open") if au_item else None
+    _au_prev = au_item.get("open")  # 今开基准
+    gold_chg_html = '<span class="flat">—</span>'
+    if au_item and _au_last and _au_open:
+        _d = _au_last - _au_open
+        _p = _d / _au_open * 100
+        _cls = "up" if _d > 0 else "down" if _d < 0 else "flat"
+        _arrow = "▲" if _d > 0 else "▼" if _d < 0 else "—"
+        gold_chg_html = f'<span class="{_cls}">{_arrow} {fmt(_d)} ({_p:+.2f}%)</span>'
+    gold_html = fmt(_au_last) if _au_last else "—"
+    # 实物金参考:金条买入 ≈ 基准金价+30 元/克(估算)
+    gold_barret = fmt(_au_last + 30) if _au_last else "—"
+    _nr = (OIL_RETAIL.get("national") or {})
+    gas92 = fmt(_nr.get("92")) if _nr.get("92") else "—"
+    _na = OIL_RETAIL.get("next_adjust") or {}
+    next_adjust = _na.get("date", "待公告")
+    usd_row = next((r for r in fx if r.get("code") == "USD"), None)
+    usd_html = fmt(usd_row.get("cny"), 4) if usd_row else "—"
     _wl_html = fmt(wti_l, 2) if wti_l else "—"
     _go_html = fmt(gold_oil_barrel, 1) if gold_oil_barrel else "—"
+    _prov = OIL_RETAIL.get("provinces") or {}
+    prov_names = list(_prov.keys())
+    prov0 = prov_names[1] if len(prov_names) > 1 else (prov_names[0] if prov_names else "全国平均")
+    prov_opts = "".join(f'<option value="{esc(pn)}">{esc(pn)}</option>' for pn in prov_names)
+    fuel_updated = OIL_RETAIL.get("updated", "")
+    _na = OIL_RETAIL.get("next_adjust") or {}
+    na_date = _na.get("date", "待公告")
+    na_expect = _na.get("expect", "") + " · " + _na.get("source", "")
+    _hist = OIL_RETAIL.get("history") or []
+    hist_html = "<br>".join(f"▸ {esc(h.get('date'))} {esc(h.get('change'))}" for h in _hist[:3]) or "暂无记录"
+    _nr = OIL_RETAIL.get("national") or {}
+    n92 = fmt(_nr.get("92")) if _nr.get("92") else "—"
+    n95 = fmt(_nr.get("95")) if _nr.get("95") else "—"
+    n98 = fmt(_nr.get("98")) if _nr.get("98") else "—"
+    n0 = fmt(_nr.get("0")) if _nr.get("0") else "—"
     sym_pills = "".join(
         f'<a class="sp" data-v="{esc(sv)}" title="点击选中/取消">{esc(sl)}</a>'
         for sv, sl in sym_pool)
@@ -1522,6 +1583,7 @@ def page_index(data):
     heat = heat_grid(data)
     payload = dict(data)
     payload["alert_mail"] = ALERT_MAIL
+    payload["oil_retail"] = OIL_RETAIL
     data_json = json.dumps(payload, ensure_ascii=False)
 
     return f"""{head_html(
@@ -1538,6 +1600,30 @@ def page_index(data):
 
   <div class="portal">{side_left('quotes')}
   <div class="portal-main">
+
+  <!-- ============ 核心价格卡片区(P0 首屏强曝光) ============ -->
+  <section class="core-cards" id="core">
+    <div class="ccard">
+      <div class="cc-k">基准金价 <span class="cc-sym">Au99.99</span></div>
+      <div class="cc-v">{gold_html}</div>
+      <div class="cc-f">{gold_chg_html} · 更新 {gen_time}</div>
+    </div>
+    <div class="ccard">
+      <div class="cc-k">实物金参考 <span class="cc-sym">金条/首饰</span></div>
+      <div class="cc-v">{gold_barret} <span style="font-size:14px;color:var(--sub)">元/克</span></div>
+      <div class="cc-f">金条买入 · 首饰含工费 · 见下方实物金估算</div>
+    </div>
+    <div class="ccard cc-link" onclick="location.href='./index.html#fuel'">
+      <div class="cc-k">92# 汽油 <span class="cc-sym">全国参考</span></div>
+      <div class="cc-v">{gas92} <span style="font-size:14px;color:var(--sub)">元/升</span></div>
+      <div class="cc-f">下次调价:{next_adjust} · 点击查看汽柴油</div>
+    </div>
+    <div class="ccard">
+      <div class="cc-k">美元兑人民币 <span class="cc-sym">USD/CNY</span></div>
+      <div class="cc-v">{usd_html}</div>
+      <div class="cc-f">央行中间价口径 · 更新 {gen_time}</div>
+    </div>
+  </section>
 
   <!-- ============ 三大报价模块（金投网式,tab 切换） ============ -->
   <section class="hero-wrap" id="overview" style="margin:14px 0 0">
@@ -1593,6 +1679,35 @@ def page_index(data):
 
   <!-- ============ 行情表 ============ -->
   <!-- ============ 价格提醒 ============ -->
+  <!-- ============ 国内成品油价模块(P0) ============ -->
+  <section class="section" id="fuel">
+    <div class="section-head">
+      <div><div class="lbl">FUEL PRICES</div><h2>国内成品油价</h2>
+        <p>92#/95#/98# 汽油与 0# 柴油全国零售参考价,支持省市切换;调价窗口按发改委 10 个工作日机制。</p></div>
+    </div>
+    <div class="card">
+      <div class="fuel-head">
+        <select id="fuelProv" aria-label="选择省市">{prov_opts}</select>
+        <span class="badge">◷ 数据更新:{fuel_updated}</span>
+        <span class="chip">口径:三桶油挂牌均价</span>
+      </div>
+      <table class="mega-table">
+        <thead><tr><th>品号</th><th>全国平均</th><th id="fuelProvHead">{prov0}</th><th>较全国</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">92# 汽油</td><td class="num strong">{n92} 元/升</td><td class="num strong" id="fp92">—</td><td class="num" id="fd92">—</td></tr>
+          <tr><td class="lbl">95# 汽油</td><td class="num strong">{n95} 元/升</td><td class="num strong" id="fp95">—</td><td class="num" id="fd95">—</td></tr>
+          <tr><td class="lbl">98# 汽油</td><td class="num strong">{n98} 元/升</td><td class="num strong" id="fp98">—</td><td class="num" id="fd98">—</td></tr>
+          <tr><td class="lbl">0# 柴油</td><td class="num strong">{n0} 元/升</td><td class="num strong" id="fp0">—</td><td class="num" id="fd0">—</td></tr>
+        </tbody>
+      </table>
+      <div class="fuel-adjust">
+        <div class="dcard"><div class="dk">下次调价窗口</div><div class="dv" style="font-size:18px">{na_date}</div><div class="dn">{na_expect}</div></div>
+        <div class="dcard"><div class="dk">最近调价记录</div><div class="dn" style="font-size:12px">{hist_html}</div></div>
+      </div>
+      <div class="hint">零售价为参考值,具体以当地加油站当日挂牌为准;调价窗口以国家发改委公告为准。</div>
+    </div>
+  </section>
+
   <section class="section" id="alerts">
     <div class="section-head">
       <div><div class="lbl">PRICE ALERTS</div><h2>价格提醒 · 免费</h2>

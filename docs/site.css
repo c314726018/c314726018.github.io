@@ -678,6 +678,21 @@ main{counter-reset:secno}
 .oe-spark{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 @media(max-width:720px){.oe-grid{grid-template-columns:1fr}}
 
+.core-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0}
+.ccard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden}
+.ccard.cc-link{cursor:pointer;transition:.15s}
+.ccard.cc-link:hover{border-color:var(--gold-2);transform:translateY(-2px)}
+.cc-k{font-size:12px;color:var(--sub);margin-bottom:6px}
+.cc-sym{color:var(--gold-2);font-size:11px;margin-left:4px}
+.cc-v{font-size:28px;font-weight:780;letter-spacing:-1px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.1}
+.cc-f{font-size:11px;color:var(--sub);margin-top:6px}
+.fuel-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.fuel-adjust{display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-top:14px}
+@media(max-width:1080px){.core-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.core-cards{grid-template-columns:1fr 1fr}.fuel-adjust{grid-template-columns:1fr}}
+@media(max-width:420px){.core-cards{grid-template-columns:1fr}}
+
 /* ============ 溢价衍生指标卡 ============ */
 .deriv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
 .dcard{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
@@ -739,8 +754,9 @@ main{counter-reset:secno}
 /* ============ 移动端适配覆盖(置于所有主定义之后,确保生效) ============ */
 @media(max-width:720px){
   .portal-main table,.portal table{min-width:0}
-  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
+  .table-scroll{position:relative;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px}
   .table-scroll .mega-table{display:table;min-width:660px;width:max-content}
+  .table-scroll .mega-table thead th{position:sticky;top:0;z-index:2;background:var(--surface-2)}
   .mega-table thead{display:table-header-group}
   .mega-table tbody,.mega-table tr,.mega-table td,.mega-table th{display:table-cell}
   .mega-table tbody tr{border:none;border-bottom:1px solid var(--line-2);border-radius:0;margin:0;padding:0;background:transparent;display:table-row}
