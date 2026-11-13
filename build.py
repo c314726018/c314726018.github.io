@@ -1587,7 +1587,7 @@ def page_index(data):
     data_json = json.dumps(payload, ensure_ascii=False)
 
     return f"""{head_html(
-        "金潮网 - 贵金属行情门户 | 今日金价_上海黄金交易所_国际金价_财经日历_金融快讯",
+        "金潮网 - 今日黄金价格_实时金价_原油白银行情查询_上海黄金交易所",
         "实时黄金白银铂金价格、今日油价（布伦特/WTI/上海原油）与人民币汇率：上海黄金交易所 Au99.99、Au(T+D)、Ag99.99 等合约最新价，国际现货 XAU/XAG/XPT，多品种国内溢价对照，附走势图表与知识百科。",
         SITE, ld)}
 <body>
