@@ -1431,7 +1431,14 @@ def metals_rows(intl, data=None):
     for key, label, sge_sym in METAL_DEFS:
         x = m.get(key) or {}
         if x.get("sge") is None and x.get("premium_pct") is None:
-            continue  # 境内无报价且无溢价（钯金关注度低,由 Au(T+D) 递延溢价替代）
+            # SGE 无成交品种:显式说明而非隐藏,回答"为什么只有金银"
+            rows.append(
+                "<tr>"
+                f'<td class="lbl" data-label="品种">{label} <span class="sym">{sge_sym}</span></td>'
+                f'<td colspan="4" data-label="说明" style="color:var(--sub);font-size:12.5px">'
+                f'上海黄金交易所 {label} 合约长期无成交,暂无法计算国内溢价;'
+                '国际价格(美元/盎司)仍在后台跟踪,待境内恢复报价或接入可靠现货源后自动展示。</td></tr>')
+            continue
         prem = x.get("premium_pct")
         cls = "up" if (prem or 0) >= 0 else "down"
         prem_txt = f"{prem:+.2f}%" if prem is not None else "—"
@@ -1946,7 +1953,7 @@ def page_index(data):
   <section class="section" id="premium">
     <div class="section-head">
       <div><div class="lbl">CROSS-MARKET PREMIUM</div><h2>多品种国内溢价</h2>
-        <p>黄金、白银、铂金的境内报价与国际折算价对照，看懂内外价差。</p></div>
+        <p>黄金、白银的境内报价与国际折算价对照;铂金/钯金因 SGE 合约长期无成交,溢价暂无法计算(表内附说明)。</p></div>
       <div class="side">溢价为正 = 境内贵于国际折算</div>
     </div>
     <div class="card">
