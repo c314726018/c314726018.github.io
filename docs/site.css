@@ -401,6 +401,10 @@ select:focus{outline:none;border-color:var(--gold-2)}
 .tb-btn{background:rgba(184,134,11,.14);border:1px solid var(--gold-2);color:var(--gold);padding:4px 14px;border-radius:99px;font-weight:650;white-space:nowrap}
 .tb-btn.gold{background:var(--gold);color:#fff}
 .tb-btn:hover{filter:brightness(1.1)}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel{background:linear-gradient(90deg,var(--surface-2) 25%,var(--line) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:8px}
+.skel-box{position:absolute;inset:0;z-index:1}
+.tq-chart,.chart-box{position:relative}
 .rel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
 .rel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow);transition:.15s}
 .rel:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 40%,var(--line))}

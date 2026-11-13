@@ -524,6 +524,10 @@ select:focus{outline:none;border-color:var(--gold-2)}
 .tb-btn{background:rgba(184,134,11,.14);border:1px solid var(--gold-2);color:var(--gold);padding:4px 14px;border-radius:99px;font-weight:650;white-space:nowrap}
 .tb-btn.gold{background:var(--gold);color:#fff}
 .tb-btn:hover{filter:brightness(1.1)}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel{background:linear-gradient(90deg,var(--surface-2) 25%,var(--line) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:8px}
+.skel-box{position:absolute;inset:0;z-index:1}
+.tq-chart,.chart-box{position:relative}
 .rel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
 .rel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow);transition:.15s}
 .rel:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 40%,var(--line))}
@@ -1120,7 +1124,7 @@ NAV_SECTIONS = [
     ("quotes", "行情中心", "./index.html", [
         ("行情概览", "./index.html#overview"),
         ("实物金价", "./index.html#physical"),
-        ("品牌金饰", "./index.html#brands"),
+        ("标准金条", "./index.html#brands"),
         ("汽柴油", "./index.html#fuel"),
         ("国际原油", "./index.html#oil"),
         ("人民币汇率", "./index.html#fx"),
@@ -1596,6 +1600,7 @@ def page_index(data):
     _bar_prem = BRANDS.get("gold_bar_premium") or 22
     bar_p = fmt(_au_base_price + _bar_prem) if _au_base_price else "—"
     bar_prem = _bar_prem
+    bar_rec = fmt(_au_base_price - 7) if _au_base_price else "—"
     _k18fee = BRANDS.get("k18_fee") or 160
     k18 = fmt(_au_base_price * 0.75 + _k18fee) if _au_base_price else "—"
     _pt_prem = BRANDS.get("pt_premium") or 180
@@ -1735,7 +1740,7 @@ def page_index(data):
           <div class="tq-name" id="qm1Name">现货黄金 Au99.99</div>
           <div class="tq-priceline"><span class="tq-price num" id="qm1Price">—</span><span class="tq-unit" id="qm1Unit">元/克</span><span class="tq-chg" id="qm1Chg">—</span></div>
         </div>
-        <div class="tq-chart"><canvas id="qm1Chart" height="132"></canvas></div>
+        <div class="tq-chart"><div class="skel skel-box" data-skel="qm1"></div><canvas id="qm1Chart" height="132"></canvas></div>
         <div class="tq-subchart" id="qm1SubBox" style="display:none"><canvas id="qm1Sub" height="90"></canvas></div>
         <div class="tq-tools" id="qm1Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm1Spark" style="display:none"></div>
@@ -1759,7 +1764,7 @@ def page_index(data):
           <div class="tq-name" id="qm3Name">布伦特原油</div>
           <div class="tq-priceline"><span class="tq-price num" id="qm3Price">—</span><span class="tq-unit" id="qm3Unit">美元/桶</span><span class="tq-chg" id="qm3Chg">—</span></div>
         </div>
-        <div class="tq-chart"><canvas id="qm3Chart" height="132"></canvas></div>
+        <div class="tq-chart"><div class="skel skel-box" data-skel="qm3"></div><canvas id="qm3Chart" height="132"></canvas></div>
         <div class="tq-subchart" id="qm3SubBox" style="display:none"><canvas id="qm3Sub" height="90"></canvas></div>
         <div class="tq-tools" id="qm3Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm3Spark" style="display:none"></div>
@@ -1768,37 +1773,52 @@ def page_index(data):
   </section>
 
   <!-- ============ 品牌金银珠宝参考(P0 用户需求) ============ -->
+  <!-- ============ 标准金条企业名录(上金所) ============ -->
   <section class="section" id="brands">
     <div class="section-head">
-      <div><div class="lbl">BRAND JEWELRY PRICES</div><h2>品牌金银珠宝参考价</h2>
-        <p>周大福、老凤祥、中国黄金等 10 个主流品牌的足金首饰今日/昨日零售参考价与涨跌、回收参考价、金条买入价;铂金、18K 彩金、银饰同步换算。</p></div>
-      <div class="side">估算口径 · 以门店挂牌为准</div>
+      <div><div class="lbl">STANDARD GOLD BARS · 标准金条</div><h2>标准金条企业名录</h2>
+        <p>上海黄金交易所可提供标准金条的签约精炼企业名录(共 12 家),名录以交易所官网公布为准。投资金条买卖参考价随基准价自动更新。</p></div>
+      <div class="side">名录来源:上海黄金交易所公开信息</div>
     </div>
     <div class="card">
+      <div class="card-head"><h3>上金所标准金条签约企业</h3>
+        <div class="chip-row"><span class="chip">规格:1kg / 500g / 100g / 50g</span><span class="chip"> purity:Au99.99</span></div></div>
       <table class="mega-table">
-        <thead><tr><th>品牌</th><th>足金首饰 今</th><th>足金首饰 昨</th><th>涨跌(元/克)</th><th>回收参考</th><th>金条买入</th></tr></thead>
+        <thead><tr><th>企业名称</th><th>总部所在地</th><th>类型</th><th>说明</th></tr></thead>
         <tbody>
-          {brand_rows}
+          <tr><td class="lbl">中国黄金集团黄金珠宝股份有限公司</td><td>北京</td><td>央企精炼/零售龙头</td><td>标准金条与品牌金饰双线,渠道最广</td></tr>
+          <tr><td class="lbl">山东黄金集团有限公司</td><td>山东济南</td><td>大型金矿集团</td><td>自有矿山,原料端优势显著</td></tr>
+          <tr><td class="lbl">紫金矿业集团股份有限公司</td><td>福建上杭</td><td>矿业巨头</td><td>金铜双主业,海外矿山布局领先</td></tr>
+          <tr><td class="lbl">中金黄金股份有限公司</td><td>北京</td><td>央企上市金企</td><td>中国黄金集团旗下上市平台</td></tr>
+          <tr><td class="lbl">山东招金金银精炼有限公司</td><td>山东招远</td><td>精炼龙头</td><td>招金集团旗下,上金所老牌精炼企业</td></tr>
+          <tr><td class="lbl">湖南黄金集团有限责任公司</td><td>湖南长沙</td><td>金锑钨矿业</td><td>锑产量全球领先,黄金主业稳定</td></tr>
+          <tr><td class="lbl">赤峰吉隆黄金药业股份有限公司</td><td>内蒙古赤峰</td><td>上市金企</td><td>境内外矿山并举</td></tr>
+          <tr><td class="lbl">灵宝黄金集团股份有限公司</td><td>河南灵宝</td><td>上市金企</td><td>中原地区老牌黄金企业</td></tr>
+          <tr><td class="lbl">山东恒邦冶炼股份有限公司</td><td>山东烟台</td><td>冶炼企业</td><td>多金属综合冶炼回收</td></tr>
+          <tr><td class="lbl">国投金企(北京)投资有限公司</td><td>北京</td><td>央企投资平台</td><td>国投集团黄金板块</td></tr>
+          <tr><td class="lbl">沈阳造币有限公司</td><td>辽宁沈阳</td><td>造币企业</td><td>投资金条与纪念币铸造</td></tr>
+          <tr><td class="lbl">成都印钞有限公司</td><td>四川成都</td><td>造币企业</td><td>投资金条铸造</td></tr>
         </tbody>
       </table>
-      <div style="height:14px"></div>
+      <div class="hint">名录为公开信息整理,签约企业名单与规格请以上海黄金交易所官网公布为准。标准金条可通过上金所交易平台或上述企业柜台购买,回购规则以各企业公告为准。</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>投资金条买卖参考(随基准价联动)</h3>
+        <div class="chip-row"><span class="chip">基准 = SGE Au99.99</span><span class="chip">参考估算</span></div></div>
       <table class="mega-table">
-        <thead><tr><th>品类</th><th>今日参考</th><th>口径</th></tr></thead>
+        <thead><tr><th>品类</th><th>参考价</th><th>口径</th></tr></thead>
         <tbody>
-          <tr><td class="lbl">投资金条</td><td class="num strong">{bar_p} 元/克</td><td>基准 +{bar_prem} 元/克;银行/品牌金条,回购按基准折价</td></tr>
+          <tr><td class="lbl">标准金条买入</td><td class="num strong">{bar_p} 元/克</td><td>基准 +{bar_prem} 元/克(企业柜台升水)</td></tr>
+          <tr><td class="lbl">金条回购</td><td class="num strong">{bar_rec} 元/克</td><td>基准 −5 ~ −10 元/克折价,验重+损耗费</td></tr>
           <tr><td class="lbl">18K 彩金(含 75% 金)</td><td class="num strong">{k18} 元/克</td><td>金价 × 75% + 工艺费,工费另计</td></tr>
           <tr><td class="lbl">铂金 Pt950 首饰</td><td class="num strong">{pt950} 元/克</td><td>SGE 铂金基准 +{pt_prem} 元/克首饰溢价</td></tr>
           <tr><td class="lbl">银饰 Ag999</td><td class="num strong">{ag} 元/克</td><td>银料价 +{ag_fee} 元/克工费,按件定价差异大</td></tr>
         </tbody>
       </table>
-      <div class="hint">{gem_note}</div>
-      <div class="hint">以上为估算参考价(每日随基准金价自动更新),各品牌门店实际挂牌价、工费与活动折扣请以当日门店为准。</div>
+      <div class="hint">钻石按 4C 标准(克拉/颜色/净度/切工)单独定价,玉石翡翠按种水色工评估,均无统一每日报价,请以品牌门店与权威鉴定证书为准。品牌足金首饰零售价请参考各品牌门店当日挂牌。</div>
     </div>
   </section>
 
-  <!-- ============ 行情表 ============ -->
-  <!-- ============ 价格提醒 ============ -->
-  <!-- ============ 国内成品油价模块(P0) ============ -->
   <section class="section" id="fuel">
     <div class="section-head">
       <div><div class="lbl">FUEL PRICES</div><h2>国内成品油价</h2>
@@ -2194,13 +2214,13 @@ def page_index(data):
     </div>
     <div class="charts">
       <div class="card"><div class="card-head"><h3>{esc(sym)} 分时走势</h3><span class="badge">最近交易时段</span></div>
-        <div class="chart-box"><canvas id="lineChart"></canvas></div></div>
+        <div class="chart-box"><div class="skel skel-box" data-skel="lineChart"></div><canvas id="lineChart"></canvas></div></div>
       <div class="card"><div class="card-head"><h3>{esc(sym)} K 线</h3><span class="badge">分时聚合</span></div>
-        <div class="chart-box"><canvas id="kChart"></canvas></div></div>
+        <div class="chart-box"><div class="skel skel-box" data-skel="kChart"></div><canvas id="kChart"></canvas></div></div>
       <div class="card full"><div class="card-head"><h3>多品种日内强弱对比</h3>
         <div class="chip-row"><span class="chip">Au99.99 黄金</span><span class="chip">Ag99.99 白银</span><span class="chip">Pt99.95 铂金</span></div></div>
         <div class="hint" style="margin:6px 0 10px"><b>读法</b>:三条线都以各自品种「今日开盘价」为零点归一化——线上方 = 日内跑赢开盘,下方 = 跑输,直接对比金/银/铂今天谁更强;悬停曲线可看任意时刻的具体数值。</div>
-        <div class="chart-box tall"><canvas id="cmpChart"></canvas></div></div>
+        <div class="chart-box tall"><div class="skel skel-box" data-skel="cmpChart"></div><canvas id="cmpChart"></canvas></div></div>
     </div>
     <div class="tfoot" style="margin-top:12px">K 线由分时序列按固定间隔聚合生成，用于观察日内结构，不等同于交易所日 K 线；对比图以各自时段起点归一化为 0%。</div>
   </section>
