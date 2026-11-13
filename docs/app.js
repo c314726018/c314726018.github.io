@@ -495,7 +495,7 @@
         "\n方向:" + dirTxt + "\n目标价:" + val +
         "\n接收邮箱:" + addr + "\n提交时间:" + new Date().toLocaleString();
       window.location.href = "mailto:" + boxMail + "?subject=" +
-        encodeURIComponent("【金潮网】邮件提醒订阅 - " + syms.length + " 个品种 " + dirTxt + " " + val) +
+        encodeURIComponent("【金衡网】邮件提醒订阅 - " + syms.length + " 个品种 " + dirTxt + " " + val) +
         "&body=" + encodeURIComponent(body);
       if (note) note.innerHTML = '已唤起邮件客户端,请点击发送完成订阅;开通后触发时 30 分钟内自动送达。';
     });

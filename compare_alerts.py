@@ -101,13 +101,13 @@ def main():
         if not hit:
             continue
         arrow = "≥" if direction == "above" else "≤"
-        subject = f"【金潮网】{symbol} {arrow} {target} 触发提醒"
+        subject = f"【金衡网】{symbol} {arrow} {target} 触发提醒"
         body = (f"您订阅的价格提醒已触发:\n\n"
                 f"品种:{symbol}\n"
                 f"条件:{arrow} {target} {unit}\n"
                 f"当前:{last} {unit}\n"
                 f"时间:{date.today().isoformat()}\n\n"
-                f"数据来源:金潮网(30 分钟更新)\n"
+                f"数据来源:金衡网(30 分钟更新)\n"
                 f"本提醒为免费订阅,如不再需要请回复本邮件退订。")
         try:
             send_mail(email, subject, body)

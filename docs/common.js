@@ -22,7 +22,7 @@
   function quoteText() {
     var lines = [];
     var gen = document.getElementById("genTime");
-    lines.push("金潮网 · 行情摘要");
+    lines.push("金衡网 · 行情摘要");
     if (gen) lines.push(gen.textContent.replace(/^数据生成：/, "生成时间："));
     var sge = document.getElementById("ovSge"), unit = document.getElementById("ovSgeUnit");
     if (sge) lines.push("Au99.99：" + sge.textContent + " " + (unit ? unit.textContent : "元/克"));
