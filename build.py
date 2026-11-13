@@ -2025,6 +2025,24 @@ def page_index(data):
           <div class="pv" id="physPtRec">—<span class="pu">元/克</span></div>
           <div class="pn">境内价 × 约 97%（钯金见数据中心）</div></div>
       </div>
+      <div class="callout" style="background:var(--gold-soft);border-left:3px solid var(--gold-2);padding:14px 18px;margin:16px 0;border-radius:0 10px 10px 0">
+        <p style="margin:0;color:var(--gold-ink);font-size:13.5px;line-height:1.8">
+          <b>关键规则:工费不计入回收价。</b>买入时支付的金价 + 工费,在回收时只按「当日基准金价 − 回收折价」计价——
+          工费部分全损。以足金首饰为例:买入 = 基准 + 工费 70 元/克,回收 = 基准 − 折价 15 元/克,
+          一买一卖的实际价差 ≈ 85 元/克。因此<b>保值属性:投资金条 ≫ 足金首饰</b>。</p>
+      </div>
+      <table class="mega-table">
+        <thead><tr><th>品类</th><th>回收折价参考</th><th>关键规则</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">投资金条</td><td class="num">5 ~ 10 元/克</td><td>品牌回购需验重,收损耗费;未拆封原盒溢价可部分回收</td></tr>
+          <tr><td class="lbl">足金首饰</td><td class="num">12 ~ 30 元/克</td><td><b>工费全损</b>;灼烧验金有 0.5%~2% 损耗扣重</td></tr>
+          <tr><td class="lbl">3D / 古法金</td><td class="num">25 ~ 40 元/克</td><td>空心/复杂工艺损耗更高,扣重明显</td></tr>
+          <tr><td class="lbl">K 金(18K)</td><td class="num">按含金量 75% 折算后再扣 40 ~ 60 元/克</td><td>提纯成本高,回收价 ≈ 0.75 × 基准 − 折价</td></tr>
+          <tr><td class="lbl">银饰 Ag999</td><td class="num">银料价的 80% ~ 90%</td><td>单件价值低,邮寄检测费占比高</td></tr>
+          <tr><td class="lbl">金币(熊猫)</td><td class="num">接近基准,扣 5 ~ 10 元/克</td><td>原封原盒有收藏溢价,拆封按金价回收</td></tr>
+        </tbody>
+      </table>
+      <div class="hint">以上折价为行业常见区间,具体以回收商当日挂牌与检测结论为准;建议保留购买凭证与证书,大额回收多家比价。</div>
       <div class="phys-note"><b>说明：</b>以上为「基准金价 + 行业典型加价 / 折价」的<b>参考估算值</b>，用于理解实物金买卖价差结构，<b>非周大福、老凤祥等品牌实时挂牌价</b>。品牌金价由各家每日公布、含独立工费与促销，需以门店为准。调整上方假设可观察不同加价下的估算结果。</div>
     </div>
   </section>
