@@ -2227,7 +2227,16 @@ def page_history(data, hist):
     au_rows, n_days = history_table_rows(hist, "SGE:Au99.99")
     if not n_days:
         au_rows = '<tr><td colspan="6" class="alert-empty" style="justify-content:center">数据累积中，明日起逐日展示。</td></tr>'
-    hist_data = json.dumps({"au": hist.get("SGE:Au99.99") or {}, "xau": hist.get("INTL:XAU") or {}},
+    # 历史蜡烛基底:沪金主力 AU0 约 250 根(一年),累积 Au99.99(逐时精确)覆盖最新几天
+    _au_kl = (data.get("klines") or {}).get("AU0") or []
+    _au_base = {}
+    for _k in _au_kl:
+        _d = _k.get("d")
+        if _d:
+            _au_base[_d] = {"o": _k.get("o"), "h": _k.get("h"), "l": _k.get("l"), "c": _k.get("c")}
+    _au_merged = dict(_au_base)
+    _au_merged.update(hist.get("SGE:Au99.99") or {})
+    hist_data = json.dumps({"au": _au_merged, "xau": hist.get("INTL:XAU") or {}},
                            ensure_ascii=False)
     empty_note = "" if n_days >= 2 else (
         '<div class="callout" style="background:var(--gold-soft);border-left:3px solid var(--gold-2);'
@@ -2236,7 +2245,7 @@ def page_history(data, hist):
         '蜡烛图将在积累 2 天后自动出现；表格每日新增一行，30 天后趋于完整。</p></div>')
     return f"""{head_html(
         "金价历史走势_黄金价格日线历史 | 金衡网",
-        "上海黄金交易所 Au99.99 黄金日线历史：每日开高低收与涨跌幅，日线蜡烛图，数据逐日自动累积。",
+        "上海黄金交易所沪金主力连续日线(约一年历史)+ Au99.99 逐时精确累积：每日开高低收与涨跌幅，日线蜡烛图，数据逐日自动累积。",
         SITE + "history.html")}
 <body>
 {topbar_html(data)}
@@ -2246,7 +2255,7 @@ def page_history(data, hist):
 <div class="wrap"><div class="portal">{side_left('data')}<div class="portal-main">
   <div class="page-hero"><span class="eyebrow">HISTORICAL PRICES</span>
     <h1>金价历史走势</h1>
-    <p>Au99.99 黄金合约日线：每日开盘、最高、最低、收盘与涨跌幅。数据每小时自动累积，长期保存。</p></div>
+    <p>沪金主力连续合约日线(约一年)与 Au99.99 逐时精确累积。数据每小时自动累积，长期保存。</p></div>
 
   <div class="card">
     <div class="card-head"><h3>Au99.99 日线蜡烛图</h3>
@@ -2288,7 +2297,7 @@ def page_history(data, hist):
     if (!el) return;
     new Chart(el, {{
       type: "candlestick",
-      data: {{ labels: days, datasets: [{{ label: "Au99.99 日线", data: candles.map(function (c, i) {{
+      data: {{ labels: days, datasets: [{{ label: "沪金主力 AU0 日线", data: candles.map(function (c, i) {{
         return {{ x: i + 1, o: c.o, h: c.h, l: c.l, c: c.c }};
       }}),
         color: {{ up: "#d4380d", down: "#129b63", unchanged: "#8895a8" }} }}] }},
