@@ -368,7 +368,7 @@
     if (lc && series.length) {
       charts.line = new Chart(lc, {
         type: "line",
-        data: { labels: (primary.time && primary.time.length ? primary.time : series.map(function (_, i) { return i + 1; })),
+        data: { labels: (primary.time && primary.time.length ? primary.time : timeLabels(series.length)),
           datasets: [{ label: primary.symbol || "主力", data: series, borderColor: c.gold,
             backgroundColor: "rgba(184,134,11,.10)", borderWidth: 1.6, pointRadius: 0, tension: .25, fill: true }] },
         options: baseOpts(c, false)
@@ -383,7 +383,7 @@
         var candles = bucketCandles(series, Math.max(2, Math.ceil(series.length / 24)));
         charts.k = new Chart(kc, {
           type: "candlestick",
-          data: { labels: candles.map(function (_, i) { return "K" + (i + 1); }),
+          data: { labels: timeLabels(series.length).filter(function (_, i) { return i % Math.max(1, Math.floor(series.length / candles.length)) === 0; }).slice(0, candles.length),
             datasets: [{ label: primary.symbol || "主力", data: candles.map(function (x, i) {
               return { x: i + 1, o: x.o, h: x.h, l: x.l, c: x.c }; }),
             color: { up: "#d4380d", down: "#389e0d", unchanged: "#999" } }] },
@@ -393,7 +393,7 @@
         // 插件缺失时降级为折线
         charts.k = new Chart(kc, {
           type: "line",
-          data: { labels: series.map(function (_, i) { return i + 1; }),
+          data: { labels: timeLabels(series.length),
             datasets: [{ label: primary.symbol || "主力", data: series, borderColor: c.gold, borderWidth: 1.6, pointRadius: 0 }] },
           options: baseOpts(c, false)
         });
@@ -416,7 +416,7 @@
       if (ds.length) {
         charts.cmp = new Chart(cc, {
           type: "line",
-          data: { labels: ds[0].data.map(function (_, i) { return i + 1; }), datasets: ds },
+          data: { labels: timeLabels(ds[0].data.length), datasets: ds },
           options: cmpOpts(c)
         });
       }
@@ -685,6 +685,17 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
         y: { position: "right", ticks: { maxTicksLimit: 4, color: c.sub, font: { size: 9 } }, grid: { color: c.grid } }
       } };
   }
+  function timeLabels(n) {
+    var out = [], h = 9, m = 0;
+    for (var i = 0; i < n; i++) {
+      out.push((h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m);
+      m++;
+      if (m >= 60) { m = 0; h++; }
+      if (h === 11 && m >= 30) { h = 13; m = 30; }
+      if (h > 15 || (h === 15 && m > 30)) { h = 9; m = 0; }
+    }
+    return out;
+  }
   function drawQChart(id, labels, data, cls, avg) {
     var cv = $("#" + id); if (!cv || !data || data.length < 3) return false;
     if (typeof Chart === "undefined") return false;
@@ -856,7 +867,7 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
       if (ok1) _set("qm1Name", x.n + "  ·  " + (QM_MODE[0] === 1 ? "日K·" : QM_MODE[0] === 2 ? "周K·" : "月K·") + x.src);
       drawSub("qm1Sub", cfg1.sub, x.kl, cfg1);
     } else if (x.it) {
-      ok1 = drawQChart("qm1Chart", x.it.series.map(function (_, i) { return i + 1; }), x.it.series, cls1, true);
+      ok1 = drawQChart("qm1Chart", timeLabels(x.it.series.length), x.it.series, cls1, true);
       hideSub("qm1SubBox");
     }
     syncTools("qm1Tools", cfg1, QM_MODE[0]);

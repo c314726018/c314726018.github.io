@@ -1036,7 +1036,9 @@ def head_html(title, desc, canonical, extra=""):
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0e1626">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
@@ -1878,10 +1880,10 @@ def page_index(data):
       <div class="fuel-head">
         <select id="fuelProv" aria-label="选择省市">{prov_opts}</select>
         <span class="badge">◷ 数据更新:{fuel_updated}</span>
-        <span class="chip">口径:三桶油挂牌均价</span>
+        <span class="chip">口径:中石油/中石化/中海油 挂牌均价(发改委统一定价)</span>
       </div>
       <table class="mega-table">
-        <thead><tr><th>品号</th><th>全国平均</th><th id="fuelProvHead">{prov0}</th><th>较全国</th></tr></thead>
+        <thead><tr><th>品号(三桶油统一挂牌)</th><th>全国平均</th><th id="fuelProvHead">{prov0}</th><th>较全国</th></tr></thead>
         <tbody>
           <tr><td class="lbl">92# 汽油</td><td class="num strong">{n92} 元/升</td><td class="num strong" id="fp92">—</td><td class="num" id="fd92">—</td></tr>
           <tr><td class="lbl">95# 汽油</td><td class="num strong">{n95} 元/升</td><td class="num strong" id="fp95">—</td><td class="num" id="fd95">—</td></tr>
