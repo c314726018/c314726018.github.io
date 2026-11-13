@@ -575,33 +575,37 @@
       if (!ocOut) return;
       var u = parseFloat(ocUsd.value), f = parseFloat(ocFx.value);
       if (isFinite(u) && isFinite(f) && u > 0 && f > 0) {
-        var v = u * f / 158.97;
-        ocOut.innerHTML = fmt(v) + '<span class="pu">元/升</span>';
+        ocOut.innerHTML = fmt(u * f / 158.97) + '<span class="pu">元/升</span>';
       } else ocOut.innerHTML = '—<span class="pu">元/升</span>';
     }
     if (ocUsd) ocUsd.addEventListener("input", oc);
     if (ocFx) ocFx.addEventListener("input", oc);
     oc();
 
+    // 交叉汇率:全部以兑人民币价(CNY 锚)交叉计算
     var fx = (window.DATA && window.DATA.fx) || [];
-    var RATE = {};
-    fx.forEach(function (r) { RATE[r.code] = { v: r.cny, note: r.unit || "" }; });
-    var fcAmt = document.getElementById("fcAmt"), fcCur = document.getElementById("fcCur"), fcOut = document.getElementById("fcOut"), fcRate = document.getElementById("fcRate");
+    var RATE = { CNY: 1 };
+    fx.forEach(function (r) { RATE[r.code] = r.cny; });  // 1 单位外币 = r.cny 元
+    var NAMES = { CNY: "人民币", USD: "美元", EUR: "欧元", JPY: "日元", HKD: "港币", GBP: "英镑", KRW: "韩元", AUD: "澳元", SGD: "新加坡元", CHF: "瑞士法郎", CAD: "加元", THB: "泰铢" };
+    var JPY100 = { JPY: true, KRW: true };  // 100 口径币种
+    var fcAmt = document.getElementById("fcAmt"), fcCur = document.getElementById("fcCur"), fcCur2 = document.getElementById("fcCur2"), fcOut = document.getElementById("fcOut"), fcRate = document.getElementById("fcRate");
     function fc() {
       if (!fcOut) return;
-      var amt = parseFloat(fcAmt.value), cur = fcCur.value;
-      var r = RATE[cur];
-      if (!isFinite(amt) || !r) { fcOut.innerHTML = '—<span class="pu">元</span>'; fcRate.textContent = "汇率:—"; return; }
-      var v = (cur === "JPY") ? amt / 100 * r.v : amt * r.v;
-      fcOut.innerHTML = fmt(v) + '<span class="pu">元</span>';
-      fcRate.textContent = "汇率:1 " + cur + " = " + r.v + " 元" + (cur === "JPY" ? "(100 口径:100 JPY = " + r.v + " 元)" : "");
+      var amt = parseFloat(fcAmt.value), from = fcCur.value, to = fcCur2.value;
+      var rf = RATE[from], rt = RATE[to];
+      if (!isFinite(amt) || !rf || !rt) { fcOut.textContent = "—"; fcRate.textContent = "汇率:—"; return; }
+      var cny = (JPY100[from]) ? amt / 100 * rf : amt * rf;   // 先换成人民币
+      var result = (JPY100[to]) ? cny * 100 / rt : cny / rt;  // 再换目标币
+      fcOut.textContent = fmt(result) + " " + (NAMES[to] || to);
+      var cross = (JPY100[to]) ? (rf / rt * 100) : (rf / rt);  // 1 from = ? to
+      fcRate.textContent = "汇率:1 " + (NAMES[from] || from) + " = " + fmt(cross) + " " + (NAMES[to] || to) + "(经人民币中间价交叉计算)";
     }
     if (fcAmt) fcAmt.addEventListener("input", fc);
     if (fcCur) fcCur.addEventListener("change", fc);
+    if (fcCur2) fcCur2.addEventListener("change", fc);
     fc();
   }
 
-  // ---------- 涨跌热力图:周期切换(今日/5/20/60 日) ----------
   function bindHeat() {
     var tabs = document.getElementById("heatTabs");
     if (!tabs) return;

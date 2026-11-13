@@ -456,29 +456,47 @@ def _strip_html(s):
 
 
 def fetch_news():
-    """华尔街见闻 7×24 快讯流 → [{title, text, time, source}]。失败返回 []（站内降级显示占位）。"""
+    """华尔街见闻 7×24 快讯流,分页回拉近 7 天历史 → [{title, text, time, source}]。失败返回 [](站内降级)。"""
+    import time as _t
+    base = "https://api-one-wscn.awtmt.com/apiv1/content/lives?channel=global-channel&client=pc&limit=100"
+    headers = {"User-Agent": HEADERS["User-Agent"], "Accept": "application/json, text/plain, */*"}
+    cutoff = _t.time() - 7 * 86400
+    raw = []
+    cursor = None
     try:
-        j = _get_json(NEWS_API, timeout=15,
-                      headers={"User-Agent": HEADERS["User-Agent"],
-                               "Accept": "application/json, text/plain, */*"})
-        items = (j.get("data") or {}).get("items") or []
-        out = []
-        for it in items[:18]:
-            ts = it.get("display_time")
-            tstr = ""
-            if ts:
-                tstr = datetime.datetime.fromtimestamp(int(ts)).strftime("%Y-%m-%d %H:%M")
-            text = _strip_html(it.get("content_text") or it.get("content") or "")
-            title = _strip_html(it.get("title") or "")
-            if not title:
-                # 快讯多为纯内容，无标题时取首句
-                title = (text.split("。")[0] if text else "快讯")[:40]
-            out.append({"title": title, "text": text[:500], "time": tstr,
-                        "source": "华尔街见闻", "uri": it.get("uri") or ""})
-        return out
+        for _page in range(35):
+            url = base + (f"&cursor={cursor}" if cursor else "")
+            j = _get_json(url, timeout=15, headers=headers)
+            data = (j.get("data") or {})
+            items = data.get("items") or []
+            if not items:
+                break
+            raw.extend(items)
+            nc = data.get("next_cursor")
+            if not nc or nc == cursor or (items[-1].get("display_time") or 0) < cutoff:
+                break
+            cursor = nc
+            _t.sleep(0.25)
     except Exception as e:
-        print(f"[warn] 快讯抓取失败: {e}", file=sys.stderr)
-        return []
+        print(f"[warn] 快讯分页抓取中断: {e}", file=sys.stderr)
+    out, seen = [], set()
+    for it in raw:
+        ts = it.get("display_time")
+        tstr = ""
+        if ts:
+            tstr = datetime.datetime.fromtimestamp(int(ts)).strftime("%Y-%m-%d %H:%M")
+        text = _strip_html(it.get("content_text") or it.get("content") or "")
+        title = _strip_html(it.get("title") or "")
+        if not title:
+            title = (text.split("。")[0] if text else "快讯")[:40]
+        k = (title or text[:40]) + "|" + tstr
+        if k in seen:
+            continue
+        seen.add(k)
+        out.append({"title": title, "text": text[:500], "time": tstr,
+                    "source": "华尔街见闻", "uri": it.get("uri") or ""})
+    out.sort(key=lambda x: x.get("time") or "", reverse=True)
+    return out
 
 
 def main():

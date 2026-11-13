@@ -1254,6 +1254,13 @@ def footer_html():
       <a href="./academy.html#articles">科普文章</a><a href="./academy.html#glossary">术语速查</a>
       <a href="./academy.html#faq">常见问题</a><a href="./feedback.html">留言反馈</a><a href="./about.html">关于本站</a>
       <a href="./privacy.html">隐私政策</a></div>
+    <div class="foot-col"><h4>联系我们</h4>
+      <a href="mailto:314726018@qq.com?subject=金衡网联系-合作咨询">商务合作</a>
+      <a href="mailto:314726018@qq.com?subject=金衡网联系-意见建议">意见建议</a>
+      <a href="mailto:314726018@qq.com?subject=金衡网联系-数据纠错">数据纠错</a>
+      <a href="mailto:314726018@qq.com?subject=金衡网联系-会员服务">会员开通</a>
+      <a href="./feedback.html">在线留言板</a>
+      <span style="font-size:11px;color:var(--sub)">请注明来意,48h 内回复</span></div>
   </div>
   <div class="wrap foot-bottom">
     <strong>免责声明：</strong>本站为行情信息聚合展示，价格以上海黄金交易所及相应机构官方发布为准。
@@ -2113,10 +2120,11 @@ def page_index(data):
         <div class="tfoot">汇率取自公开汇率接口的 1 美元折算口径，与银行柜台实时牌价存在点差；日元 / 韩元 / 泰铢按 100 单位展示。</div>
       </div>
       <div class="card">
-        <div class="card-head"><h3>外币 ⇄ 人民币 换算器</h3><span class="chip">双向实时换算</span></div>
+        <div class="card-head"><h3>任意币种 ⇄ 任意币种 换算器</h3><span class="chip">11 币种交叉兑换</span></div>
         <div class="assume-row">
           <div class="a-item"><label>金额</label><input id="fcAmt" type="number" step="0.01" value="1000"></div>
-          <div class="a-item"><label>币种</label><select id="fcCur"><option value="USD">美元 USD</option><option value="EUR">欧元 EUR</option><option value="JPY">日元 JPY</option><option value="HKD">港币 HKD</option><option value="GBP">英镑 GBP</option></select></div>
+          <div class="a-item"><label>从币种</label><select id="fcCur"><option value="USD">美元 USD</option><option value="EUR">欧元 EUR</option><option value="JPY">日元 JPY</option><option value="HKD">港币 HKD</option><option value="GBP">英镑 GBP</option><option value="KRW">韩元 KRW</option><option value="AUD">澳元 AUD</option><option value="SGD">新加坡元 SGD</option><option value="CHF">瑞士法郎 CHF</option><option value="CAD">加元 CAD</option><option value="THB">泰铢 THB</option><option value="CNY">人民币 CNY</option></select></div>
+          <div class="a-item"><label>兑换到</label><select id="fcCur2"><option value="CNY">人民币 CNY</option><option value="USD">美元 USD</option><option value="EUR">欧元 EUR</option><option value="JPY">日元 JPY</option><option value="HKD">港币 HKD</option><option value="GBP">英镑 GBP</option><option value="KRW">韩元 KRW</option><option value="AUD">澳元 AUD</option><option value="SGD">新加坡元 SGD</option><option value="CHF">瑞士法郎 CHF</option><option value="CAD">加元 CAD</option><option value="THB">泰铢 THB</option></select></div>
         </div>
         <div class="phys-card" style="margin:10px 0"><div class="pk">换算结果</div><div class="pv" id="fcOut">—<span class="pu">元</span></div><div class="pn" id="fcRate">汇率:—</div></div>
         <div class="card-head" style="margin:14px 0 8px"><h3>汇率口径说明</h3></div>
@@ -2139,27 +2147,31 @@ def page_index(data):
     </div>
     <div class="tool-grid">
       <div class="tool-card">
-        <h3>克 ↔ 金衡盎司</h3>
+        <h3>① 克 ↔ 金衡盎司</h3>
+        <div class="tool-tip">任一栏输入数字,另一栏自动换算。买金饰称"克",国际报价用"盎司",这个工具帮你两头对照。</div>
         <div class="field"><label>克 (g)</label><input id="t1g" type="number" step="0.01" placeholder="1"></div>
         <div class="field"><label>金衡盎司 (oz)</label><input id="t1o" type="number" step="0.0001" placeholder="0.03215"></div>
         <div class="src">1 金衡盎司 = 31.1034768 克（与日常常衡盎司 28.35g 不同）</div>
       </div>
       <div class="tool-card">
-        <h3>美元金价 → 人民币金价</h3>
+        <h3>② 美元金价 → 人民币金价</h3>
+        <div class="tool-tip">两个框已自动填入最新国际金价与汇率,直接看结果或改数字。买国际金、看国际盘必备换算。</div>
         <div class="field"><label>国际金价 (美元/盎司)</label><input id="t2usd" type="number" step="0.1"></div>
         <div class="field"><label>美元兑人民币</label><input id="t2fx" type="number" step="0.0001"></div>
         <div class="tool-out" id="t2out">—</div>
         <div class="src" id="t2src"></div>
       </div>
       <div class="tool-card">
-        <h3>实物金买卖成本估算</h3>
+        <h3>③ 实物金买卖成本估算</h3>
+        <div class="tool-tip">算一笔实物金买卖的真实盈亏:买入价含工费,卖出按回收价(低于基准),直观看到价差有多大。</div>
         <div class="field"><label>克重 (g)</label><input id="t3g" type="number" step="0.1" value="10"></div>
         <div class="field"><label>买入价 (元/克)</label><input id="t3b" type="number" step="0.01"></div>
         <div class="field"><label>卖出 / 回收价 (元/克)</label><input id="t3s" type="number" step="0.01"></div>
         <div class="tool-out" id="t3out">—</div>
       </div>
       <div class="tool-card">
-        <h3>持仓盈亏计算</h3>
+        <h3>④ 持仓盈亏计算</h3>
+        <div class="tool-tip">输入持仓克重与买入成本,现价自动联动实时金价,实时看盈亏金额与收益率。</div>
         <div class="field"><label>克重 (g)</label><input id="t4g" type="number" step="0.1" value="10"></div>
         <div class="field"><label>成本价 (元/克)</label><input id="t4b" type="number" step="0.01"></div>
         <div class="field"><label>现价 (元/克)</label><input id="t4n" type="number" step="0.01"></div>
@@ -2708,6 +2720,15 @@ ECON_EVENTS = [
     ("2026-12-18 周五", "日本央行利率决议", "中", "1.25%", "影响日元汇率与全球套息交易"),
     ("2027-01-22 周五", "日本央行利率决议", "中", "—", "2027 年首次议息"),
     ("2027-01-27-28 周三四", "美联储 FOMC 议息会议(2027年1月)", "高", "—", "2027 年首次议息,含经济预测"),
+
+    ("每月首个周五 21:30", "美国失业率(与非农同发)", "高", "失业率 %", "就业健康度指标,联储双重使命之一"),
+    ("每月 1 日前后 9:45/22:45", "财新制造业 PMI / 美国 ISM 制造业 PMI", "中", "荣枯线 50", "制造业景气先行指标,影响商品需求预期"),
+    ("每月 10 日前后 21:30", "美国 PPI 生产者物价指数", "中", "环比/同比", "CPI 领先指标,反映上游通胀压力"),
+    ("每周三 22:30", "美国 EIA 原油库存周报", "中", "库存变动(万桶)", "直接影响 WTI 与布伦特油价"),
+    ("每月 15-17 日 10:00", "中国工业增加值 / 社零总额", "中", "同比增速", "中国实体需求核心数据,影响工业金属"),
+    ("每月 20 日前后", "美国成屋销售 / 新屋开工", "中", "年化数量", "地产是美国周期敏感指标,关联联储政策"),
+    ("每月末", "欧元区 CPI 初值", "中", "同比", "决定 ECB 路径,影响美元指数与金价"),
+    ("每季度首月 21:30", "美国 GDP 增速", "高", "环比折年率", "决定货币政策大方向的核心数据"),
 ]
 
 # 各国央行利率决议节奏(来源:各国央行官网公开日历)
@@ -2782,6 +2803,22 @@ def page_calendar(data):
         <tbody>{fomc_rows}</tbody>
       </table>
       <div class="phys-note" style="margin-top:14px"><b>决议发布时间：</b>美联储在会期第二日美东时间 14:00 发布声明（北京时间次日凌晨 02:00 / 夏令时 03:00），主席新闻会 30 分钟后召开。纪要于会后第三周公布。</div>
+    <div class="charts" style="margin-top:18px">
+      <div class="card">
+        <div class="card-head"><h3>如何解读 FOMC 会议</h3><span class="chip">看门道</span></div>
+        <table class="mega-table">
+          <thead><tr><th>看点</th><th>说明</th><th>对金价影响</th></tr></thead>
+          <tbody>
+            <tr><td class="lbl">利率决议</td><td>加/降/维持 25bp 变动与利率区间</td><td>降息利多,加息利空</td></tr>
+            <tr><td class="lbl">点阵图 SEP</td><td>19 位委员对未来利率预测的散点,中位数=利率终点预期</td><td>点阵上移=更鹰派=利空金价</td></tr>
+            <tr><td class="lbl">声明措辞</td><td>对比上次声明变化(如"通胀取得进展"→"通胀停滞")</td><td>转鹰承压,转鸽反弹</td></tr>
+            <tr><td class="lbl">鲍威尔记者会</td><td>会后 30 分钟问答,"数据依赖"等关键表态</td><td>短线最大波动来源</td></tr>
+            <tr><td class="lbl">经济预测摘要</td><td>GDP/失业率/PCE 通胀预测更新</td><td>GDP 下调+通胀上调=滞胀信号,利多金价</td></tr>
+          </tbody>
+        </table>
+        <div class="hint">议息日建议提前设置价格提醒(首页价格提醒板块),抓住异动窗口。</div>
+      </div>
+    </div>
     </div>
   </section>
 
