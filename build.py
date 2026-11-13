@@ -2811,12 +2811,6 @@ def page_data(data, hist):
         <tbody>{hist_rows}</tbody>
       </table>
     </div>
-    <div class="rel-grid" style="margin-top:18px">
-      <a class="rel" href="./history.html"><div class="rt">历史走势图</div><p>日线蜡烛图与每日开高低收</p></a>
-      <a class="rel" href="./index.html#charts"><div class="rt">实时图表</div><p>分时 / K 线 / 多品种对比</p></a>
-      <a class="rel" href="./calendar.html"><div class="rt">财经日历</div><p>数据发布日程</p></a>
-      <a class="rel" href="./academy.html"><div class="rt">投资学院</div><p>读懂金银比与溢价</p></a>
-    </div>
   </section>
 </div>{side_right(data)}</div></div>
 {footer_html()}
