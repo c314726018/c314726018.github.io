@@ -1435,6 +1435,36 @@ def page_index(data):
     D = (data.get("extra") or {}).get("dxy")
     if D:
         sym_pool.append(("DINIW", "美元指数"))
+    # 油价衍生:折算元/升 + 金油比 + spark
+    oil = data.get("oil") or {}
+    fx = data.get("fx") or []
+    fx_usd = next((r.get("cny") for r in fx if r.get("code") == "USD"), 0) or (intl.get("usd_cny") or 0)
+    oil_b = oil.get("brent") or {}
+    oil_w = oil.get("wti") or {}
+    brent_last = oil_b.get("last")
+    wti_last = oil_w.get("last")
+    gold_last = next((it.get("last") for it in items if it.get("symbol") == "Au99.99"), None)
+    brent_l = brent_last * fx_usd / 158.97 if (brent_last and fx_usd) else None
+    wti_l = wti_last * fx_usd / 158.97 if (wti_last and fx_usd) else None
+    gold_oil_barrel = (gold_last * 31.1035) / (brent_last * fx_usd) if (brent_last and fx_usd and gold_last) else None
+    _oil_kl = (data.get("klines") or {}).get("OIL") or []
+    _pts = _oil_kl[-60:]
+    _svg = ""
+    if len(_pts) >= 5:
+        _vals = [x["c"] for x in _pts]
+        _lo, _hi = min(_vals), max(_vals)
+        _rng = (_hi - _lo) or 1
+        _W, _H = 900, 90
+        _step = _W / (len(_vals) - 1)
+        _poly = " ".join(f"{i*_step:.1f},{_H-6-(v-_lo)/_rng*(_H-12):.1f}" for i, v in enumerate(_vals))
+        _up = _vals[-1] >= _vals[0]
+        _color = "#d4380d" if _up else "#129b63"
+        _svg = (f'<svg viewBox="0 0 {_W:.0f} {_H}" style="width:100%;height:60px;display:block">'
+                f'<polyline points="{_poly}" fill="none" stroke="{_color}" stroke-width="2"/></svg>'
+                f'<div style="font-size:10.5px;color:var(--sub)">{esc(_pts[0]["d"])} → {esc(_pts[-1]["d"])} · {fmt(_vals[0])} → {fmt(_vals[-1])} 美元/桶</div>')
+    _bl_html = fmt(brent_l, 2) if brent_l else "—"
+    _wl_html = fmt(wti_l, 2) if wti_l else "—"
+    _go_html = fmt(gold_oil_barrel, 1) if gold_oil_barrel else "—"
     sym_pills = "".join(
         f'<a class="sp" data-v="{esc(sv)}" title="点击选中/取消">{esc(sl)}</a>'
         for sv, sl in sym_pool)
@@ -2577,29 +2607,6 @@ def page_data(data, hist):
     brent_last = (oil.get("brent") or {}).get("last")
     xau_usd = intl.get("xau_usd")
     usd_cny = intl.get("usd_cny")
-    fx_usd = next((r.get("cny") for r in fx if r.get("code") == "USD"), 0) or usd_cny or 0
-    wti_last = (oil.get("wti") or {}).get("last")
-    brent_l = brent_last * fx_usd / 158.97 if (brent_last and fx_usd) else None
-    wti_l = wti_last * fx_usd / 158.97 if (wti_last and fx_usd) else None
-    gold_oil_barrel = (gold_last * 31.1035) / (brent_last * fx_usd) if (brent_last and fx_usd and gold_last) else None
-    _oil_kl = (data.get("klines") or {}).get("OIL") or []
-    _pts = _oil_kl[-60:]
-    _svg = ""
-    if len(_pts) >= 5:
-        _vals = [x["c"] for x in _pts]
-        _lo, _hi = min(_vals), max(_vals)
-        _rng = (_hi - _lo) or 1
-        _W, _H = 900, 90
-        _step = _W / (len(_vals) - 1)
-        _poly = " ".join(f"{i*_step:.1f},{_H-6-(v-_lo)/_rng*(_H-12):.1f}" for i, v in enumerate(_vals))
-        _up = _vals[-1] >= _vals[0]
-        _color = "#d4380d" if _up else "#129b63"
-        _svg = (f'<svg viewBox="0 0 {_W:.0f} {_H}" style="width:100%;height:60px;display:block">'
-                f'<polyline points="{_poly}" fill="none" stroke="{_color}" stroke-width="2"/></svg>'
-                f'<div style="font-size:10.5px;color:var(--sub)">{esc(_pts[0]["d"])} → {esc(_pts[-1]["d"])} · {fmt(_vals[0])} → {fmt(_vals[-1])} 美元/桶</div>')
-    _bl_html = fmt(brent_l, 2) if brent_l else "—"
-    _wl_html = fmt(wti_l, 2) if wti_l else "—"
-    _go_html = fmt(gold_oil_barrel, 1) if gold_oil_barrel else "—"
 
     gold_silver = ratio(gold_last, (silver_last or 0) / 1000 if silver_last else None)  # 元/克 vs 元/克
     gold_oil = ratio(gold_last, brent_last)

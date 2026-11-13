@@ -674,6 +674,10 @@ main{counter-reset:secno}
 
 .pmod-b .mini-list .mini-sub{font-size:10.5px;color:var(--sub);line-height:1.6;margin-top:2px}
 
+.oe-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}
+.oe-spark{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+@media(max-width:720px){.oe-grid{grid-template-columns:1fr}}
+
 /* ============ 溢价衍生指标卡 ============ */
 .deriv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
 .dcard{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}

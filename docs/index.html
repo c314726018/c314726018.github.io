@@ -22,8 +22,8 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "今日金价是多少？", "acceptedAnswer": {"@type": "Answer", "text": "本页实时展示上海黄金交易所 Au99.99 等合约最新价，以及国际现货黄金（XAU/USD）折算人民币后的价格与国内溢价。数据每小时自动更新，页面每 60 秒检查一次新数据。"}}, {"@type": "Question", "name": "Au99.99 是什么？和 Au99.95 有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "Au99.99 是上海黄金交易所纯度 99.99% 的现货黄金合约，单位元/克，是国内黄金现货最主要的基准报价。Au99.95 纯度为 99.95%，成交活跃度较低，两者价格通常相差很小。iAu99.99 是国际板合约，以人民币计价但面向国际投资者，可观察境内外价差。"}}, {"@type": "Question", "name": "国内溢价怎么算？为什么会是负数？", "acceptedAnswer": {"@type": "Answer", "text": "国内溢价 =（SGE Au99.99 元/克 − 国际金价折算元/克）÷ 国际金价折算元/克 × 100%。国际折算价 = XAU/USD × USD/CNY ÷ 31.1034768。溢价为正说明国内比国际贵，常见于实物需求旺盛或进口配额紧张；为负说明国内贴水，可能与人民币汇率预期、境内供给充裕或国际金价短期快速上涨有关。"}}, {"@type": "Question", "name": "一盎司黄金等于多少克？", "acceptedAnswer": {"@type": "Answer", "text": "金衡盎司（troy ounce）是国际贵金属计价单位，1 金衡盎司 = 31.1034768 克。注意它与日常用的常衡盎司（28.3495 克）不同。把国际金价换算成人民币每克，需要先乘以美元兑人民币汇率，再除以 31.1034768。"}}, {"@type": "Question", "name": "账户黄金和实物黄金有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "账户黄金（如 SGE 现货合约、银行积存金）不提取实物，交易便捷、买卖价差小；实物黄金（金条、金币、首饰）需额外考虑加工费、保管、鉴定与回购折价，实际买入成本通常显著高于交易所报价。"}}, {"@type": "Question", "name": "数据多久更新一次？非交易时段显示什么？", "acceptedAnswer": {"@type": "Answer", "text": "站点每小时抓取一次上海黄金交易所官方行情、国际现货金价与美元兑人民币汇率。非交易时段（夜间、周末、节假日）会显示最近一次有效报价，不会用空值或 0 填充。分时图展示的是最近一个交易时段采集到的价格序列。"}}, {"@type": "Question", "name": "价格提醒会上传到服务器吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会。提醒规则只保存在你当前浏览器的 localStorage 中，页面每 60 秒用本地数据比对一次，触发时通过浏览器桌面通知提示。我们不会收集你的邮箱、价格目标或任何个人信息。"}}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "金潮网", "url": "https://c314726018.github.io/", "description": "实时黄金价格、上海黄金交易所行情、国际金价与国内溢价", "inLanguage": "zh-CN"}</script>
-<link rel="stylesheet" href="./site.css?v=202611131345">
-<script src="./common.js?v=202611131345"></script>
+<link rel="stylesheet" href="./site.css?v=202611131403">
+<script src="./common.js?v=202611131403"></script>
 </head>
 
 <body>
@@ -272,6 +272,18 @@
           <tbody id="energyBody"><tr><td class="lbl" data-label="品种">布伦特原油</td><td class="sym" data-label="代码">OIL</td><td class="num strong" data-label="最新价">95.88</td><td data-label="涨跌幅"><span class="chg up">▲ 0.06%</span></td><td class="unit" data-label="单位">美元/桶</td><td class="unit" data-label="日期">布伦特原油</td></tr><tr><td class="lbl" data-label="品种">WTI原油</td><td class="sym" data-label="代码">CL</td><td class="num strong" data-label="最新价">88.53</td><td data-label="涨跌幅"><span class="chg down">▼ 0.24%</span></td><td class="unit" data-label="单位">美元/桶</td><td class="unit" data-label="日期">纽约原油</td></tr><tr><td class="lbl" data-label="品种">上海原油</td><td class="sym" data-label="代码">SC</td><td class="num strong" data-label="最新价">609.70</td><td data-label="涨跌幅"><span class="chg up">▲ 2.32%</span></td><td class="unit" data-label="单位">元/桶</td><td class="unit" data-label="日期">2026-11-13</td></tr></tbody>
         </table>
         <div class="tfoot">布伦特 / WTI 为国际基准原油（美元/桶，前收为基准）；上海原油为上期能源 SC 主力连续（元/桶，昨结为基准）。国内成品油调价与国际油价联动，但存在调控上下限与调价窗口，本表不直接等于加油站价格。</div>
+      <!-- 油价衍生:折算/走势/金油比 -->
+      <div class="oil-extra">
+        <div class="oe-grid">
+          <div class="dcard"><div class="dk">布伦特 折算人民币</div><div class="dv">4.03 <span style="font-size:12px">元/升</span></div><div class="dn">美元/桶 × 汇率 ÷ 158.97 升,原料口径</div></div>
+          <div class="dcard"><div class="dk">WTI 折算人民币</div><div class="dv">3.72 <span style="font-size:12px">元/升</span></div><div class="dn">同口径折算,跨市场价差参考</div></div>
+          <div class="dcard"><div class="dk">金油比</div><div class="dv">40.2 <span style="font-size:12px">桶/盎司</span></div><div class="dn">1 盎司黄金可兑换的布伦特桶数</div></div>
+        </div>
+        <div class="oe-spark">
+          <div class="dk" style="margin-bottom:6px">布伦特 近 60 个交易日收盘</div>
+          <svg viewBox="0 0 900 90" style="width:100%;height:60px;display:block"><polyline points="0.0,71.3 15.3,84.0 30.5,81.7 45.8,76.5 61.0,77.0 76.3,70.2 91.5,57.7 106.8,57.3 122.0,55.6 137.3,55.6 152.5,51.6 167.8,45.7 183.1,38.9 198.3,17.7 213.6,33.2 228.8,25.8 244.1,19.9 259.3,28.5 274.6,45.4 289.8,46.6 305.1,55.2 320.3,58.8 335.6,48.5 350.8,43.3 366.1,51.1 381.4,47.7 396.6,56.0 411.9,49.9 427.1,35.2 442.4,36.5 457.6,43.2 472.9,40.9 488.1,40.7 503.4,32.4 518.6,31.4 533.9,26.5 549.2,26.3 564.4,26.6 579.7,27.9 594.9,16.6 610.2,18.0 625.4,18.4 640.7,15.9 655.9,7.2 671.2,9.7 686.4,15.1 701.7,16.5 716.9,13.7 732.2,11.3 747.5,6.0 762.7,32.1 778.0,31.9 793.2,59.3 808.5,45.8 823.7,49.7 839.0,65.7 854.2,66.6 869.5,64.8 884.7,55.3 900.0,55.8" fill="none" stroke="#d4380d" stroke-width="2"/></svg><div style="font-size:10.5px;color:var(--sub)">2026-08-24 → 2026-11-13 · 90.29 → 95.77 美元/桶</div>
+        </div>
+      </div>
       </div>
       <div class="card"><div class="card-head"><h3>人民币汇率</h3>
         <div class="chip-row"><span class="chip">USD/CNY 6.6851</span></div></div>
@@ -406,6 +418,6 @@
 <script src="./vendor/chart.umd.min.js"></script>
 <script src="./vendor/chartjs-chart-financial.umd.min.js"></script>
 <script src="./ads.js"></script>
-<script src="./app.js?v=202611131345"></script>
+<script src="./app.js?v=202611131403"></script>
 </body>
 </html>
