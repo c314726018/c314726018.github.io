@@ -601,8 +601,9 @@
     var labels = kl.map(function (x) { return (x.d || "").slice(5); });
     var closes = kl.map(function (x) { return x.c; });
     var maLine = function (data, color, label) {
-      return { type: "line", label: label, data: data, borderColor: color,
-        borderWidth: 1.2, pointRadius: 0, tension: .3 };
+      // {x,y} 对象格式:y=null 合法跳过,避免混合 candlestick 时 null.x 崩溃(3.x 解析器行为)
+      return { type: "line", label: label, data: data.map(function (v, i) { return { x: i + 1, y: v }; }),
+        borderColor: color, borderWidth: 1.2, pointRadius: 0, tension: .3 };
     };
     var datasets = [
       { label: "K线", data: kl.map(function (x, i) {
@@ -640,6 +641,7 @@
       });
       return true;
     } catch (e) {
+      console.error("drawQK FAIL", id, e.message);
       return drawQChart(id, labels, closes, cls);
     }
   }
@@ -792,6 +794,7 @@
   function hideSub(id) { var b = $("#" + id); if (b) b.style.display = "none"; }
   function drawSub(boxId, type, kl, cfg) {
     var box = $("#" + boxId); if (!box) return;
+    console.log("drawSub", boxId, "type=" + type, "kl=" + (kl ? kl.length : "null"));
     if (type === "none" || !kl || kl.length < 10 || typeof Chart === "undefined") { box.style.display = "none"; return; }
     box.style.display = "";
     var cid = boxId.replace("Box", "");
@@ -808,10 +811,11 @@
         var dif = closes.map(function (_, i) { return +(e12[i] - e26[i]).toFixed(3); });
         var dea = ema(dif, 9);
         var hist = dif.map(function (v, i) { return +((v - dea[i]) * 2).toFixed(3); });
+        var xy = function (arr) { return arr.map(function (v, i) { return { x: i + 1, y: v }; }); };
         ds = [
-          { type: "bar", label: "MACD", data: hist, backgroundColor: hist.map(function (v) { return v >= 0 ? "rgba(212,56,13,.6)" : "rgba(18,155,99,.6)"; }) },
-          { type: "line", label: "DIF", data: dif, borderColor: "#f5a623", borderWidth: 1, pointRadius: 0, tension: .3 },
-          { type: "line", label: "DEA", data: dea, borderColor: "#4a90e2", borderWidth: 1, pointRadius: 0, tension: .3 }
+          { type: "bar", label: "MACD", data: xy(hist), backgroundColor: hist.map(function (v) { return v >= 0 ? "rgba(212,56,13,.6)" : "rgba(18,155,99,.6)"; }) },
+          { type: "line", label: "DIF", data: xy(dif), borderColor: "#f5a623", borderWidth: 1, pointRadius: 0, tension: .3 },
+          { type: "line", label: "DEA", data: xy(dea), borderColor: "#4a90e2", borderWidth: 1, pointRadius: 0, tension: .3 }
         ];
       } else {
         var n = 9, kv = [], hv = [], lv2 = [];
@@ -825,10 +829,11 @@
           K = (2 * K + rsv) / 3; D = (2 * D + K) / 3;
           kv.push(+K.toFixed(2)); hv.push(+D.toFixed(2)); lv2.push(+(3 * K - 2 * D).toFixed(2));
         }
+        var xy2 = function (arr) { return arr.map(function (v, i) { return { x: i + 1, y: v }; }); };
         ds = [
-          { type: "line", label: "K", data: kv, borderColor: "#f5a623", borderWidth: 1, pointRadius: 0, tension: .3 },
-          { type: "line", label: "D", data: hv, borderColor: "#4a90e2", borderWidth: 1, pointRadius: 0, tension: .3 },
-          { type: "line", label: "J", data: lv2, borderColor: "#b07de8", borderWidth: 1, pointRadius: 0, tension: .3 }
+          { type: "line", label: "K", data: xy2(kv), borderColor: "#f5a623", borderWidth: 1, pointRadius: 0, tension: .3 },
+          { type: "line", label: "D", data: xy2(hv), borderColor: "#4a90e2", borderWidth: 1, pointRadius: 0, tension: .3 },
+          { type: "line", label: "J", data: xy2(lv2), borderColor: "#b07de8", borderWidth: 1, pointRadius: 0, tension: .3 }
         ];
       }
       qCharts[key] = new Chart(cv, {
@@ -838,7 +843,7 @@
           plugins: { legend: { display: true, position: "top", labels: { color: c.sub, font: { size: 9 }, boxWidth: 10 } } },
           scales: { x: { display: false }, y: { position: "right", ticks: { maxTicksLimit: 3, color: c.sub, font: { size: 8 } }, grid: { color: c.grid } } } }
       });
-    } catch (e) { box.style.display = "none"; }
+    } catch (e) { console.error("drawSub FAIL", boxId, e.message); box.style.display = "none"; }
   }
   function syncTools(boxId, cfg, mode) {
     var box = $("#" + boxId); if (!box) return;
