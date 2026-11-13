@@ -160,7 +160,7 @@
     </div>
     <div class="card">
       <div class="fuel-head">
-        <select id="fuelProv" aria-label="选择省市"><option value="全国平均">全国平均</option><option value="北京">北京</option><option value="上海">上海</option><option value="广东">广东</option><option value="江苏">江苏</option><option value="浙江">浙江</option><option value="山东">山东</option><option value="四川">四川</option><option value="湖北">湖北</option><option value="湖南">湖南</option><option value="河南">河南</option><option value="河北">河北</option><option value="福建">福建</option><option value="陕西">陕西</option><option value="辽宁">辽宁</option></select>
+        <select id="fuelProv" aria-label="选择省市"><option value="全国平均">全国平均</option><option value="北京">北京</option><option value="上海">上海</option><option value="广东">广东</option><option value="江苏">江苏</option><option value="浙江">浙江</option><option value="山东">山东</option><option value="四川">四川</option><option value="湖北">湖北</option><option value="湖南">湖南</option><option value="河南">河南</option><option value="河北">河北</option><option value="福建">福建</option><option value="陕西">陕西</option><option value="辽宁">辽宁</option><option value="天津">天津</option><option value="山西">山西</option><option value="内蒙古">内蒙古</option><option value="吉林">吉林</option><option value="黑龙江">黑龙江</option><option value="安徽">安徽</option><option value="江西">江西</option><option value="广西">广西</option><option value="重庆">重庆</option><option value="贵州">贵州</option><option value="云南">云南</option><option value="西藏">西藏</option><option value="甘肃">甘肃</option><option value="青海">青海</option><option value="宁夏">宁夏</option><option value="新疆">新疆</option><option value="海南">海南</option></select>
         <span class="badge">◷ 数据更新:2026-11-13</span>
         <span class="chip">口径:三桶油挂牌均价</span>
       </div>
@@ -173,6 +173,21 @@
           <tr><td class="lbl">0# 柴油</td><td class="num strong">7.52 元/升</td><td class="num strong" id="fp0">—</td><td class="num" id="fd0">—</td></tr>
         </tbody>
       </table>
+      <div class="hint" style="margin-top:12px"><b>省际参考:</b>92# 全国最低 <b>新疆 7.72 元/升</b>,最高 <b>海南 8.85 元/升</b>(海南含养路费);切换上方省市可查看对应挂牌参考。</div>
+      <div class="fuel-adjust">
+        <div class="dcard"><div class="dk">柴油牌号参考(低凝柴油)</div><div class="dn" style="font-size:12px;line-height:1.9">
+          <b>0#</b> 常温适用(全年大部地区) · 按上表 0# 价<br>
+          <b>-10#</b> 冬季适用(长江以北) ≈ 0# + 0.15 元/升<br>
+          <b>-20#</b> 寒区适用(东北/西北冬季) ≈ 0# + 0.30 元/升<br>
+          <b>-35#</b> 高寒适用(东北北部/青藏) ≈ 0# + 0.50 元/升
+        </div></div>
+        <div class="dcard"><div class="dk">调价机制与油品标准</div><div class="dn" style="font-size:12px;line-height:1.9">
+          <b>调价机制</b>:每 10 个工作日调整一次,设 40 美元/桶地板价与 130 美元/桶天花板价<br>
+          <b>油品标准</b>:全国执行国 VI B 标准,92#/95# 为车用乙醇汽油(E10,含 10% 乙醇)<br>
+          <b>原油联动</b>:原油每变动 1 美元/桶,对应成品油约 0.06 元/升(税前粗算)<br>
+          <b>口径</b>:三桶油挂牌均价,不含加油站促销折扣
+        </div></div>
+      </div>
       <div class="fuel-adjust">
         <div class="dcard"><div class="dk">下次调价窗口</div><div class="dv" style="font-size:18px">2026-11-24 24:00</div><div class="dn">预计上调 0.08 元/升 · 按发改委 10 个工作日调整机制预估,以发改委公告为准</div></div>
         <div class="dcard"><div class="dk">最近调价记录</div><div class="dn" style="font-size:12px">▸ 2026-11-06 上调 0.07 元/升<br>▸ 2026-10-22 下调 0.05 元/升<br>▸ 2026-10-09 上调 0.09 元/升</div></div>

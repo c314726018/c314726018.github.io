@@ -1567,6 +1567,11 @@ def page_index(data):
     na_expect = _na.get("expect", "") + " · " + _na.get("source", "")
     _hist = OIL_RETAIL.get("history") or []
     hist_html = "<br>".join(f"▸ {esc(h.get('date'))} {esc(h.get('change'))}" for h in _hist[:3]) or "暂无记录"
+    _provs92 = {pn: v.get("92") for pn, v in _prov.items() if v.get("92")}
+    _lo_p = min(_provs92, key=_provs92.get) if _provs92 else "—"
+    _hi_p = max(_provs92, key=_provs92.get) if _provs92 else "—"
+    lo_prov, lo_v = _lo_p, fmt(_provs92.get(_lo_p)) if _lo_p != "—" else "—"
+    hi_prov, hi_v = _hi_p, fmt(_provs92.get(_hi_p)) if _hi_p != "—" else "—"
     _nr = OIL_RETAIL.get("national") or {}
     n92 = fmt(_nr.get("92")) if _nr.get("92") else "—"
     n95 = fmt(_nr.get("95")) if _nr.get("95") else "—"
@@ -1764,6 +1769,21 @@ def page_index(data):
           <tr><td class="lbl">0# 柴油</td><td class="num strong">{n0} 元/升</td><td class="num strong" id="fp0">—</td><td class="num" id="fd0">—</td></tr>
         </tbody>
       </table>
+      <div class="hint" style="margin-top:12px"><b>省际参考:</b>92# 全国最低 <b>{lo_prov} {lo_v} 元/升</b>,最高 <b>{hi_prov} {hi_v} 元/升</b>(海南含养路费);切换上方省市可查看对应挂牌参考。</div>
+      <div class="fuel-adjust">
+        <div class="dcard"><div class="dk">柴油牌号参考(低凝柴油)</div><div class="dn" style="font-size:12px;line-height:1.9">
+          <b>0#</b> 常温适用(全年大部地区) · 按上表 0# 价<br>
+          <b>-10#</b> 冬季适用(长江以北) ≈ 0# + 0.15 元/升<br>
+          <b>-20#</b> 寒区适用(东北/西北冬季) ≈ 0# + 0.30 元/升<br>
+          <b>-35#</b> 高寒适用(东北北部/青藏) ≈ 0# + 0.50 元/升
+        </div></div>
+        <div class="dcard"><div class="dk">调价机制与油品标准</div><div class="dn" style="font-size:12px;line-height:1.9">
+          <b>调价机制</b>:每 10 个工作日调整一次,设 40 美元/桶地板价与 130 美元/桶天花板价<br>
+          <b>油品标准</b>:全国执行国 VI B 标准,92#/95# 为车用乙醇汽油(E10,含 10% 乙醇)<br>
+          <b>原油联动</b>:原油每变动 1 美元/桶,对应成品油约 0.06 元/升(税前粗算)<br>
+          <b>口径</b>:三桶油挂牌均价,不含加油站促销折扣
+        </div></div>
+      </div>
       <div class="fuel-adjust">
         <div class="dcard"><div class="dk">下次调价窗口</div><div class="dv" style="font-size:18px">{na_date}</div><div class="dn">{na_expect}</div></div>
         <div class="dcard"><div class="dk">最近调价记录</div><div class="dn" style="font-size:12px">{hist_html}</div></div>
