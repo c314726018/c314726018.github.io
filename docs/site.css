@@ -242,14 +242,13 @@ tbody tr:last-child td{border-bottom:none}
 
 /* 页脚 */
 footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5px}
-.foot-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;gap:28px;padding:44px 0 34px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1.2fr;gap:20px;padding:26px 0 18px;font-size:12px}
 .foot-brand .brand-txt strong{color:#fff}
 .foot-brand p{margin:14px 0 0;font-size:12.5px;line-height:1.9;max-width:290px}
 .foot-col h4{color:#fff;font-size:13px;margin:0 0 14px;font-weight:650}
 .foot-col a{display:block;padding:5px 0;color:#98a8c0;font-size:12.5px}
 .foot-col a:hover{color:var(--gold-2);text-decoration:underline;text-underline-offset:3px}
-.foot-bottom{border-top:1px solid rgba(255,255,255,.09);padding:18px 0 26px;font-size:11.5px;
-  line-height:1.85;color:#7e8ea8}
+.foot-bottom{border-top:1px solid var(--line);padding:12px 0 20px;font-size:11px;color:var(--sub);line-height:1.7}
 .foot-bottom strong{color:#b9c6da}
 
 /* 悬浮 */
@@ -397,6 +396,11 @@ button:active, .fbtn:active{transform:scale(.97)}
 .quick-row a{padding:9px 16px;border:1px solid var(--line);border-radius:30px;font-size:13px;
   background:var(--surface);color:var(--ink-2);box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
 .quick-row a:hover{border-color:var(--gold-2);color:var(--gold);background:var(--gold-soft)}
+select{background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:26px}
+select:focus{outline:none;border-color:var(--gold-2)}
+.tb-btn{background:rgba(184,134,11,.14);border:1px solid var(--gold-2);color:var(--gold);padding:4px 14px;border-radius:99px;font-weight:650;white-space:nowrap}
+.tb-btn.gold{background:var(--gold);color:#fff}
+.tb-btn:hover{filter:brightness(1.1)}
 .rel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
 .rel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow);transition:.15s}
 .rel:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 40%,var(--line))}

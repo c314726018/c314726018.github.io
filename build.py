@@ -365,14 +365,13 @@ tbody tr:last-child td{border-bottom:none}
 
 /* 页脚 */
 footer.site{margin-top:52px;background:var(--brand);color:#98a8c0;font-size:12.5px}
-.foot-grid{display:grid;grid-template-columns:1.7fr 1fr 1fr 1fr 1fr;gap:28px;padding:44px 0 34px}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr 1.2fr;gap:20px;padding:26px 0 18px;font-size:12px}
 .foot-brand .brand-txt strong{color:#fff}
 .foot-brand p{margin:14px 0 0;font-size:12.5px;line-height:1.9;max-width:290px}
 .foot-col h4{color:#fff;font-size:13px;margin:0 0 14px;font-weight:650}
 .foot-col a{display:block;padding:5px 0;color:#98a8c0;font-size:12.5px}
 .foot-col a:hover{color:var(--gold-2);text-decoration:underline;text-underline-offset:3px}
-.foot-bottom{border-top:1px solid rgba(255,255,255,.09);padding:18px 0 26px;font-size:11.5px;
-  line-height:1.85;color:#7e8ea8}
+.foot-bottom{border-top:1px solid var(--line);padding:12px 0 20px;font-size:11px;color:var(--sub);line-height:1.7}
 .foot-bottom strong{color:#b9c6da}
 
 /* 悬浮 */
@@ -520,6 +519,11 @@ button:active, .fbtn:active{transform:scale(.97)}
 .quick-row a{padding:9px 16px;border:1px solid var(--line);border-radius:30px;font-size:13px;
   background:var(--surface);color:var(--ink-2);box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
 .quick-row a:hover{border-color:var(--gold-2);color:var(--gold);background:var(--gold-soft)}
+select{background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:26px}
+select:focus{outline:none;border-color:var(--gold-2)}
+.tb-btn{background:rgba(184,134,11,.14);border:1px solid var(--gold-2);color:var(--gold);padding:4px 14px;border-radius:99px;font-weight:650;white-space:nowrap}
+.tb-btn.gold{background:var(--gold);color:#fff}
+.tb-btn:hover{filter:brightness(1.1)}
 .rel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
 .rel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow);transition:.15s}
 .rel:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 40%,var(--line))}
@@ -1059,6 +1063,8 @@ def topbar_html(data):
   <div class="tb-r">
     <span id="genTime">数据生成：{esc(data.get('generated_at') or '—')}</span>
     <a href="./about.html">数据说明</a>
+    <a class="tb-btn" href="./feedback.html">✉ 留言反馈</a>
+    <a class="tb-btn gold" href="./index.html#alerts">🔔 金市异动提醒</a>
   </div>
 </div></div>"""
 
@@ -1114,16 +1120,16 @@ NAV_SECTIONS = [
     ("quotes", "行情中心", "./index.html", [
         ("行情概览", "./index.html#overview"),
         ("实物金价", "./index.html#physical"),
+        ("品牌金饰", "./index.html#brands"),
         ("汽柴油", "./index.html#fuel"),
+        ("国际原油", "./index.html#oil"),
+        ("人民币汇率", "./index.html#fx"),
         ("价格提醒", "./index.html#alerts"),
         ("实时行情", "./index.html#quotes"),
         ("涨跌热力图", "./index.html#heat"),
         ("溢价对照", "./index.html#premium"),
-        ("国际原油", "./index.html#oil"),
-        ("人民币汇率", "./index.html#fx"),
         ("工具计算", "./index.html#tools"),
         ("走势图表", "./index.html#charts"),
-        ("留言反馈", "./feedback.html"),
     ]),
     ("data", "数据中心", "./data.html", [
         ("关键指标", "./data.html#indicators"),
@@ -1260,7 +1266,7 @@ def footer_html():
       <a href="mailto:314726018@qq.com?subject=金衡网联系-数据纠错">数据纠错</a>
       <a href="mailto:314726018@qq.com?subject=金衡网联系-会员服务">会员开通</a>
       <a href="./feedback.html">在线留言板</a>
-      <span style="font-size:11px;color:var(--sub)">请注明来意,48h 内回复</span></div>
+      <span style="font-size:11px">48h 内回复</span></div>
   </div>
   <div class="wrap foot-bottom">
     <strong>免责声明：</strong>本站为行情信息聚合展示，价格以上海黄金交易所及相应机构官方发布为准。
@@ -1748,7 +1754,7 @@ def page_index(data):
         </div>
       </div>
       <div class="tq" id="qm3">
-        <div class="tq-tabs"><b>能源与商品</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a><a data-i="3">沪铜</a><a data-i="4">沪铝</a><a data-i="5">沪锌</a><a data-i="6">沪镍</a><a data-i="7">沪锡</a><a data-i="8">螺纹钢</a><a data-i="9">豆粕</a><a data-i="10">铁矿石</a><a data-i="11">玉米</a><a data-i="12">棉花</a><span class="tq-mode"><a class="on" data-m="0">走势</a><a data-m="1">日K</a></span></div>
+        <div class="tq-tabs"><b>能源与商品</b><a class="on" data-i="0">布伦特</a><a data-i="1">WTI</a><a data-i="2">上海原油</a><a data-i="3">沪铜</a><a data-i="4">沪铝</a><a data-i="5">沪锌</a><a data-i="6">沪镍</a><a data-i="7">沪锡</a><a data-i="8">螺纹钢</a><a data-i="9">豆粕</a><a data-i="10">铁矿石</a><a data-i="11">玉米</a><a data-i="12">棉花</a><span class="tq-mode"><a class="on" data-m="0">日线</a><a data-m="1">日K</a></span></div>
         <div class="tq-top">
           <div class="tq-name" id="qm3Name">布伦特原油</div>
           <div class="tq-priceline"><span class="tq-price num" id="qm3Price">—</span><span class="tq-unit" id="qm3Unit">美元/桶</span><span class="tq-chg" id="qm3Chg">—</span></div>
@@ -2865,12 +2871,6 @@ def page_calendar(data):
       </div>
     </div>
     </div>
-    <div class="rel-grid" style="margin-top:18px">
-      <a class="rel" href="./index.html#charts"><div class="rt">金价走势</div><p>事件前后的价格反应，看走势图表</p></a>
-      <a class="rel" href="./news.html"><div class="rt">即时快讯</div><p>事件公布瞬间的市场反应</p></a>
-      <a class="rel" href="./academy.html"><div class="rt">投资学院</div><p>非农 / CPI 如何影响金价</p></a>
-      <a class="rel" href="./data.html"><div class="rt">数据中心</div><p>利率周期下的金价表现</p></a>
-    </div>
   </section>
 </div>{side_right(data)}</div></div>
 {footer_html()}
@@ -2999,12 +2999,6 @@ def page_academy(data):
       <div><div class="lbl">FAQ · 常见问题</div><h2>投资常见疑问</h2></div>
     </div>
     <div class="card"><div class="faq-list">{faq_html}</div></div>
-    <div class="rel-grid" style="margin-top:18px">
-      <a class="rel" href="./index.html#tools"><div class="rt">工具计算</div><p>克↔盎司、人民币金价、盈亏计算</p></a>
-      <a class="rel" href="./index.html#physical"><div class="rt">实物金价</div><p>金条 / 回收 / 首饰价格估算</p></a>
-      <a class="rel" href="./calendar.html"><div class="rt">财经日历</div><p>非农 / CPI / FOMC 时间表</p></a>
-      <a class="rel" href="./data.html"><div class="rt">数据中心</div><p>金银比、溢价等关键指标</p></a>
-    </div>
   </section>
 </div>{side_right(data)}</div></div>
 {footer_html()}
