@@ -21,6 +21,17 @@ jobs:
         run: |
           python fetch.py
           python build.py
+      - name: 部署到腾讯云服务器
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_KEY: ${{ secrets.SERVER_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SERVER_KEY" > ~/.ssh/jinchao_deploy
+          chmod 600 ~/.ssh/jinchao_deploy
+          rsync -az --delete -e "ssh -i ~/.ssh/jinchao_deploy -o StrictHostKeyChecking=accept-new" docs/ $SERVER_USER@$SERVER_HOST:/var/www/jinchao/
+          echo "已同步 $(rsync -az --stats -e "ssh -i ~/.ssh/jinchao_deploy" docs/ $SERVER_USER@$SERVER_HOST:/var/www/jinchao/ 2>&1 | grep 'Number of regular files' || echo ok)"
       - name: 邮件提醒比对与发信
         env:
           MAIL_USER: ${{ secrets.MAIL_USER }}
