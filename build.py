@@ -23,8 +23,8 @@ def page_feedback(data):
     """留言页:复用全站包装,内核由 feedback_page.main_html 提供(拼接式,无 f-string 转义)。"""
     fb = feedback_main()
     s = head_html(
-        "留言反馈 - 意见建议与需求沟通 - 金潮网",
-        "向金潮网发送意见、建议与功能需求,直达站长邮箱。",
+        "留言反馈 - 意见建议与需求沟通 - 金衡网",
+        "向金衡网发送意见、建议与功能需求,直达站长邮箱。",
         SITE + "feedback.html")
     s += topbar_html(data)
     s += ticker_html(data)
@@ -52,7 +52,7 @@ def page_feedback(data):
     s += 'if(!body.trim()){alert("请填写留言内容");return;}'
     s += 'var full="称呼:"+name+"\\n联系邮箱:"+mail+"\\n\\n留言内容:\\n"+body+"\\n\\n时间:"+new Date().toLocaleString();'
     s += 'window.location.href="mailto:"+(window.DATA&&window.DATA.alert_mail||"314726018@qq.com")'
-    s += '+("?subject="+encodeURIComponent("【金潮网】用户留言 - "+name))'
+    s += '+("?subject="+encodeURIComponent("【金衡网】用户留言 - "+name))'
     s += '+("&body="+encodeURIComponent(full));'
     s += 'var n=document.getElementById("fbNote");'
     s += 'if(n)n.innerHTML="已唤起邮件客户端,请点击发送完成留言。";'
@@ -997,10 +997,10 @@ def head_html(title, desc, canonical, extra=""):
 <meta name="theme-color" content="#0e1626">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
-<meta name="keywords" content="金潮网,贵金属行情,今日金价,黄金价格,实时金价,上海黄金交易所,Au99.99,国际金价,国内溢价,白银价格,铂金价格,今日油价,布伦特原油,WTI,上海原油,人民币汇率,美元汇率">
-<meta name="author" content="金潮网">
+<meta name="keywords" content="金衡网,贵金属行情,今日金价,黄金价格,实时金价,上海黄金交易所,Au99.99,国际金价,国内溢价,白银价格,铂金价格,今日油价,布伦特原油,WTI,上海原油,人民币汇率,美元汇率">
+<meta name="author" content="金衡网">
 <meta name="robots" content="index,follow">
-<meta property="og:site_name" content="金潮网 · 贵金属行情门户">
+<meta property="og:site_name" content="金衡网 · 贵金属行情门户">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
 <meta property="og:type" content="website">
@@ -1121,9 +1121,9 @@ def nav_html(active=""):
         parts.append(f'<a class="{cls}" href="{url}">{text}</a>')
     a = "".join(parts)
     return f"""<header class="nav"><div class="wrap nav-top">
-  <a class="brand" href="./index.html" aria-label="金潮网 首页">
+  <a class="brand" href="./index.html" aria-label="金衡网 首页">
     <span class="brand-mark">Au</span>
-    <span class="brand-txt"><strong>金潮网</strong><small>贵金属行情门户</small></span>
+    <span class="brand-txt"><strong>金衡网</strong><small>贵金属行情门户</small></span>
   </a>
   <nav class="nav-menu" id="navMenu">{a}</nav>
   <div class="nav-act">
@@ -1200,7 +1200,7 @@ def footer_html():
     <div class="foot-brand">
       <a class="brand" href="./index.html" style="margin-bottom:6px">
         <span class="brand-mark">Au</span>
-        <span class="brand-txt"><strong>金潮网</strong><small>贵金属行情门户</small></span>
+        <span class="brand-txt"><strong>金衡网</strong><small>贵金属行情门户</small></span>
       </a>
       <p>一站式贵金属行情门户：实时行情、数据中心、财经日历、金融快讯、投资学院五大板块。数据聚合展示，仅供参考，不构成投资建议。</p>
     </div>
@@ -1223,7 +1223,7 @@ def footer_html():
     <strong>免责声明：</strong>本站为行情信息聚合展示，价格以上海黄金交易所及相应机构官方发布为准。
     所有内容仅供信息参考，不构成任何投资建议、要约或交易依据。黄金价格波动较大，投资需自行判断并承担风险。<br>
     数据更新：每 30 分钟自动抓取 · 浏览器每 60 秒检查更新 · 非交易时段显示最近一次有效报价 · 快讯来自华尔街见闻公开流<br>
-    © 2026 金潮网 · 页面含第三方广告（Google AdSense），广告内容由第三方提供，与本站点立场无关。
+    © 2026 金衡网 · 页面含第三方广告（Google AdSense），广告内容由第三方提供，与本站点立场无关。
   </div>
 </footer>
 <button class="back-top" id="backTop" type="button" aria-label="返回顶部">↑</button>
@@ -1557,7 +1557,7 @@ def page_index(data):
         for key, text, url, subs in NAV_SECTIONS)
 
     website_ld = json.dumps({
-        "@context": "https://schema.org", "@type": "WebSite", "name": "金潮网",
+        "@context": "https://schema.org", "@type": "WebSite", "name": "金衡网",
         "url": SITE, "description": "实时黄金价格、上海黄金交易所行情、国际金价与国内溢价",
         "inLanguage": "zh-CN"}, ensure_ascii=False)
     ld = (f'<script type="application/ld+json">{faq_ld(FAQ)}</script>\n'
@@ -1587,7 +1587,7 @@ def page_index(data):
     data_json = json.dumps(payload, ensure_ascii=False)
 
     return f"""{head_html(
-        "金潮网 - 今日黄金价格_实时金价_原油白银行情查询_上海黄金交易所",
+        "金衡网 - 今日黄金价格_实时金价_原油白银行情查询_上海黄金交易所",
         "实时黄金白银铂金价格、今日油价（布伦特/WTI/上海原油）与人民币汇率：上海黄金交易所 Au99.99、Au(T+D)、Ag99.99 等合约最新价，国际现货 XAU/XAG/XPT，多品种国内溢价对照，附走势图表与知识百科。",
         SITE, ld)}
 <body>
@@ -1973,8 +1973,8 @@ def page_about(data):
         f'<details><summary>{esc(f["q"])}</summary><div class="ans">{esc(f["a"])}</div></details>'
         for f in FAQ)
     return f"""{head_html(
-        "关于本站 · 数据来源与指标算法 | 金潮网",
-        "金潮网的数据来源、更新机制、国内溢价与国际折算价的计算口径，以及完整免责声明与常见问题。",
+        "关于本站 · 数据来源与指标算法 | 金衡网",
+        "金衡网的数据来源、更新机制、国内溢价与国际折算价的计算口径，以及完整免责声明与常见问题。",
         SITE + "about.html")}
 <body>
 {topbar_html(data)}
@@ -2037,8 +2037,8 @@ def page_about(data):
 
 def page_privacy(data):
     return f"""{head_html(
-        "隐私政策 | 金潮网",
-        "金潮网的隐私政策：说明本站如何使用 localStorage、浏览器通知、第三方广告 Cookie 以及你的选择权。",
+        "隐私政策 | 金衡网",
+        "金衡网的隐私政策：说明本站如何使用 localStorage、浏览器通知、第三方广告 Cookie 以及你的选择权。",
         SITE + "privacy.html")}
 <body>
 {topbar_html(data)}
@@ -2133,8 +2133,8 @@ Sitemap: {SITE}sitemap.xml
 """
 
 MANIFEST = {
-    "name": "金潮网 · 贵金属行情门户",
-    "short_name": "金潮网",
+    "name": "金衡网 · 贵金属行情门户",
+    "short_name": "金衡网",
     "description": "上海黄金交易所实时行情、国际金价、白银铂金钯金与多品种国内溢价",
     "start_url": "./",
     "scope": "./",
@@ -2245,7 +2245,7 @@ def page_history(data, hist):
         '<p style="margin:0;color:var(--gold-ink);font-size:13px">历史数据自今日开始逐小时累积，'
         '蜡烛图将在积累 2 天后自动出现；表格每日新增一行，30 天后趋于完整。</p></div>')
     return f"""{head_html(
-        "金价历史走势_黄金价格日线历史 | 金潮网",
+        "金价历史走势_黄金价格日线历史 | 金衡网",
         "上海黄金交易所 Au99.99 黄金日线历史：每日开高低收与涨跌幅，日线蜡烛图，数据逐日自动累积。",
         SITE + "history.html")}
 <body>
@@ -2377,7 +2377,7 @@ def page_news(data):
         hero = '<div class="news-empty">快讯数据加载中,请稍候刷新。</div>'
         items_html = ""
     head = head_html(
-        "财经快讯 - 7×24 实时金融快讯 - 金潮网",
+        "财经快讯 - 7×24 实时金融快讯 - 金衡网",
         "7×24 小时实时财经快讯:覆盖贵金属、宏观央行、能源商品、外汇与全球股市,按分类筛选阅读,30 分钟随数据管道自动更新。",
         SITE + "news.html")
     body = f"""{topbar_html(data)}
@@ -2481,7 +2481,7 @@ def page_calendar(data):
         for name, freq, rate, last in CENTRAL_BANKS)
 
     head = head_html(
-        "财经日历 - 美联储议息/非农/CPI 时间表 - 金潮网",
+        "财经日历 - 美联储议息/非农/CPI 时间表 - 金衡网",
         "2026-2027 年重要财经事件日历：美联储 FOMC 八次议息日程、美国非农与 CPI 公布时间、各国央行利率决议节奏。日期来源为官方公开日程。",
         SITE + "calendar.html")
     body = f"""{topbar_html(data)}
@@ -2628,7 +2628,7 @@ def page_academy(data):
         f'<details><summary>{esc(f["q"])}</summary><div class="ans">{esc(f["a"])}</div></details>'
         for f in FAQ)
     head = head_html(
-        "投资学院 - 黄金投资入门到进阶 - 金潮网",
+        "投资学院 - 黄金投资入门到进阶 - 金衡网",
         "黄金投资学院：18 篇系统科普（基础入门、实物黄金、投资工具、宏观分析、数据指标、风险教育）+ 15 条术语速查 + 常见问题。",
         SITE + "academy.html")
     body = f"""{topbar_html(data)}
@@ -2764,7 +2764,7 @@ def page_data(data, hist):
     hist_rows, _hist_n = history_table_rows(hist, "SGE:Au99.99", limit=15)
 
     head = head_html(
-        "数据中心 - 金银比/国内溢价/汇率/历史走势 - 金潮网",
+        "数据中心 - 金银比/国内溢价/汇率/历史走势 - 金衡网",
         "贵金属数据中心：金银比、金油比、金铂比等关键指标看板，国内溢价明细，11 币种汇率表，Au99.99 历史日线数据。",
         SITE + "data.html")
     body = f"""{topbar_html(data)}
