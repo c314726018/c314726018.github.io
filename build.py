@@ -784,6 +784,10 @@ main{counter-reset:secno}
 
 .pmod-b .mini-list .mini-sub{font-size:10.5px;color:var(--sub);line-height:1.6;margin-top:2px}
 
+.oe-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}
+.oe-spark{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+@media(max-width:720px){.oe-grid{grid-template-columns:1fr}}
+
 /* ============ 溢价衍生指标卡 ============ */
 .deriv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
 .dcard{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
@@ -1721,6 +1725,18 @@ def page_index(data):
           <tbody id="energyBody">{oil_rows(oil)}</tbody>
         </table>
         <div class="tfoot">布伦特 / WTI 为国际基准原油（美元/桶，前收为基准）；上海原油为上期能源 SC 主力连续（元/桶，昨结为基准）。国内成品油调价与国际油价联动，但存在调控上下限与调价窗口，本表不直接等于加油站价格。</div>
+      <!-- 油价衍生:折算/走势/金油比 -->
+      <div class="oil-extra">
+        <div class="oe-grid">
+          <div class="dcard"><div class="dk">布伦特 折算人民币</div><div class="dv">{_bl_html} <span style="font-size:12px">元/升</span></div><div class="dn">美元/桶 × 汇率 ÷ 158.97 升,原料口径</div></div>
+          <div class="dcard"><div class="dk">WTI 折算人民币</div><div class="dv">{_wl_html} <span style="font-size:12px">元/升</span></div><div class="dn">同口径折算,跨市场价差参考</div></div>
+          <div class="dcard"><div class="dk">金油比</div><div class="dv">{_go_html} <span style="font-size:12px">桶/盎司</span></div><div class="dn">1 盎司黄金可兑换的布伦特桶数</div></div>
+        </div>
+        <div class="oe-spark">
+          <div class="dk" style="margin-bottom:6px">布伦特 近 60 个交易日收盘</div>
+          {_svg}
+        </div>
+      </div>
       </div>
       <div class="card"><div class="card-head"><h3>人民币汇率</h3>
         <div class="chip-row"><span class="chip">USD/CNY {fmt(intl.get('usd_cny'), 4)}</span></div></div>
@@ -2561,6 +2577,29 @@ def page_data(data, hist):
     brent_last = (oil.get("brent") or {}).get("last")
     xau_usd = intl.get("xau_usd")
     usd_cny = intl.get("usd_cny")
+    fx_usd = next((r.get("cny") for r in fx if r.get("code") == "USD"), 0) or usd_cny or 0
+    wti_last = (oil.get("wti") or {}).get("last")
+    brent_l = brent_last * fx_usd / 158.97 if (brent_last and fx_usd) else None
+    wti_l = wti_last * fx_usd / 158.97 if (wti_last and fx_usd) else None
+    gold_oil_barrel = (gold_last * 31.1035) / (brent_last * fx_usd) if (brent_last and fx_usd and gold_last) else None
+    _oil_kl = (data.get("klines") or {}).get("OIL") or []
+    _pts = _oil_kl[-60:]
+    _svg = ""
+    if len(_pts) >= 5:
+        _vals = [x["c"] for x in _pts]
+        _lo, _hi = min(_vals), max(_vals)
+        _rng = (_hi - _lo) or 1
+        _W, _H = 900, 90
+        _step = _W / (len(_vals) - 1)
+        _poly = " ".join(f"{i*_step:.1f},{_H-6-(v-_lo)/_rng*(_H-12):.1f}" for i, v in enumerate(_vals))
+        _up = _vals[-1] >= _vals[0]
+        _color = "#d4380d" if _up else "#129b63"
+        _svg = (f'<svg viewBox="0 0 {_W:.0f} {_H}" style="width:100%;height:60px;display:block">'
+                f'<polyline points="{_poly}" fill="none" stroke="{_color}" stroke-width="2"/></svg>'
+                f'<div style="font-size:10.5px;color:var(--sub)">{esc(_pts[0]["d"])} → {esc(_pts[-1]["d"])} · {fmt(_vals[0])} → {fmt(_vals[-1])} 美元/桶</div>')
+    _bl_html = fmt(brent_l, 2) if brent_l else "—"
+    _wl_html = fmt(wti_l, 2) if wti_l else "—"
+    _go_html = fmt(gold_oil_barrel, 1) if gold_oil_barrel else "—"
 
     gold_silver = ratio(gold_last, (silver_last or 0) / 1000 if silver_last else None)  # 元/克 vs 元/克
     gold_oil = ratio(gold_last, brent_last)

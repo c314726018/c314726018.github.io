@@ -381,7 +381,9 @@
         var candles = bucketCandles(series, Math.max(2, Math.ceil(series.length / 24)));
         charts.k = new Chart(kc, {
           type: "candlestick",
-          data: { datasets: [{ label: primary.symbol || "主力", data: candles,
+          data: { labels: candles.map(function (_, i) { return "K" + (i + 1); }),
+            datasets: [{ label: primary.symbol || "主力", data: candles.map(function (x, i) {
+              return { x: i + 1, o: x.o, h: x.h, l: x.l, c: x.c }; }),
             color: { up: "#d4380d", down: "#389e0d", unchanged: "#999" } }] },
           options: baseOpts(c, true)
         });
