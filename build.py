@@ -1372,13 +1372,14 @@ def metals_rows(intl, data=None):
         prem = x.get("premium_pct")
         cls = "up" if (prem or 0) >= 0 else "down"
         prem_txt = f"{prem:+.2f}%" if prem is not None else "—"
+        prem_cell = "—" if prem is None else f'<span class="chg {cls}">{prem_txt}</span>'
         unit = esc(x.get("unit") or "")
         rows.append(
             "<tr>"
             f'<td class="lbl" data-label="品种">{label} <span class="sym">{sge_sym}</span></td>'
             f'<td class="num" data-label="境内报价">{"—" if x.get("sge") is None else fmt(x.get("sge"))} <span class="unit">{unit}</span></td>'
             f'<td class="num" data-label="国际折算">{fmt(x.get("intl_cny"))} <span class="unit">{unit}</span></td>'
-            f'<td data-label="国内溢价">{"—" if prem is None else '<span class="chg {cls}">{prem_txt}</span>'}</td>'
+            f'<td data-label="国内溢价">{prem_cell}</td>'
             f'<td class="unit" data-label="口径">{esc(x.get("intl_symbol") or "")} × USD/CNY</td>'
             "</tr>")
     # 黄金延期 Au(T+D) 递延溢价（多空失衡核心指标）
