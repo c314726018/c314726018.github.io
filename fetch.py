@@ -512,6 +512,26 @@ def main():
     extra = fetch_extra()
     klines = fetch_klines()
 
+    # 热力图多周期数据(5/20/60 交易日累计涨跌)
+    HEAT_KL_MAP = [
+        ("沪金主力", "AU0"), ("沪银主力", "AG0"), ("沪铜主力", "CU0"), ("沪铝主力", "AL0"),
+        ("沪锌主力", "ZN0"), ("沪镍主力", "NI0"), ("沪锡主力", "SN0"), ("螺纹钢主力", "RB0"),
+        ("上海原油", "SC0"), ("豆粕主力", "M0"), ("铁矿石主力", "I0"), ("玉米主力", "C0"),
+        ("棉花主力", "CF0"), ("伦敦金 XAU", "XAU"), ("COMEX黄金", "GC"), ("COMEX白银", "SI"),
+    ]
+    def _hm_pct(closes, n):
+        if len(closes) <= n or not closes[-n - 1]:
+            return None
+        base = closes[-n - 1]
+        return round((closes[-1] - base) / base * 100, 2) if base else None
+    heat_multi_data = []
+    for _name, _key in HEAT_KL_MAP:
+        _arr = klines.get(_key) or []
+        if len(_arr) < 21:
+            continue
+        _closes = [x.get("c") for x in _arr]
+        heat_multi_data.append({"name": _name, "p5": _hm_pct(_closes, 5),
+                                "p20": _hm_pct(_closes, 20), "p60": _hm_pct(_closes, 60)})
     # 布伦特/WTI 升级为 hf_ 实时价(新浪外盘),保留 30 日收盘线供画图
     intl_by_code = {x["code"]: x for x in extra.get("intl") or []}
     for key, code in (("brent", "hf_OIL"), ("wti", "hf_CL")):
@@ -538,6 +558,7 @@ def main():
         "oil": oil,
         "fx": fx_table,
         "news": news_merged,
+        "heat_multi": heat_multi_data,
         "extra": extra,
         "klines": klines,
     }

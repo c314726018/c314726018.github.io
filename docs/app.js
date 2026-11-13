@@ -568,6 +568,48 @@
     });
   }
 
+  // ---------- 涨跌热力图:周期切换(今日/5/20/60 日) ----------
+  function bindHeat() {
+    var tabs = document.getElementById("heatTabs");
+    if (!tabs) return;
+    var HM = null;
+    try { HM = (window.DATA && window.DATA.heat_multi) || []; } catch (e) { HM = []; }
+    function cellHtml(x, pct) {
+      var cls, lv, arrow;
+      if (pct == null) return '<a class="heat flat"><span class="h-n">' + x.name + '</span><span class="h-v">—</span></a>';
+      cls = pct > 0 ? "up" : pct < 0 ? "down" : "flat";
+      var a = Math.abs(pct);
+      lv = a >= 4 ? "lv4" : a >= 2 ? "lv3" : a >= 1 ? "lv2" : "lv1";
+      arrow = pct > 0 ? "▲" : pct < 0 ? "▼" : "—";
+      return '<a class="heat ' + cls + ' ' + lv + '"><span class="h-n">' + x.name + '</span><span class="h-v">' + arrow + ' ' + (pct > 0 ? "+" : "") + pct.toFixed(2) + '%</span></a>';
+    }
+    function renderMulti(p) {
+      var box = document.getElementById("heatMultiBox");
+      if (!box) return;
+      var items = HM.filter(function (x) { return x["p" + p] != null; })
+        .sort(function (a, b) { return (b["p" + p] || 0) - (a["p" + p] || 0); });
+      box.innerHTML = items.map(function (x) { return cellHtml(x, x["p" + p]); }).join("");
+    }
+    tabs.addEventListener("click", function (e) {
+      var a = e.target.closest("a[data-p]"); if (!a) return;
+      var p = a.getAttribute("data-p");
+      tabs.querySelectorAll("a").forEach(function (t) { t.classList.toggle("on", t === a); });
+      var today = document.getElementById("heatToday"), multi = document.getElementById("heatMultiBox");
+      if (p === "today") {
+        if (today) today.style.display = "";
+        if (multi) multi.style.display = "none";
+      } else {
+        renderMulti(+p);
+        if (today) today.style.display = "none";
+        if (multi) multi.style.display = "";
+      }
+      var note = document.getElementById("heatNote");
+      if (note) note.textContent = p === "today"
+        ? "口径:今日 = SGE 合约较今开(期货较昨结,现货/指数较昨收);格里数字为百分比。"
+        : "口径:" + p + " 日 = 各品种以 " + p + " 个交易日前的收盘价为基准的累计涨跌(基于日线行情),红涨绿跌。";
+    });
+  }
+
   // ---------- 三大报价模块（金投网式,tab 切换品种 + 分时/日K 大图） ----------
   var QM_TAB = [0, 0, 0];
   var QM_MODE = [0, 0, 0]; // 0=分时/走势 1=日K 2=周K 3=月K
@@ -1056,6 +1098,7 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
     bindTools();
     bindQM();
     bindFuel();
+    bindHeat();
     renderAll(DATA);
     loadData();                 // 拉取最新 baked 数据
     setInterval(loadData, 60000); // 每 60s 检查一次（新构建发布即更新）

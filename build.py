@@ -837,6 +837,14 @@ main{counter-reset:secno}
 .faq p{margin:4px 0 0;font-size:12.5px;color:var(--sub);line-height:1.7}
 @media(max-width:720px){.plan-cards{grid-template-columns:1fr}.steps-row{grid-template-columns:1fr}}
 
+.heat-tabs{display:inline-flex;gap:6px;margin-left:14px;vertical-align:middle}
+.heat-tabs a{padding:4px 12px;border:1px solid var(--line);border-radius:99px;font-size:12px;color:var(--sub);cursor:pointer}
+.heat-tabs a.on{color:var(--gold);border-color:var(--gold-2);background:rgba(184,134,11,.12);font-weight:650}
+.heat-legend{display:inline-flex;gap:4px;margin-left:12px;font-size:11px;color:var(--sub);vertical-align:middle;align-items:center}
+.heat-legend .hl{font-style:normal;padding:1px 7px;border-radius:4px;color:#fff;font-weight:650}
+.heat-legend .dn4{background:#0d5c3c}.heat-legend .dn2{background:#129b63}.heat-legend .flat{background:#8895a8}
+.heat-legend .up2{background:#d4380d}.heat-legend .up4{background:#8f2508}
+
 /* ============ 溢价衍生指标卡 ============ */
 .deriv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
 .dcard{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
@@ -1925,12 +1933,11 @@ def page_index(data):
   </section>
 
 
-  <!-- ============ 全品种涨跌热力图 ============ -->
-  <section class="section" id="heat">
-    <div class="mbox-h"><span class="mh-l">全品种涨跌热力图</span>
-      <span class="more">红涨绿跌 · 色深代表幅度 · 覆盖 36 个品种</span></div>
-    <div class="card" style="padding:12px">
-      {heat}
+  <!-- ============ 全品种涨跌热力图<span class="heat-tabs" id="heatTabs"><a class="on" data-p="today">今日</a><a data-p="5">5 日</a><a data-p="20">20 日</a><a data-p="60">60 日</a></span>
+      <span class="heat-legend">色阶:<i class="hl dn4">-4%</i><i class="hl dn2">-2%</i><i class="hl flat">0</i><i class="hl up2">+2%</i><i class="hl up4">+4%</i>(红涨绿跌,色深代表幅度)</span>
+     
+      <div id="heatToday">{heat}</div><div id="heatMultiBox" style="display:none"></div>
+      <div class="hint" id="heatNote">口径:今日 = SGE 合约较今开(期货较昨结,现货/指数较昨收);5/20/60 日 = 各品种以对应交易日收盘为基准的累计涨跌(基于日线行情)。格里数字为百分比,点击品种可进行情区。</div>
     </div>
     <div class="mbox-note">覆盖上海黄金交易所、国内期货主力、全球股指、国际现货与美元指数;涨跌幅口径:SGE 以今开为基准,期货以昨结,现货与指数以昨收。</div>
   </section>

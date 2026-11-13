@@ -714,6 +714,14 @@ main{counter-reset:secno}
 .faq p{margin:4px 0 0;font-size:12.5px;color:var(--sub);line-height:1.7}
 @media(max-width:720px){.plan-cards{grid-template-columns:1fr}.steps-row{grid-template-columns:1fr}}
 
+.heat-tabs{display:inline-flex;gap:6px;margin-left:14px;vertical-align:middle}
+.heat-tabs a{padding:4px 12px;border:1px solid var(--line);border-radius:99px;font-size:12px;color:var(--sub);cursor:pointer}
+.heat-tabs a.on{color:var(--gold);border-color:var(--gold-2);background:rgba(184,134,11,.12);font-weight:650}
+.heat-legend{display:inline-flex;gap:4px;margin-left:12px;font-size:11px;color:var(--sub);vertical-align:middle;align-items:center}
+.heat-legend .hl{font-style:normal;padding:1px 7px;border-radius:4px;color:#fff;font-weight:650}
+.heat-legend .dn4{background:#0d5c3c}.heat-legend .dn2{background:#129b63}.heat-legend .flat{background:#8895a8}
+.heat-legend .up2{background:#d4380d}.heat-legend .up4{background:#8f2508}
+
 /* ============ 溢价衍生指标卡 ============ */
 .deriv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
 .dcard{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}

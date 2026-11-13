@@ -15847,8 +15847,8 @@
       "open": 88.79,
       "high": 89.2,
       "low": 88.04,
-      "date": "纽约原油",
-      "prev_close": 88.74,
+      "date": "2026-11-13",
+      "prev_close": 88.69,
       "hist": [
         89.28,
         89.89,
@@ -15886,12 +15886,8 @@
       "name": "上海原油",
       "symbol": "SC",
       "unit": "元/桶",
-      "last": 625.5,
-      "open": 594.9,
-      "high": 626.6,
-      "low": 587.8,
-      "prev_settle": 595.9,
-      "date": "2026-11-13"
+      "last": 594.3,
+      "prev_settle": 599.3
     }
   },
   "fx": [
@@ -16554,6 +16550,12 @@
       "unit": "点",
       "date": "2026-11-13"
     }
+  ],
+  "extra": {
+    "indices": [],
+    "futures": [],
+    "intl": [],
+    "dxy": null
   },
   "klines": {
     "AU0": [
