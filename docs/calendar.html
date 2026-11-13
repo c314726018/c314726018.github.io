@@ -87,8 +87,39 @@
     <div class="card">
       <table class="fomc-table">
         <thead><tr><th>央行</th><th>议息节奏</th><th>当前利率</th><th>最近一次变动</th></tr></thead>
-        <tbody><tr><td><strong>美联储 FED</strong></td><td>每年 8 次议息(1/3/4/6/7/9/10/12 月)</td><td>3.75-4.00%</td><td>2025-12-10 降 25bp</td></tr><tr><td><strong>欧洲央行 ECB</strong></td><td>每年约 8 次,通常 1/3/4/6/7/9/10/12 月</td><td>2.50%</td><td>2025-09-10 降 25bp</td></tr><tr><td><strong>日本央行 BOJ</strong></td><td>每年约 8 次,季度末含展望报告</td><td>1.25%</td><td>2026-09-18 加 25bp</td></tr><tr><td><strong>中国人民银行 PBOC</strong></td><td>每月 20 日公布 LPR;MLF/逆回购每日操作</td><td>1 年 LPR 3.0%</td><td>2025-05-20 调降</td></tr><tr><td><strong>英国央行 BOE</strong></td><td>每年 8 次议息</td><td>3.75%</td><td>2025-12-18 降 25bp</td></tr></tbody>
+        <tbody><tr><td><strong>美联储 FED</strong></td><td>每年 8 次议息(1/3/4/6/7/9/10/12 月)</td><td>3.75-4.00%</td><td>2025-12-10 降 25bp</td></tr><tr><td><strong>欧洲央行 ECB</strong></td><td>每年约 8 次,通常 1/3/4/6/7/9/10/12 月</td><td>2.50%</td><td>2025-09-10 降 25bp</td></tr><tr><td><strong>日本央行 BOJ</strong></td><td>每年约 8 次,季度末含展望报告</td><td>1.25%</td><td>2026-09-18 加 25bp</td></tr><tr><td><strong>中国人民银行 PBOC</strong></td><td>每月 20 日公布 LPR;MLF/逆回购每日操作</td><td>1 年 LPR 3.0%</td><td>2025-05-20 调降</td></tr><tr><td><strong>英国央行 BOE</strong></td><td>每年 8 次议息</td><td>3.75%</td><td>2025-12-18 降 25bp</td></tr><tr><td><strong>瑞士央行 SNB</strong></td><td>每年 4 次季度议息</td><td>0.00%</td><td>2025-06 降至零利率</td></tr><tr><td><strong>加拿大央行 BOC</strong></td><td>每年 8 次固定议息日</td><td>2.25%</td><td>2025-07 降 25bp</td></tr><tr><td><strong>澳大利亚央行 RBA</strong></td><td>每年 8 次议息</td><td>3.60%</td><td>2025-08 降 25bp</td></tr><tr><td><strong>印度央行 RBI</strong></td><td>每年 6 次双月议息</td><td>5.50%</td><td>待更新</td></tr><tr><td><strong>韩国央行 BOK</strong></td><td>每年 8 次议息</td><td>2.50%</td><td>待更新</td></tr></tbody>
       </table>
+
+    <div class="charts" style="margin-top:18px">
+      <div class="card">
+        <div class="card-head"><h3>央行利率如何影响金价</h3><span class="chip">传导机制</span></div>
+        <table class="mega-table">
+          <thead><tr><th>政策动作</th><th>对金价的影响</th><th>传导逻辑</th></tr></thead>
+          <tbody>
+            <tr><td class="lbl">降息</td><td class="num up">利多金价</td><td>持有黄金的机会成本(放弃的利息)下降,资金流向黄金等无息资产</td></tr>
+            <tr><td class="lbl">加息</td><td class="num down">利空金价</td><td>利率上升,债券/存款收益更有吸引力,黄金吸引力下降</td></tr>
+            <tr><td class="lbl">量化宽松 QE</td><td class="num up">利多金价</td><td>货币供应增加,货币贬值预期推动避险买盘</td></tr>
+            <tr><td class="lbl">缩表 QT</td><td class="num down">偏空</td><td>回收流动性,美元走强压制金价</td></tr>
+            <tr><td class="lbl">实际利率 = 名义利率 − 通胀</td><td class="num">核心变量</td><td>实际利率为负时(通胀高于利率)金价最强——这是过去数年金价牛市的底层逻辑</td></tr>
+          </tbody>
+        </table>
+        <div class="hint">央行议息当日金价波动往往放大(可配合价格提醒功能设置异动通知);点阵图与声明措辞的变化常比利率本身更重要。</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>主要央行的政策工具速查</h3><span class="chip">进阶知识</span></div>
+        <table class="mega-table">
+          <thead><tr><th>央行</th><th>核心利率工具</th><th>其他常用工具</th></tr></thead>
+          <tbody>
+            <tr><td class="lbl">美联储 FED</td><td>联邦基金利率目标区间</td><td>公开市场操作、QE/QT 资产购买、贴现窗口、SRF 回购便利</td></tr>
+            <tr><td class="lbl">欧洲央行 ECB</td><td>三大关键利率(主要再融资 MRO/存款便利/边际贷款)</td><td>APP/PEPP 资产购买、TLTRO 长期再融资</td></tr>
+            <tr><td class="lbl">中国人民银行 PBOC</td><td>LPR 贷款市场报价利率、MLF 中期借贷便利</td><td>逆回购(每日)、降准、结构性货币政策工具、PSL</td></tr>
+            <tr><td class="lbl">日本央行 BOJ</td><td>无担保隔夜拆借利率</td><td>收益率曲线控制 YCC(已调整)、JGB 国债购买</td></tr>
+            <tr><td class="lbl">英国央行 BOE</td><td>Bank Rate 银行利率</td><td>资产购买 APF、主动出售 gilt 英债</td></tr>
+          </tbody>
+        </table>
+        <div class="hint">PBOC 的货币政策框架以数量型+价格型工具并用为主;理解 MLF→LPR 传导是看懂中国利率的关键。</div>
+      </div>
+    </div>
     </div>
     <div class="rel-grid" style="margin-top:18px">
       <a class="rel" href="./index.html#charts"><div class="rt">金价走势</div><p>事件前后的价格反应，看走势图表</p></a>
