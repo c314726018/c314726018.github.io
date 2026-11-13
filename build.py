@@ -2224,11 +2224,9 @@ def history_table_rows(hist, key, limit=30):
 
 
 def page_history(data, hist):
-    au_rows, n_days = history_table_rows(hist, "SGE:Au99.99")
-    if not n_days:
-        au_rows = '<tr><td colspan="6" class="alert-empty" style="justify-content:center">数据累积中，明日起逐日展示。</td></tr>'
-    # 历史蜡烛基底:沪金主力 AU0 约 250 根(一年),累积 Au99.99(逐时精确)覆盖最新几天
+    # 数据回填:KL.AU0(沪金主力约 250 根真实日线)+ KL.XAU(伦敦金)为基底,逐时累积覆盖最新几天
     _au_kl = (data.get("klines") or {}).get("AU0") or []
+    _xau_kl = (data.get("klines") or {}).get("XAU") or []
     _au_base = {}
     for _k in _au_kl:
         _d = _k.get("d")
@@ -2236,7 +2234,21 @@ def page_history(data, hist):
             _au_base[_d] = {"o": _k.get("o"), "h": _k.get("h"), "l": _k.get("l"), "c": _k.get("c")}
     _au_merged = dict(_au_base)
     _au_merged.update(hist.get("SGE:Au99.99") or {})
-    hist_data = json.dumps({"au": _au_merged, "xau": hist.get("INTL:XAU") or {}},
+    _xau_base = {}
+    for _k in _xau_kl:
+        _d = _k.get("d")
+        if _d:
+            _xau_base[_d] = {"o": _k.get("o"), "h": _k.get("h"), "l": _k.get("l"), "c": _k.get("c")}
+    _xau_merged = dict(_xau_base)
+    _xau_merged.update(hist.get("INTL:XAU") or {})
+    hist2 = dict(hist)
+    hist2["SGE:Au99.99"] = _au_merged
+    hist2["INTL:XAU"] = _xau_merged
+    n_days = len(_au_merged)
+    au_rows, _ = history_table_rows(hist2, "SGE:Au99.99", limit=90)
+    if not n_days:
+        au_rows = '<tr><td colspan="6" class="alert-empty" style="justify-content:center">数据累积中，明日起逐日展示。</td></tr>'
+    hist_data = json.dumps({"au": _au_merged, "xau": _xau_merged},
                            ensure_ascii=False)
     empty_note = "" if n_days >= 2 else (
         '<div class="callout" style="background:var(--gold-soft);border-left:3px solid var(--gold-2);'
