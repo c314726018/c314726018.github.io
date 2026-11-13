@@ -76,7 +76,13 @@ try:
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", "oil_retail.json"), encoding="utf-8") as _f:
         OIL_RETAIL = json.load(_f)
 except Exception:
-    OIL_RETAIL = {"national": {}, "provinces": {}, "next_adjust": {}, "history": [], "updated": ""}  # 站长接收邮箱:填写后邮件订阅按钮将唤起邮件客户端预填订阅信息
+    OIL_RETAIL = {"national": {}, "provinces": {}, "next_adjust": {}, "history": [], "updated": ""}
+# 品牌金饰参考配置(溢价=SGE基准+估算溢价;数据文件 docs/brands.json 可编辑)
+try:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", "brands.json"), encoding="utf-8") as _f:
+        BRANDS = json.load(_f)
+except Exception:
+    BRANDS = {"brands_gold": [], "gem_note": ""}  # 站长接收邮箱:填写后邮件订阅按钮将唤起邮件客户端预填订阅信息
 
 # AdSense 网站代码 —— 直接写入生成页的 <head>，确保验证时原始 HTML 抓取也能命中
 ADSENSE_LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>'
@@ -1512,6 +1518,33 @@ def page_index(data):
     usd_html = fmt(usd_row.get("cny"), 4) if usd_row else "—"
     _wl_html = fmt(wti_l, 2) if wti_l else "—"
     _go_html = fmt(gold_oil_barrel, 1) if gold_oil_barrel else "—"
+    # 品牌金银珠宝参考价(基于 Au99.99 基准 + brands.json 溢价估算)
+    _au_base_price = next((it.get("last") for it in items if it.get("symbol") == "Au99.99"), None)
+    _pt_base = next((it.get("last") for it in items if it.get("symbol") == "Pt99.95"), None)
+    _ag_base = next((it.get("last") for it in items if it.get("symbol") == "Ag99.99"), None)
+    _ag_unit_div = 1000.0 if _ag_base and _ag_base > 100 else 1.0
+    brand_rows = ""
+    _brs = (BRANDS.get("brands_gold") or [])
+    for _b in _brs:
+        _v = _au_base_price + (_b.get("premium") or 0) if _au_base_price else None
+        brand_rows += (
+            f'<tr><td class="lbl">{esc(_b.get("name"))}</td>'
+            f'<td class="num strong">{fmt(_v)} 元/克</td>'
+            f'<td class="num">+{_b.get("premium")} 元/克</td>'
+            f'<td>足金首饰零售参考,工费另计</td></tr>')
+    _bar_prem = BRANDS.get("gold_bar_premium") or 22
+    bar_p = fmt(_au_base_price + _bar_prem) if _au_base_price else "—"
+    bar_prem = _bar_prem
+    _k18fee = BRANDS.get("k18_fee") or 160
+    k18 = fmt(_au_base_price * 0.75 + _k18fee) if _au_base_price else "—"
+    _pt_prem = BRANDS.get("pt_premium") or 180
+    pt950 = fmt(_pt_base + _pt_prem) if _pt_base else "—"
+    pt_prem = _pt_prem
+    _ag_fee = BRANDS.get("silver_fee") or 2.2
+    _ag_gram = _ag_base / _ag_unit_div if _ag_base else None
+    ag = fmt(_ag_gram + _ag_fee) if _ag_gram else "—"
+    ag_fee = _ag_fee
+    gem_note = BRANDS.get("gem_note", "")
     _prov = OIL_RETAIL.get("provinces") or {}
     prov_names = list(_prov.keys())
     prov0 = prov_names[1] if len(prov_names) > 1 else (prov_names[0] if prov_names else "全国平均")
@@ -1664,6 +1697,29 @@ def page_index(data):
         <div class="tq-tools" id="qm3Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm3Spark" style="display:none"></div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ 品牌金银珠宝参考(P0 用户需求) ============ -->
+  <section class="section" id="brands">
+    <div class="section-head">
+      <div><div class="lbl">BRAND JEWELRY PRICES</div><h2>品牌金银珠宝参考价</h2>
+        <p>周大福、老凤祥等主流品牌足金首饰零售参考价(按 SGE 基准金价 + 行业溢价估算,每日随基准自动更新);铂金、18K 彩金、银饰同步换算。</p></div>
+      <div class="side">估算口径 · 以门店挂牌为准</div>
+    </div>
+    <div class="card">
+      <table class="mega-table">
+        <thead><tr><th>品牌 / 品类</th><th>足金首饰(元/克)</th><th>较基准溢价</th><th>说明</th></tr></thead>
+        <tbody>
+          {brand_rows}
+          <tr><td class="lbl">投资金条</td><td class="num strong">{bar_p} 元/克</td><td class="num">+{bar_prem} 元/克</td><td>银行/品牌投资金条,回购按基准价折价</td></tr>
+          <tr><td class="lbl">18K 彩金(含 75% 金)</td><td class="num strong">{k18} 元/克</td><td class="num">工费另计</td><td>彩金按含金量 75% × 金价 + 工艺费估算</td></tr>
+          <tr><td class="lbl">铂金 Pt950 首饰</td><td class="num strong">{pt950} 元/克</td><td class="num">+{pt_prem} 元/克</td><td>按 SGE 铂金基准 + 首饰溢价估算</td></tr>
+          <tr><td class="lbl">银饰 Ag999</td><td class="num strong">{ag} 元/克</td><td class="num">+{ag_fee} 元/克</td><td>银料价 + 工费,按件定价差异大</td></tr>
+        </tbody>
+      </table>
+      <div class="hint">{gem_note}</div>
+      <div class="hint">以上为估算参考价(每日随基准金价自动更新),各品牌门店实际挂牌价、工费与活动折扣请以当日门店为准。</div>
     </div>
   </section>
 
