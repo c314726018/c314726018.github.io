@@ -611,7 +611,7 @@
                 if (ctx.dataset.type === "line") return ctx.dataset.label + " " + fmt(ctx.parsed.y);
                 var v = (ctx.raw && ctx.raw.o != null) ? ctx.raw : null;
                 return v ? ["开 " + fmt(v.o), "高 " + fmt(v.h), "低 " + fmt(v.l), "收 " + fmt(v.c)] : ""; } } } },
-          scales: { x: { ticks: { maxTicksLimit: 6, color: c.sub, font: { size: 9 }, maxRotation: 0 }, grid: { display: false } },
+          scales: { x: { type: "category", ticks: { maxTicksLimit: 6, color: c.sub, font: { size: 9 }, maxRotation: 0 }, grid: { display: false } },
             y: { position: "right", ticks: { maxTicksLimit: 4, color: c.sub, font: { size: 9 } }, grid: { color: c.grid } } } }
       });
       return true;
