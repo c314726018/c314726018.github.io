@@ -21,8 +21,8 @@
 <link rel="manifest" href="./manifest.json">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="./site.css?v=202611131552">
-<script src="./common.js?v=202611131552"></script>
+<link rel="stylesheet" href="./site.css?v=202611131557">
+<script src="./common.js?v=202611131557"></script>
 </head>
 
 <body>
@@ -139,13 +139,15 @@
     if (!el) return;
     new Chart(el, {
       type: "candlestick",
-      data: { datasets: [{ label: "Au99.99 日线", data: candles,
+      data: { labels: days, datasets: [{ label: "Au99.99 日线", data: candles.map(function (c, i) {
+        return { x: i + 1, o: c.o, h: c.h, l: c.l, c: c.c };
+      }),
         color: { up: "#d4380d", down: "#129b63", unchanged: "#8895a8" } }] },
       options: {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-          x: { ticks: { color: "#77839a", font: { size: 10 }, maxTicksLimit: 10 }, grid: { display: false } },
+          x: { type: "category", ticks: { color: "#77839a", font: { size: 10 }, maxTicksLimit: 10 }, grid: { display: false } },
           y: { ticks: { color: "#77839a", font: { size: 10 } }, grid: { color: "#eef0f3" } }
         }
       }

@@ -2299,13 +2299,15 @@ def page_history(data, hist):
     if (!el) return;
     new Chart(el, {{
       type: "candlestick",
-      data: {{ datasets: [{{ label: "Au99.99 日线", data: candles,
+      data: {{ labels: days, datasets: [{{ label: "Au99.99 日线", data: candles.map(function (c, i) {{
+        return {{ x: i + 1, o: c.o, h: c.h, l: c.l, c: c.c }};
+      }}),
         color: {{ up: "#d4380d", down: "#129b63", unchanged: "#8895a8" }} }}] }},
       options: {{
         responsive: true, maintainAspectRatio: false,
         plugins: {{ legend: {{ display: false }} }},
         scales: {{
-          x: {{ ticks: {{ color: "#77839a", font: {{ size: 10 }}, maxTicksLimit: 10 }}, grid: {{ display: false }} }},
+          x: {{ type: "category", ticks: {{ color: "#77839a", font: {{ size: 10 }}, maxTicksLimit: 10 }}, grid: {{ display: false }} }},
           y: {{ ticks: {{ color: "#77839a", font: {{ size: 10 }} }}, grid: {{ color: "#eef0f3" }} }}
         }}
       }}

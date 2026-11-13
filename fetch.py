@@ -487,6 +487,28 @@ def main():
     oil = fetch_oil()
     fx_table = build_fx_table(float(intl["usd_cny"]), fx_rates)
     news = fetch_news()
+    # 快讯累积:合并历史归档(去重,保留 300 条),避免每日只有当天快讯
+    _ARCH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", "news_archive.json")
+    try:
+        with open(_ARCH, encoding="utf-8") as _f:
+            _arch = json.load(_f)
+    except Exception:
+        _arch = []
+    _seen = set()
+    _merged = []
+    for _n in (news + _arch):
+        _k = (_n.get("title") or "") + "|" + (_n.get("time") or "")
+        if _k in _seen or not _n.get("title"):
+            continue
+        _seen.add(_k)
+        _merged.append(_n)
+    _merged.sort(key=lambda x: x.get("time") or "", reverse=True)
+    news_merged = _merged[:300]
+    try:
+        with open(_ARCH, "w", encoding="utf-8") as _f:
+            json.dump(news_merged, _f, ensure_ascii=False, indent=1)
+    except Exception:
+        pass
     extra = fetch_extra()
     klines = fetch_klines()
 
@@ -515,7 +537,7 @@ def main():
         "intl": intl,
         "oil": oil,
         "fx": fx_table,
-        "news": news,
+        "news": news_merged,
         "extra": extra,
         "klines": klines,
     }
