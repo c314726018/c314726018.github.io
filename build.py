@@ -1518,20 +1518,32 @@ def page_index(data):
     usd_html = fmt(usd_row.get("cny"), 4) if usd_row else "—"
     _wl_html = fmt(wti_l, 2) if wti_l else "—"
     _go_html = fmt(gold_oil_barrel, 1) if gold_oil_barrel else "—"
-    # 品牌金银珠宝参考价(基于 Au99.99 基准 + brands.json 溢价估算)
-    _au_base_price = next((it.get("last") for it in items if it.get("symbol") == "Au99.99"), None)
+    # 品牌金银珠宝参考价矩阵(今日/昨日/涨跌/回收/金条)
+    _au_item = next((it for it in items if it.get("symbol") == "Au99.99"), None)
+    _au_base_price = _au_item.get("last") if _au_item else None
+    _au_prev_price = _au_item.get("open") if _au_item else None
     _pt_base = next((it.get("last") for it in items if it.get("symbol") == "Pt99.95"), None)
     _ag_base = next((it.get("last") for it in items if it.get("symbol") == "Ag99.99"), None)
     _ag_unit_div = 1000.0 if _ag_base and _ag_base > 100 else 1.0
     brand_rows = ""
     _brs = (BRANDS.get("brands_gold") or [])
     for _b in _brs:
-        _v = _au_base_price + (_b.get("premium") or 0) if _au_base_price else None
+        _prem = _b.get("premium") or 0
+        _bb = _b.get("buyback") or 0
+        _today = _au_base_price + _prem if _au_base_price else None
+        _yest = _au_prev_price + _prem if _au_prev_price else None
+        _chg = _today - _yest if (_today and _yest) else None
+        _cls = "up" if (_chg or 0) > 0 else "down" if (_chg or 0) < 0 else "flat"
+        _chg_txt = ('<span class="chg ' + _cls + '">' + ("+" if _chg > 0 else "") + fmt(_chg) + "</span>") if _chg is not None else "—"
+        _rec = _au_base_price - _bb if _au_base_price else None
+        _bar_b = _au_base_price + (BRANDS.get("gold_bar_premium") or 22) if _au_base_price else None
         brand_rows += (
             f'<tr><td class="lbl">{esc(_b.get("name"))}</td>'
-            f'<td class="num strong">{fmt(_v)} 元/克</td>'
-            f'<td class="num">+{_b.get("premium")} 元/克</td>'
-            f'<td>足金首饰零售参考,工费另计</td></tr>')
+            f'<td class="num strong">{fmt(_today)}</td>'
+            f'<td class="num">{fmt(_yest)}</td>'
+            f'<td class="num">{_chg_txt}</td>'
+            f'<td class="num">{fmt(_rec)}</td>'
+            f'<td class="num">{fmt(_bar_b)}</td></tr>')
     _bar_prem = BRANDS.get("gold_bar_premium") or 22
     bar_p = fmt(_au_base_price + _bar_prem) if _au_base_price else "—"
     bar_prem = _bar_prem
@@ -1704,18 +1716,24 @@ def page_index(data):
   <section class="section" id="brands">
     <div class="section-head">
       <div><div class="lbl">BRAND JEWELRY PRICES</div><h2>品牌金银珠宝参考价</h2>
-        <p>周大福、老凤祥等主流品牌足金首饰零售参考价(按 SGE 基准金价 + 行业溢价估算,每日随基准自动更新);铂金、18K 彩金、银饰同步换算。</p></div>
+        <p>周大福、老凤祥、中国黄金等 10 个主流品牌的足金首饰今日/昨日零售参考价与涨跌、回收参考价、金条买入价;铂金、18K 彩金、银饰同步换算。</p></div>
       <div class="side">估算口径 · 以门店挂牌为准</div>
     </div>
     <div class="card">
       <table class="mega-table">
-        <thead><tr><th>品牌 / 品类</th><th>足金首饰(元/克)</th><th>较基准溢价</th><th>说明</th></tr></thead>
+        <thead><tr><th>品牌</th><th>足金首饰 今</th><th>足金首饰 昨</th><th>涨跌(元/克)</th><th>回收参考</th><th>金条买入</th></tr></thead>
         <tbody>
           {brand_rows}
-          <tr><td class="lbl">投资金条</td><td class="num strong">{bar_p} 元/克</td><td class="num">+{bar_prem} 元/克</td><td>银行/品牌投资金条,回购按基准价折价</td></tr>
-          <tr><td class="lbl">18K 彩金(含 75% 金)</td><td class="num strong">{k18} 元/克</td><td class="num">工费另计</td><td>彩金按含金量 75% × 金价 + 工艺费估算</td></tr>
-          <tr><td class="lbl">铂金 Pt950 首饰</td><td class="num strong">{pt950} 元/克</td><td class="num">+{pt_prem} 元/克</td><td>按 SGE 铂金基准 + 首饰溢价估算</td></tr>
-          <tr><td class="lbl">银饰 Ag999</td><td class="num strong">{ag} 元/克</td><td class="num">+{ag_fee} 元/克</td><td>银料价 + 工费,按件定价差异大</td></tr>
+        </tbody>
+      </table>
+      <div style="height:14px"></div>
+      <table class="mega-table">
+        <thead><tr><th>品类</th><th>今日参考</th><th>口径</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">投资金条</td><td class="num strong">{bar_p} 元/克</td><td>基准 +{bar_prem} 元/克;银行/品牌金条,回购按基准折价</td></tr>
+          <tr><td class="lbl">18K 彩金(含 75% 金)</td><td class="num strong">{k18} 元/克</td><td>金价 × 75% + 工艺费,工费另计</td></tr>
+          <tr><td class="lbl">铂金 Pt950 首饰</td><td class="num strong">{pt950} 元/克</td><td>SGE 铂金基准 +{pt_prem} 元/克首饰溢价</td></tr>
+          <tr><td class="lbl">银饰 Ag999</td><td class="num strong">{ag} 元/克</td><td>银料价 +{ag_fee} 元/克工费,按件定价差异大</td></tr>
         </tbody>
       </table>
       <div class="hint">{gem_note}</div>

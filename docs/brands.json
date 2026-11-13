@@ -1,15 +1,60 @@
 {
-  "note": "品牌金饰零售参考价 = SGE 基准金价 + 品牌溢价估算(元/克,工费另计)。溢价为行业常见区间估算值,实际以各品牌门店当日挂牌为准。修改溢价或增删品牌请编辑本文件。",
-  "brands_gold": [
-    {"name": "周大福", "premium": 128},
-    {"name": "老凤祥", "premium": 118},
-    {"name": "周生生", "premium": 122},
-    {"name": "六福珠宝", "premium": 118},
-    {"name": "潮宏基", "premium": 112}
-  ],
-  "gold_bar_premium": 22,
-  "pt_premium": 180,
-  "k18_fee": 160,
-  "silver_fee": 2.2,
-  "gem_note": "钻石按 4C 标准(克拉/颜色/净度/切工)单独定价,玉石翡翠按种水色工评估,均无统一每日报价,请以品牌门店与权威鉴定证书为准。"
+ "note": "品牌金饰零售参考价 = SGE 基准金价 + 品牌溢价估算(元/克,工费另计);回收参考价 = 基准金价 - 回收折价。溢价/折价为行业常见区间估算,实际以各品牌门店当日挂牌为准。增删品牌或调整参数请编辑本文件。",
+ "brands_gold": [
+  {
+   "name": "周大福",
+   "premium": 128,
+   "buyback": 20
+  },
+  {
+   "name": "老凤祥",
+   "premium": 118,
+   "buyback": 18
+  },
+  {
+   "name": "周生生",
+   "premium": 122,
+   "buyback": 20
+  },
+  {
+   "name": "六福珠宝",
+   "premium": 118,
+   "buyback": 18
+  },
+  {
+   "name": "潮宏基",
+   "premium": 112,
+   "buyback": 16
+  },
+  {
+   "name": "中国黄金",
+   "premium": 108,
+   "buyback": 14
+  },
+  {
+   "name": "老庙黄金",
+   "premium": 115,
+   "buyback": 16
+  },
+  {
+   "name": "菜百首饰",
+   "premium": 105,
+   "buyback": 14
+  },
+  {
+   "name": "明牌珠宝",
+   "premium": 110,
+   "buyback": 15
+  },
+  {
+   "name": "百泰首饰",
+   "premium": 95,
+   "buyback": 12
+  }
+ ],
+ "gold_bar_premium": 22,
+ "pt_premium": 180,
+ "k18_fee": 160,
+ "silver_fee": 2.2,
+ "gem_note": "钻石按 4C 标准(克拉/颜色/净度/切工)单独定价,玉石翡翠按种水色工评估,均无统一每日报价,请以品牌门店与权威鉴定证书为准。"
 }
