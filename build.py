@@ -817,6 +817,26 @@ main{counter-reset:secno}
 @media(max-width:720px){.core-cards{grid-template-columns:1fr 1fr}.fuel-adjust{grid-template-columns:1fr}}
 @media(max-width:420px){.core-cards{grid-template-columns:1fr}}
 
+.plan-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0}
+.plan-card{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);padding:18px;position:relative;transition:.15s}
+.plan-card.featured{border-color:var(--gold-2);box-shadow:0 4px 24px rgba(184,134,11,.12)}
+.plan-card .hot{position:absolute;top:-10px;right:14px;background:var(--gold);color:#fff;font-size:11px;padding:2px 10px;border-radius:99px}
+.plan-card .pk{font-size:13px;color:var(--sub);font-weight:650}
+.plan-card .pv{font-size:26px;font-weight:780;color:var(--ink);margin:6px 0 10px}
+.plan-card ul{list-style:none;margin:0 0 14px;padding:0;font-size:12.5px;color:var(--ink);line-height:2}
+.steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.sr-item{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--sub)}
+.sr-item b{color:var(--ink);font-size:13px}
+.alert-type{display:flex;gap:8px;margin:10px 0}
+.alert-type a{padding:6px 14px;border:1px solid var(--line);border-radius:99px;font-size:12.5px;color:var(--sub);cursor:pointer}
+.alert-type a.on{color:var(--gold);border-color:var(--gold-2);background:rgba(184,134,11,.1);font-weight:650}
+.alert-type .pro-tag{font-size:10px;color:var(--gold-2)}
+.rule-item{display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:12.5px;color:var(--ink)}
+.faq-list{display:flex;flex-direction:column;gap:10px}
+.faq b{font-size:13px;color:var(--ink)}
+.faq p{margin:4px 0 0;font-size:12.5px;color:var(--sub);line-height:1.7}
+@media(max-width:720px){.plan-cards{grid-template-columns:1fr}.steps-row{grid-template-columns:1fr}}
+
 /* ============ 溢价衍生指标卡 ============ */
 .deriv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
 .dcard{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
@@ -1557,6 +1577,7 @@ def page_index(data):
     ag = fmt(_ag_gram + _ag_fee) if _ag_gram else "—"
     ag_fee = _ag_fee
     gem_note = BRANDS.get("gem_note", "")
+    bao_duo_link = "https://mianbaoduo.com/"  # TODO:替换为面包多商品页链接(季度/年度会员)
     _prov = OIL_RETAIL.get("provinces") or {}
     prov_names = list(_prov.keys())
     prov0 = prov_names[1] if len(prov_names) > 1 else (prov_names[0] if prov_names else "全国平均")
@@ -1794,37 +1815,92 @@ def page_index(data):
 
   <section class="section" id="alerts">
     <div class="section-head">
-      <div><div class="lbl">PRICE ALERTS</div><h2>价格提醒 · 免费</h2>
-        <p>选择品种、设定目标价,触发后 30 分钟内自动发送邮件通知。无需挂机,免费 1 年。</p></div>
+      <div><div class="lbl">PRICE ALERTS · 邮件提醒服务</div><h2>金市异动,第一时间知道</h2>
+        <p>覆盖 SGE 合约、国内期货、国际现货、股指与能源共 40+ 品种,每 30 分钟自动巡检。近 30 个交易日,黄金出现 <b style="color:var(--gold-2)">9 次</b>单日波动超 1.5%——每一次,都可以让邮件先告诉你。</p></div>
     </div>
+
+    <div class="plan-cards">
+      <div class="plan-card">
+        <div class="pk">免费版</div>
+        <div class="pv">¥0 <span style="font-size:12px;color:var(--sub)">长期有效</span></div>
+        <ul>
+          <li>✓ 3 条提醒规则</li>
+          <li>✓ 全部 40+ 品种</li>
+          <li>✓ 价格触发(高于/低于/等于)</li>
+          <li>✓ 每 30 分钟巡检</li>
+        </ul>
+        <a class="btn" href="#alertForm" style="width:100%">立即免费订阅</a>
+      </div>
+      <div class="plan-card featured">
+        <div class="hot">最受欢迎</div>
+        <div class="pk">季度会员</div>
+        <div class="pv">¥9.9 <span style="font-size:12px;color:var(--sub)">/ 季</span></div>
+        <ul>
+          <li>✓ 10 条提醒规则</li>
+          <li>✓ <b>涨跌幅触发</b>(单日 ±X% 异动)</li>
+          <li>✓ 新品种上线优先体验</li>
+          <li>✓ 触发邮件优先送达</li>
+        </ul>
+        <a class="btn gold" href="{bao_duo_link}" target="_blank" rel="noopener">面包多购买季度会员</a>
+      </div>
+      <div class="plan-card">
+        <div class="pk">年度会员</div>
+        <div class="pv">¥29.9 <span style="font-size:12px;color:var(--sub)">/ 年</span></div>
+        <ul>
+          <li>✓ 无限条提醒规则</li>
+          <li>✓ 涨跌幅 + 全类型触发</li>
+          <li>✓ 会员期内免费升级</li>
+          <li>✓ 问题优先响应</li>
+        </ul>
+        <a class="btn gold" href="{bao_duo_link}" target="_blank" rel="noopener">面包多购买年度会员</a>
+      </div>
+    </div>
+
     <div class="card">
-      <div class="alert-grid">
-        <div>
-          <div class="card-head" style="margin-bottom:10px"><h3>设置邮件提醒</h3></div>
-          <ol class="steps"><li>选择品种与方向（高于 / 低于），填写目标价</li><li>填写接收邮箱，提交订阅</li><li>触发后自动发信，30 分钟内送达</li></ol>
-          <div class="sym-multi" id="alertSymBox" aria-label="选择品种(可多选)">{sym_pills}</div>
-          <div class="hint" style="margin:4px 2px">可多选品种;每个品种将分别建立提醒规则。</div>
-          <div class="alert-row">
-            <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option><option value="equal">= 等于</option></select>
-            <input id="alertVal" type="number" step="0.01" placeholder="目标价格" aria-label="目标价格">
-          </div>
-          <div class="alert-row">
-            <input id="mailAddr" type="email" placeholder="接收邮箱" aria-label="接收邮箱" style="flex:1 1 180px">
-            <button class="btn" id="mailSubmit" type="button">提交订阅</button>
-          </div>
-          <div class="hint" id="mailNote">邮箱仅用于发送提醒,不公开;当日重复触发不重复发送。</div>
-          <button class="btn ghost" id="copyQuote" type="button" style="margin-top:4px">⧉ 复制当前行情摘要</button>
-        </div>
-        <div>
-          <div class="card-head" style="margin-bottom:10px"><h3>服务说明</h3></div>
-          <ol class="steps">
-            <li>覆盖 SGE 合约、国内期货主力、全球股指、国际现货与能源,共 40+ 品种</li>
-            <li>行情每 30 分钟更新一次,触发后 30 分钟内邮件送达</li>
-            <li>免费 1 年;当日同一规则重复触发不重复发送</li>
-            <li>退订:回复提醒邮件即可</li>
-          </ol>
-          <div class="hint">邮件通过本站通知通道发送;订阅邮箱仅用于提醒,不用于其他用途。</div>
-        </div>
+      <div class="steps-row">
+        <div class="sr-item"><b>① 购买</b><span>面包多付款,支持微信/支付宝</span></div>
+        <div class="sr-item"><b>② 回复订单</b><span>向提醒邮件回复订单号 + 监控邮箱</span></div>
+        <div class="sr-item"><b>③ 开通</b><span>24 小时内人工开通,邮件确认生效</span></div>
+      </div>
+    </div>
+
+    <div class="card" id="alertForm">
+      <div class="card-head" style="margin-bottom:10px"><h3>设置提醒规则</h3>
+        <div class="chip-row"><span class="badge">◷ 每 30 分钟巡检</span><span class="chip" id="quotaChip">免费版:3 条规则</span></div></div>
+      <div class="alert-type" id="alertTypeBox">
+        <a class="on" data-t="price">🎯 价格触发</a>
+        <a data-t="pct">📈 涨跌幅触发 <span class="pro-tag">会员</span></a>
+      </div>
+      <div class="sym-multi" id="alertSymBox" aria-label="选择品种(可多选)">{sym_pills}</div>
+      <div class="hint" style="margin:4px 2px">可多选品种;每个品种将分别建立提醒规则。</div>
+      <div class="alert-row" id="rowPrice">
+        <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option><option value="equal">= 等于</option></select>
+        <input id="alertVal" type="number" step="0.01" placeholder="目标价格" aria-label="目标价格">
+      </div>
+      <div class="alert-row" id="rowPct" style="display:none">
+        <select id="pctDir" aria-label="涨跌方向"><option value="up">📈 单日涨幅超过</option><option value="down">📉 单日跌幅超过</option></select>
+        <input id="pctVal" type="number" step="0.1" placeholder="如 2 表示 2%" aria-label="涨跌幅">
+      </div>
+      <div class="alert-row">
+        <input id="mailAddr" type="email" placeholder="接收邮箱" aria-label="接收邮箱" style="flex:1 1 180px">
+        <button class="btn" id="mailSubmit" type="button">提交订阅</button>
+      </div>
+      <div class="hint" id="mailNote">邮箱仅用于发送提醒,不公开;当日同一规则重复触发不重复发送。</div>
+      <button class="btn ghost" id="copyQuote" type="button" style="margin-top:4px">⧉ 复制当前行情摘要</button>
+      <div style="margin-top:14px">
+        <div class="card-head" style="margin-bottom:8px"><h3 style="font-size:14px">我的提醒规则</h3><span class="chip" id="ruleCount">0 条</span></div>
+        <div id="ruleListBox" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head" style="margin-bottom:10px"><h3>常见问题</h3></div>
+      <div class="faq-list">
+        <div class="faq"><b>Q:会员购买后如何开通?</b><p>面包多付款后在订单页备注或回复邮件提供「订单号 + 监控邮箱」,24 小时内人工开通并以邮件确认生效。</p></div>
+        <div class="faq"><b>Q:邮件多久能送达?</b><p>行情每 30 分钟巡检一次,触发后 30 分钟内送达;会员触发邮件优先发送。</p></div>
+        <div class="faq"><b>Q:免费版与会员的核心区别?</b><p>免费版支持 3 条价格触发规则;会员解锁「涨跌幅触发」(单日异动邮件)并提升规则数量上限,适合盯盘精力有限的投资者。</p></div>
+        <div class="faq"><b>Q:如何退订?</b><p>回复任意提醒邮件即可退订;或在本页删除对应规则。</p></div>
+        <div class="faq"><b>Q:数据准确吗?</b><p>行情来源于上海黄金交易所公开数据与国际市场公开报价,每 30 分钟更新;提醒仅为信息通知,不构成投资建议。</p></div>
       </div>
     </div>
   </section>

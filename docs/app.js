@@ -475,6 +475,47 @@
       var p = e.target.closest(".sp"); if (!p) return;
       p.classList.toggle("on");
     });
+
+    // 提醒类型切换(价格触发 / 涨跌幅触发)
+    var atype = "price";
+    var tbox = $("#alertTypeBox");
+    if (tbox) tbox.addEventListener("click", function (e) {
+      var a = e.target.closest("a[data-t]"); if (!a) return;
+      atype = a.getAttribute("data-t");
+      tbox.querySelectorAll("a").forEach(function (t) { t.classList.toggle("on", t === a); });
+      var rp = $("#rowPrice"), rc = $("#rowPct");
+      if (rp) rp.style.display = atype === "price" ? "" : "none";
+      if (rc) rc.style.display = atype === "pct" ? "" : "none";
+    });
+
+    // 本地规则列表(localStorage)
+    var FREE_LIMIT = 3;
+    function myRules() {
+      try { return JSON.parse(localStorage.getItem("alertRules") || "[]"); } catch (e) { return []; }
+    }
+    function saveRules(rs) { localStorage.setItem("alertRules", JSON.stringify(rs)); }
+    function renderRules() {
+      var lb = $("#ruleListBox"), cnt = $("#ruleCount");
+      var rs = myRules();
+      if (cnt) cnt.textContent = rs.length + " 条";
+      if (!lb) return;
+      if (!rs.length) { lb.innerHTML = '<div class="hint">暂无本地规则;提交订阅后此处展示,可随时删除。</div>'; return; }
+      lb.innerHTML = rs.map(function (r, i) {
+        var txt = r.type === "pct"
+          ? (r.syms || []).join("/") + " · " + (r.dir === "up" ? "涨幅" : "跌幅") + " ≥ " + r.pct + "% · " + (r.mail || "")
+          : (r.syms || []).join("/") + " · " + (r.dir === "above" ? "≥" : r.dir === "below" ? "≤" : "=") + " " + r.val + " · " + (r.mail || "");
+        return '<div class="rule-item"><span style="flex:1">' + txt + '</span><button class="btn ghost" data-ri="' + i + '" style="padding:3px 10px;font-size:12px">删除</button></div>';
+      }).join("");
+      lb.querySelectorAll("[data-ri]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var rs2 = myRules(); rs2.splice(+(b.getAttribute("data-ri") || 0), 1); saveRules(rs2); renderRules();
+        });
+      });
+      var q = $("#quotaChip");
+      if (q) q.textContent = rs.length >= FREE_LIMIT ? "免费版:已达 " + FREE_LIMIT + " 条上限(会员解锁更多)" : "免费版:" + rs.length + "/" + FREE_LIMIT + " 条";
+    }
+    renderRules();
+
     var ms = $("#mailSubmit");
     if (ms) ms.addEventListener("click", function () {
       var addr = ($("#mailAddr") || {}).value || "";
@@ -484,20 +525,46 @@
       var syms = box ? $all(".sp.on", box).map(function (x) { return x.getAttribute("data-v"); }) : [];
       if (!syms.length) { alert("请至少选择一个品种"); return; }
       if (addr.indexOf("@") < 0 || addr.indexOf(".") < 0) { alert("请填写有效的接收邮箱"); return; }
-      if (!val) { alert("请先填写目标价格"); return; }
+
+      var rs = myRules();
+      if (rs.length >= FREE_LIMIT) { alert("免费版上限 " + FREE_LIMIT + " 条规则。升级会员可解锁 10 条以上,并支持涨跌幅触发。"); return; }
+
       var boxMail = DATA && DATA.alert_mail;
       if (!boxMail) {
         if (note) note.innerHTML = '邮件订阅通道即将开放。';
         return;
       }
-      var dirTxt = dir === "above" ? "高于" : dir === "below" ? "低于" : "等于";
-      var body = "订阅类型:邮件价格提醒(免费 1 年)\n品种(" + syms.length + "):" + syms.join("、") +
-        "\n方向:" + dirTxt + "\n目标价:" + val +
-        "\n接收邮箱:" + addr + "\n提交时间:" + new Date().toLocaleString();
+
+      var rule = { type: atype, syms: syms, mail: addr, ts: Date.now() };
+      var dirTxt, subjectTail, bodyExtra;
+      if (atype === "pct") {
+        var pv = parseFloat(($("#pctVal") || {}).value || "0");
+        if (!(pv > 0)) { alert("请填写涨跌幅阈值(如 2 表示 2%)"); return; }
+        var pdir = ($("#pctDir") || {}).value || "up";
+        rule.dir = pdir; rule.pct = pv;
+        dirTxt = pdir === "up" ? "涨幅超过" : "跌幅超过";
+        subjectTail = dirTxt + " " + pv + "%";
+        bodyExtra = "触发类型:涨跌幅\n方向:" + dirTxt + "\n阈值:" + pv + "%\n";
+        if (note) note.innerHTML = '已保存涨跌幅规则(本地)。该类型为会员功能——<a href="#alerts" style="color:var(--gold-2)">购买会员</a>后回复订单号+邮箱即可人工开通,开通前引擎按价格提醒处理。';
+      } else {
+        if (!val) { alert("请先填写目标价格"); return; }
+        rule.dir = dir; rule.val = val;
+        dirTxt = dir === "above" ? "高于" : dir === "below" ? "低于" : "等于";
+        subjectTail = dirTxt + " " + val;
+        bodyExtra = "触发类型:价格\n方向:" + dirTxt + "\n目标价:" + val + "\n";
+        if (note) note.innerHTML = '已保存规则(本地)。已唤起邮件客户端,请点击发送完成订阅;开通后触发时 30 分钟内自动送达。';
+      }
+
+      saveRules(rs); renderRules();
+
+      var body = "订阅类型:邮件价格提醒\n品种(" + syms.length + "):" + syms.join("、") +
+        "\n" + bodyExtra +
+        "接收邮箱:" + addr + "\n提交时间:" + new Date().toLocaleString();
       window.location.href = "mailto:" + boxMail + "?subject=" +
-        encodeURIComponent("【金衡网】邮件提醒订阅 - " + syms.length + " 个品种 " + dirTxt + " " + val) +
+        encodeURIComponent("【金衡网】邮件提醒订阅 - " + syms.length + " 个品种 " + subjectTail) +
         "&body=" + encodeURIComponent(body);
-      if (note) note.innerHTML = '已唤起邮件客户端,请点击发送完成订阅;开通后触发时 30 分钟内自动送达。';
+      ms.textContent = "已提交 ✓";
+      setTimeout(function () { ms.textContent = "提交订阅"; }, 2500);
     });
   }
 
