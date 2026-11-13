@@ -752,7 +752,15 @@
       { key: "wti", n: "WTI原油 CL", kl: "CL", ksrc: "WTI连续", oil: true },
       { key: "sc", n: "上海原油 SC", kl: "SC0", ksrc: "沪原油连续", oil: true },
       { key: "cu", n: "沪铜主力 CU", kl: "CU0", ksrc: "沪铜连续", fut: "nf_CU0" },
-      { key: "rb", n: "螺纹钢主力 RB", kl: "RB0", ksrc: "螺纹钢连续", fut: "nf_RB0" }
+      { key: "al", n: "沪铝主力 AL", kl: "AL0", ksrc: "沪铝连续", fut: "nf_AL0" },
+      { key: "zn", n: "沪锌主力 ZN", kl: "ZN0", ksrc: "沪锌连续", fut: "nf_ZN0" },
+      { key: "ni", n: "沪镍主力 NI", kl: "NI0", ksrc: "沪镍连续", fut: "nf_NI0" },
+      { key: "sn", n: "沪锡主力 SN", kl: "SN0", ksrc: "沪锡连续", fut: "nf_SN0" },
+      { key: "rb", n: "螺纹钢主力 RB", kl: "RB0", ksrc: "螺纹钢连续", fut: "nf_RB0" },
+      { key: "m", n: "豆粕主力 M", kl: "M0", ksrc: "豆粕连续", fut: "nf_M0" },
+      { key: "i", n: "铁矿石主力 I", kl: "I0", ksrc: "铁矿石连续", fut: "nf_I0" },
+      { key: "c", n: "玉米主力 C", kl: "C0", ksrc: "玉米连续", fut: "nf_C0" },
+      { key: "cf", n: "棉花主力 CF", kl: "CF0", ksrc: "棉花连续", fut: "nf_CF0" }
     ];
     var def3 = defs3[QM_TAB[2]] || defs3[0];
     var o = def3.oil ? ((d.oil || {})[def3.key] || {}) : (pickFut(def3.fut) || {});
