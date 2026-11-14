@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14 18:56:29",
+  "generated_at": "2026-11-14 19:27:01",
   "source": "上海黄金交易所 (SGE) · 国际现货贵金属 · 美元兑人民币 · 新浪财经 · 华尔街见闻",
   "live": 9,
   "items": [
@@ -15779,21 +15779,21 @@
     "symbol": "Au99.99"
   },
   "intl": {
-    "xau_usd": 3887.6,
+    "xau_usd": 4048.0,
     "usd_cny": 6.6849,
-    "intl_cny_per_g": 835.55,
+    "intl_cny_per_g": 870.02,
     "sge_cny_per_g": 831.0,
-    "premium_pct": -0.54,
+    "premium_pct": -4.48,
     "metals": {
       "gold": {
         "name": "黄金",
         "sge_symbol": "Au99.99",
         "intl_symbol": "XAU/USD",
         "unit": "元/克",
-        "intl_usd": 3887.6,
-        "intl_cny": 835.55,
+        "intl_usd": 4048.0,
+        "intl_cny": 870.02,
         "sge": 831.0,
-        "premium_pct": -0.54
+        "premium_pct": -4.48
       },
       "silver": {
         "name": "白银",
