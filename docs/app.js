@@ -118,7 +118,8 @@
         '<td><span class="pill ' + ch.cls + '">' + (ch.d > 0 ? "▲ +" : ch.d < 0 ? "▼ " : "— ") + fmt(Math.abs(ch.pct)) + "%</span></td>"
       : '<td class="num">—</td><td><span class="pill flat">—</span></td>';
     var star = '<span class="fav' + (isFav(code) ? " on" : "") + '" data-code="' + esc(code) + '" title="加入/移出自选">' + (isFav(code) ? "★" : "☆") + "</span>";
-    return "<tr>" +
+    var goto = slug ? ' style="cursor:pointer" data-goto="./quote-' + slug + '.html"' : "";
+    return "<tr" + goto + ">" +
       '<td class="lbl">' + star + esc(name) + "</td>" +
       '<td class="sym">' + esc(code) + "</td>" +
       '<td class="num strong">' + fmt(last) + "</td>" + chgCell +
@@ -160,6 +161,7 @@
     }
     tb.innerHTML = h;
     tb.onclick = function (e) {
+      var g = e.target.closest("[data-goto]"); if (g) { location.href = g.getAttribute("data-goto"); return; }
       var f = e.target.closest(".fav"); if (!f) return;
       toggleFav(f.getAttribute("data-code"));
       renderTable(DATA);
@@ -1204,18 +1206,18 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
   // ---------- 全站品种快搜 ----------
   var SEARCH_INDEX = [
     // SGE 合约 → #quotes
-    { n: "黄金 Au99.99", mod: "quotes" }, { n: "黄金延期 Au(T+D)", mod: "quotes" },
-    { n: "白银 Ag99.99", mod: "quotes" }, { n: "白银延期 Ag(T+D)", mod: "quotes" },
-    { n: "铂金 Pt99.95", mod: "quotes" }, { n: "钯金 Pd99.95", mod: "quotes" },
+    { n: "黄金 Au99.99", mod: "quotes", page: "quote-au9999.html" }, { n: "黄金延期 Au(T+D)", page: "quote-autd.html" },
+    { n: "白银 Ag99.99", page: "quote-ag9999.html" }, { n: "白银延期 Ag(T+D)", page: "quote-agtd.html" },
+    { n: "铂金 Pt99.95", page: "quote-pt9995.html" }, { n: "钯金 Pd99.95", mod: "quotes" },
     { n: "金 99.95", mod: "quotes" }, { n: "金 100g", mod: "quotes" }, { n: "国际板金 iAu99.99", mod: "quotes" },
     // 期货主力 → 能源与商品模块(切换 tab)
-    { n: "沪铜主力", mod: "energy", tab: 3 }, { n: "沪铝主力", mod: "energy", tab: 4 },
-    { n: "沪锌主力", mod: "energy", tab: 5 }, { n: "沪镍主力", mod: "energy", tab: 6 },
-    { n: "沪锡主力", mod: "energy", tab: 7 }, { n: "螺纹钢主力", mod: "energy", tab: 8 },
-    { n: "豆粕主力", mod: "energy", tab: 9 }, { n: "铁矿石主力", mod: "energy", tab: 10 },
-    { n: "玉米主力", mod: "energy", tab: 11 }, { n: "棉花主力", mod: "energy", tab: 12 },
-    { n: "布伦特原油", mod: "energy", tab: 0 }, { n: "WTI 原油", mod: "energy", tab: 1 },
-    { n: "上海原油 SC", mod: "energy", tab: 2 },
+    { n: "沪铜主力", page: "quote-cu0.html" }, { n: "沪铝主力", page: "quote-al0.html" },
+    { n: "沪锌主力", page: "quote-zn0.html" }, { n: "沪镍主力", page: "quote-ni0.html" },
+    { n: "沪锡主力", page: "quote-sn0.html" }, { n: "螺纹钢主力", page: "quote-rb0.html" },
+    { n: "豆粕主力", page: "quote-m0.html" }, { n: "铁矿石主力", page: "quote-i0.html" },
+    { n: "玉米主力", page: "quote-c0.html" }, { n: "棉花主力", page: "quote-cf0.html" },
+    { n: "布伦特原油", page: "quote-brent.html" }, { n: "WTI 原油", page: "quote-wti.html" },
+    { n: "上海原油 SC", page: "quote-sc0.html" },
     // 板块/页面
     { n: "实物金价", mod: "physical" }, { n: "品牌金饰", mod: "brands" },
     { n: "标准金条", mod: "brands" }, { n: "汽柴油", mod: "fuel" },

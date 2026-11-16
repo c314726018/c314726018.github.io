@@ -443,6 +443,14 @@ def fetch_klines():
 
 
 # ---------------- 实时财经快讯（华尔街见闻 lives） ----------------
+SYMBOL_SLUG = {
+    "Au99.99": "au9999", "Au99.95": "au9995", "Au100g": "au100g", "iAu99.99": "iau9999",
+    "Au(T+D)": "autd", "mAu(T+D)": "mautd", "Ag99.99": "ag9999", "Ag(T+D)": "agtd", "Pt99.95": "pt9995",
+    "nf_AU0": "au0", "nf_AG0": "ag0", "nf_CU0": "cu0", "nf_AL0": "al0", "nf_ZN0": "zn0",
+    "nf_NI0": "ni0", "nf_SN0": "sn0", "nf_RB0": "rb0", "nf_SC0": "sc0", "nf_M0": "m0",
+    "nf_I0": "i0", "nf_C0": "c0", "nf_CF0": "cf0",
+    "XAU": "xau", "GC": "gc", "SI": "si", "Brent": "brent", "WTI": "wti",
+}
 NEWS_API = "https://api-one.wallstcn.com/apiv1/content/lives?channel=global-channel&limit=30"
 
 
@@ -641,6 +649,7 @@ def main():
         "news": news_merged,
         "heat_multi": (heat_multi_data if heat_multi_data is not None else []),
         "daily_report": daily_report,
+        "symbol_slug": SYMBOL_SLUG,
         "extra": extra,
         "klines": klines,
     }

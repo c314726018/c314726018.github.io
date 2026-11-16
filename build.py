@@ -15,6 +15,7 @@
   - 涨=红 / 跌=绿（中国市场习惯）
 """
 import json
+import sys
 import os
 import datetime
 from feedback_page import main_html as feedback_main
@@ -1049,6 +1050,8 @@ GLOSSARY = [
 # ---------------------------------------------------------------- 页面骨架
 
 def head_html(title, desc, canonical, extra=""):
+    if isinstance(extra, dict):
+        extra = '<script type="application/ld+json">' + json.dumps(extra, ensure_ascii=False) + "</script>"
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -1283,6 +1286,232 @@ def side_right(data):
 </aside>"""
 
 
+def _quote_data(qd, data):
+    """品种页数据提取:返回 (last, open_, high, low, prev, pct, chg, unit, series, kl)。"""
+    it = None
+    for x in data.get("items") or []:
+        if x.get("symbol") == qd["symbol"]:
+            it = x
+            break
+    fut = None
+    for x in (data.get("extra") or {}).get("futures") or []:
+        if x.get("code") == qd["symbol"] or x.get("name") == qd["symbol"]:
+            fut = x
+            break
+    intl_x = None
+    for x in (data.get("extra") or {}).get("intl") or []:
+        if x.get("code") == qd["symbol"]:
+            intl_x = x
+            break
+    oil_x = (data.get("oil") or {}).get(qd["symbol"].lower()) if qd["type"] == "oil" else None
+    idx_x = None
+    for x in (data.get("extra") or {}).get("indices") or []:
+        if x.get("name") == qd["symbol"]:
+            idx_x = x
+            break
+    series, last, open_, high, low, prev, pct, unit = [], None, None, None, None, None, None, ""
+    if qd["src"] == "items" and it:
+        last, open_, high, low, unit = it.get("last"), it.get("open"), it.get("max"), it.get("min"), it.get("unit") or ""
+        prev = it.get("prev_close") or it.get("open")
+        pct = (last - prev) / prev * 100 if (last is not None and prev) else it.get("pct")
+        series = it.get("series") or []
+    elif qd["src"] == "futures" and fut:
+        last, open_, high, low, unit = fut.get("last"), fut.get("open"), fut.get("high"), fut.get("low"), fut.get("unit") or ""
+        prev = fut.get("prev_settle") or fut.get("prev")
+        series = fut.get("series") or []
+        pct = (last - prev) / prev * 100 if (last and prev) else None
+    elif qd["src"] == "intl" and intl_x:
+        last, open_, high, low, unit = intl_x.get("last"), intl_x.get("open"), intl_x.get("high"), intl_x.get("low"), intl_x.get("unit") or ""
+        prev = intl_x.get("prev")
+        series = intl_x.get("series") or []
+        pct = (last - prev) / prev * 100 if (last and prev) else None
+    elif qd["src"] == "oil" and oil_x:
+        last, unit = oil_x.get("last"), oil_x.get("unit") or ""
+        prev = oil_x.get("prev_close") or oil_x.get("prev_settle")
+        pct = (last - prev) / prev * 100 if (last and prev) else None
+        series = oil_x.get("series") or []
+    elif qd["src"] == "indices" and idx_x:
+        last, pct, unit = idx_x.get("last"), idx_x.get("pct"), "点"
+        prev = idx_x.get("prev")
+        open_, high, low = idx_x.get("open"), None, None
+    kl = (data.get("klines") or {}).get(qd["kl"]) or []
+    if qd["type"] == "idx":
+        kl = []  # 股指暂无日线
+    return {"last": last, "open": open_, "high": high, "low": low, "prev": prev,
+            "pct": pct, "unit": unit, "series": series, "kl": kl}
+
+
+def page_quote(qd, data):
+    """品种详情页:每品种一个独立 URL,含实时价/图表/周期切换/报价表/百科/同类品种。"""
+    q = _quote_data(qd, data)
+    last, pct, unit = q["last"], q["pct"], q["unit"] or ""
+    cls = "up" if (pct or 0) > 0 else "down" if (pct or 0) < 0 else "flat"
+    arrow = "▲" if (pct or 0) > 0 else "▼" if (pct or 0) < 0 else "—"
+    pct_txt = f"{arrow} {abs(pct or 0):.2f}%" if pct is not None else "—"
+    chg = (q["last"] - q["prev"]) if (q["last"] is not None and q["prev"]) else None
+    gen = data.get("generated_at") or ""
+    # 同频道品种导航
+    peers = [x for x in QUOTE_DEFS if x["channel"] == qd["channel"] and x["slug"] != qd["slug"]]
+    peers_html = "".join(f'<a class="shc" href="./quote-{x["slug"]}.html">{esc(x["name"])}</a>' for x in peers)
+    # 内联数据(分时 series + KL)
+    qd_data = json.dumps({
+        "name": qd["name"], "symbol": qd["symbol"], "unit": unit,
+        "series": (q["series"] or [])[-500:] if q["series"] else [],
+        "kl": q["kl"][-250:],
+        "time": (next((x for x in data.get("items") or [] if x.get("symbol") == qd["symbol"]), {}) or {}).get("time") or "",
+    }, ensure_ascii=False)
+    head = head_html(
+        f"{qd['name']}最新价格_{qd['name']}今日行情走势图_实时报价 - 金衡网",
+        f"{qd['name']}({qd['symbol']})最新价格、今日行情走势图、历史K线与品种百科。数据每 5 分钟随上海黄金交易所与国际市场自动更新。{qd['wiki'][:60]}",
+        SITE + f"quote-{qd['slug']}.html",
+        {"@context": "https://schema.org", "@type": "BreadcrumbList",
+         "itemListElement": [
+             {"@type": "ListItem", "position": 1, "name": "行情中心", "item": SITE + "index.html#quotes"},
+             {"@type": "ListItem", "position": 2, "name": qd["name"], "item": SITE + f"quote-{qd['slug']}.html"}]})
+    body = f"""{topbar_html(data)}
+{ticker_html(data)}
+{nav_html("quotes")}
+{subnav_html("quotes")}
+<div class="wrap"><div class="portal">{side_left("quotes")}<div class="portal-main">
+  <h1 class="sr-only">{qd['name']}行情</h1>
+  <section class="section" id="qhead" style="padding-top:20px">
+    <div class="card">
+      <div class="quote-hero">
+        <div class="qh-main">
+          <div class="qh-name">{esc(qd['name'])} <span class="sym">{esc(qd['symbol'])}</span></div>
+          <div class="qh-price num {cls}">{fmt(last)} <span class="pu">{unit}</span></div>
+          <div class="qh-chg {cls}">{pct_txt}{f'({chg:+.2f})' if chg is not None else ''}</div>
+        </div>
+        <div class="qh-grid">
+          <div class="qh-cell"><span>今开</span><b class="num">{fmt(q['open'])}</b></div>
+          <div class="qh-cell"><span>昨收</span><b class="num">{fmt(q['prev'])}</b></div>
+          <div class="qh-cell"><span>最高</span><b class="num up">{fmt(q['high'])}</b></div>
+          <div class="qh-cell"><span>最低</span><b class="num down">{fmt(q['low'])}</b></div>
+        </div>
+        <div class="qh-meta">数据更新:{esc(gen)} · 数据来源:{esc(qd['src'] == 'items' and '上海黄金交易所' or qd['src'] == 'futures' and '国内期货交易所' or qd['src'] == 'intl' and '国际市场公开报价' or qd['src'] == 'oil' and '国际原油市场' or '公开指数行情')}</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="qchart">
+    <div class="section-head">
+      <div><div class="lbl">CHART</div><h2>{esc(qd['name'])}走势图</h2></div>
+      <div class="side"><button class="btn mini" data-share="qChart" type="button">📷 分享</button></div>
+    </div>
+    <div class="card">
+      <div class="tq-tabs"><b>周期</b>
+        <a class="on" data-qm="0">分时</a>
+        <a data-qm="1">日K</a>
+        <a data-qm="2">周K</a>
+        <a data-qm="3">月K</a>
+      </div>
+      <div class="chart-box"><div class="skel skel-box" data-skel="qChart"></div><canvas id="qChart" height="380"></canvas></div>
+      <div class="hint">分时图为日内走势;日/周/月K 由日线数据聚合。共 {len(q['kl'])} 根日K数据。</div>
+    </div>
+  </section>
+
+  <section class="section" id="qwiki">
+    <div class="section-head"><div><div class="lbl">WIKI · 品种百科</div><h2>关于{esc(qd['name'])}</h2></div></div>
+    <div class="card"><p style="font-size:13.5px;line-height:2;color:var(--ink);margin:0">{qd['wiki']}</p></div>
+  </section>
+
+  <section class="section" id="qpeers">
+    <div class="section-head"><div><div class="lbl">RELATED</div><h2>同类品种</h2></div></div>
+    <div class="card"><div class="sh-chips" style="justify-content:flex-start">{peers_html}</div></div>
+  </section>
+</div>{side_right(data)}</div></div>
+{footer_html()}
+<script id="app-data" type="application/json">{json.dumps({"gen": gen}, ensure_ascii=False)}</script>
+<script src="./vendor/chart.umd.min.js"></script>
+<script src="./app.js?v={TS}"></script>
+<script>
+var QD = {qd_data};
+(function () {{
+  function fmt(v) {{ return (v == null || isNaN(v)) ? "—" : (+v).toFixed(2).replace(/\B(?=(\d{{3}})+(?!\d))/g, ","); }}
+  function themeColors() {{
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    return {{ grid: dark ? "rgba(255,255,255,.07)" : "rgba(15,20,35,.08)", sub: dark ? "#8895a8" : "#5b6472" }};
+  }}
+  function drawLine(canvas, labels, series, unit) {{
+    if (!canvas || series.length < 3 || typeof Chart === "undefined") return;
+    var c = themeColors();
+    new Chart(canvas, {{
+      type: "line",
+      data: {{ labels: labels, datasets: [{{ label: QD.name, data: series, borderColor: "#b8860b", borderWidth: 1.8, pointRadius: 0, tension: .25, fill: true, backgroundColor: "rgba(184,134,11,.10)" }}] }},
+      options: {{ responsive: true, maintainAspectRatio: false, animation: false, interaction: {{ mode: "index", intersect: false }},
+        plugins: {{ legend: {{ display: false }} }},
+        scales: {{ x: {{ ticks: {{ maxTicksLimit: 8, color: c.sub, font: {{ size: 10 }} }}, grid: {{ display: false }} }},
+                  y: {{ position: "right", ticks: {{ maxTicksLimit: 6, color: c.sub, font: {{ size: 10 }} }}, grid: {{ color: c.grid }} }} }} }}
+    }});
+  }}
+  function drawKL(canvas, kl) {{
+    if (!canvas || kl.length < 5 || typeof Chart === "undefined") return false;
+    try {{
+      var c = themeColors();
+      new Chart(canvas, {{
+        type: "candlestick",
+        data: {{ labels: kl.map(function (x, i) {{ return (x.d || "").slice(5); }}),
+          datasets: [{{ label: QD.name, data: kl.map(function (x) {{ return {{ x: 0, o: x.o, h: x.h, l: x.l, c: x.c }}; }}) }}],
+        }} ,
+        options: {{ responsive: true, maintainAspectRatio: false, animation: false, plugins: {{ legend: {{ display: false }} }},
+          scales: {{ x: {{ ticks: {{ maxTicksLimit: 10, color: c.sub }}, grid: {{ display: false }} }},
+                    y: {{ position: "right", ticks: {{ maxTicksLimit: 6, color: c.sub }}, grid: {{ color: c.grid }} }} }} }}
+      }});
+      return true;
+    }} catch (e) {{ return false; }}
+  }}
+  function aggKL(kl, mode) {{
+    var per = mode === "w" ? 5 : 20;
+    var out = [];
+    for (var i = 0; i < kl.length; i += per) {{
+      var chunk = kl.slice(i, i + per);
+      if (!chunk.length) break;
+      out.push({{ d: chunk[0].d, o: chunk[0].o, h: Math.max.apply(null, chunk.map(function (x) {{ return x.h; }})),
+                 l: Math.min.apply(null, chunk.map(function (x) {{ return x.l; }})), c: chunk[chunk.length - 1].c }});
+    }}
+    return out;
+  }}
+  var MODE = 0;
+  function render() {{
+    var cv = document.getElementById("qChart");
+    if (!cv) return;
+    if (typeof Chart.getChart === "function") {{
+      var old = Chart.getChart(cv); if (old) old.destroy();
+    }}
+    if (MODE === 0 && QD.series && QD.series.length > 3) {{
+      drawLine(cv, QD.series.map(function (_, i) {{ return i + 1; }}), QD.series, QD.unit);
+    }} else if (QD.kl && QD.kl.length > 5) {{
+      var ok = drawKL(cv, QD.kl);
+      if (!ok && MODE === 1) {{
+        drawLine(cv, QD.kl.map(function (x) {{ return (x.d || "").slice(5); }}), QD.kl.map(function (x) {{ return x.c; }}), QD.unit);
+      }}
+      if (MODE === 2) {{
+        drawLine(cv, aggKL(QD.kl, "w").map(function (x) {{ return (x.d || "").slice(5); }}), aggKL(QD.kl, "w").map(function (x) {{ return x.c; }}), QD.unit);
+      }}
+      if (MODE === 3) {{
+        drawLine(cv, aggKL(QD.kl, "m").map(function (x) {{ return (x.d || "").slice(5); }}), aggKL(QD.kl, "m").map(function (x) {{ return x.c; }}), QD.unit);
+      }}
+    }}
+  }}
+  document.querySelectorAll("[data-qm]").forEach(function (a) {{
+    a.addEventListener("click", function () {{
+      document.querySelectorAll("[data-qm]").forEach(function (t) {{ t.classList.toggle("on", t === a); }});
+      MODE = +(a.getAttribute("data-qm") || 0);
+      render();
+    }});
+  }});
+  // 分时无数据时默认日K
+  if (!(QD.series && QD.series.length > 3)) {{
+    MODE = 1;
+    document.querySelectorAll("[data-qm]").forEach(function (t) {{ t.classList.toggle("on", (t.getAttribute("data-qm") || 0) === "1"); }});
+  }}
+  render();
+}})();
+</script>
+"""
+    return head + body
+
+
 def footer_html():
     return f"""<footer class="site">
   <div class="wrap foot-grid">
@@ -1336,6 +1565,93 @@ def faq_ld(faq):
 def ad_slot():
     return '<div class="ad-slot" aria-label="广告位"></div>'
 
+
+
+# 品种详情页定义:symbol→(名称, slug, 频道, 类型, KL键, 数据源, 百科文案)
+QUOTE_DEFS = []
+
+
+def _q(name, symbol, slug, channel, ktype, kl_key, src, wiki):
+    QUOTE_DEFS.append({"name": name, "symbol": symbol, "slug": slug, "channel": channel,
+                       "type": ktype, "kl": kl_key, "src": src, "wiki": wiki})
+
+
+# SGE 现货(9)
+_q("黄金 Au99.99", "Au99.99", "au9999", "gjs", "sge", "AU0", "items",
+   "Au99.99 是上海黄金交易所挂牌的现货黄金合约,成色 99.99%,最小交易单位 100 克/手,以人民币元/克计价。它是国内现货金价的定价基准,本站所有实物金价、品牌金饰参考价均以此为锚。保证金比例与交割规则以上金所公布为准。")
+_q("金 99.95", "Au99.95", "au9995", "gjs", "sge", "AU0", "items",
+   "Au99.95 是上金所现货黄金合约,成色 99.95%,以 3 千克/手的大宗规格交易,参与方以机构与用金企业为主,是国内金锭现货流通的重要品种。")
+_q("金 100g", "Au100g", "au100g", "gjs", "sge", "AU0", "items",
+   "Au100g 是上金所 100 克规格的现货黄金合约,面向中小投资者的实物交割品种,门槛低于大宗合约,适合希望持有交易所标准实物的个人。")
+_q("国际板金 iAu99.99", "iAu99.99", "iau9999", "gjs", "sge", "XAU", "items",
+   "iAu99.99 是上金所国际板黄金合约,在上海自贸区挂牌,境外投资者可通过国际会员参与,价格与国际市场联动更紧密,是观察内外价差的重要参考。")
+_q("黄金延期 Au(T+D)", "Au(T+D)", "autd", "gjs", "sge", "AU0", "items",
+   "Au(T+D) 是上金所黄金延期交收合约,保证金交易(约 10% 起),可多空双向,每日收取递延费。它是国内黄金投机最主流的场内工具,风险显著高于现货合约。")
+_q("迷你金延期 mAu(T+D)", "mAu(T+D)", "mautd", "gjs", "sge", "AU0", "items",
+   "mAu(T+D) 是 100 克/手的迷你版黄金延期合约,降低参与门槛,规则与 Au(T+D) 一致,适合小资金体验杠杆交易。")
+_q("白银 Ag99.99", "Ag99.99", "ag9999", "gjs", "sge", "AG0", "items",
+   "Ag99.99 是上金所现货白银合约,15 千克/手,以元/千克计价。白银兼具贵金属与工业金属双重属性,波动率通常高于黄金。")
+_q("白银延期 Ag(T+D)", "Ag(T+D)", "agtd", "gjs", "sge", "AG0", "items",
+   "Ag(T+D) 是上金所白银延期交收合约,15 千克/手,保证金交易,规则同黄金延期,是白银投机的主要场内工具。")
+_q("铂金 Pt99.95", "Pt99.95", "pt9995", "gjs", "sge", "XPT", "items",
+   "Pt99.95 是上金所现货铂金合约,1 千克/手。铂金合约成交清淡,常出现无当日结算价的情况;铂金现货更多通过华通铂金市场等场外渠道交易。")
+# 期货主力(13)
+_q("沪金主力", "nf_AU0", "au0", "qh", "fut", "AU0", "futures",
+   "沪金主力是上海期货交易所黄金期货的主力连续合约,以元/克计价,15 千克/手,保证金约 10%。它与 SGE 现货价高度联动,是机构对冲与投机的主力工具。")
+_q("沪银主力", "nf_AG0", "ag0", "qh", "fut", "AG0", "futures",
+   "沪银主力是上期所白银期货主力连续合约,15 千克/手。白银期货波动大于黄金,日内振幅常达 2-3%。")
+_q("沪铜主力", "nf_CU0", "cu0", "qh", "fut", "CU0", "futures",
+   "沪铜主力是上期所阴极铜期货主力合约,5 吨/手,是全球铜价的重要参考(与 LME 铜联动)。铜被称为「经济金属」,与宏观景气度高度相关。")
+_q("沪铝主力", "nf_AL0", "al0", "qh", "fut", "AL0", "futures",
+   "沪铝主力是上期所铝期货主力合约,5 吨/手。电解铝受供给侧与能耗政策影响显著。")
+_q("沪锌主力", "nf_ZN0", "zn0", "qh", "fut", "ZN0", "futures",
+   "沪锌主力是上期所锌期货主力合约,5 吨/手,镀锌板需求是核心变量。")
+_q("沪镍主力", "nf_NI0", "ni0", "qh", "fut", "NI0", "futures",
+   "沪镍主力是上期所镍期货主力合约,1 吨/手。镍与不锈钢及新能源电池产业链相关,历史上多次出现极端波动行情。")
+_q("沪锡主力", "nf_SN0", "sn0", "qh", "fut", "SN0", "futures",
+   "沪锡主力是上期所锡期货主力合约,1 吨/手,锡是电子焊料核心金属,供给端集中于少数国家。")
+_q("螺纹钢主力", "nf_RB0", "rb0", "qh", "fut", "RB0", "futures",
+   "螺纹钢主力是上期所螺纹钢期货主力合约,10 吨/手,是中国黑色系商品的风向标,与地产、基建景气度强相关。")
+_q("上海原油", "nf_SC0", "sc0", "qh", "fut", "SC0", "futures",
+   "上海原油(SC)是上期能源的人民币计价原油期货,中国唯一国际化期货品种,境外投资者可直接参与,价格叠加了汇率与运费因素。")
+_q("豆粕主力", "nf_M0", "m0", "qh", "fut", "M0", "futures",
+   "豆粕主力是大商所豆粕期货主力合约,10 吨/手,受美豆、南美天气与国内生猪存栏影响。")
+_q("铁矿石主力", "nf_I0", "i0", "qh", "fut", "I0", "futures",
+   "铁矿石主力是大商所铁矿石期货主力合约,100 吨/手,供给端集中于澳洲与巴西四大矿山。")
+_q("玉米主力", "nf_C0", "c0", "qh", "fut", "C0", "futures",
+   "玉米主力是大商所玉米期货主力合约,10 吨/手,受临储政策、进口配额与饲用需求影响。")
+_q("棉花主力", "nf_CF0", "cf0", "qh", "fut", "CF0", "futures",
+   "棉花主力是郑商所棉花期货主力合约,5 吨/手,受新疆棉产量、全球纺织需求与政策影响。")
+# 国际现货(3)
+_q("伦敦金 XAU", "XAU", "xau", "intl", "intl", "XAU", "intl",
+   "伦敦金(XAU/USD)是全球黄金现货定价基准,以美元/盎司计价,24 小时场外交易。所有国内金价(现货、期货、金饰)都以其为最终定价锚。")
+_q("COMEX 黄金", "GC", "gc", "intl", "intl", "GC", "intl",
+   "COMEX 黄金期货是全球黄金期货定价基准,纽约商品交易所交易,美元/盎司计价,是全球黄金持仓与投机情绪的风向标。")
+_q("COMEX 白银", "SI", "si", "intl", "intl", "SI", "intl",
+   "COMEX 白银期货是全球白银期货基准,美元/盎司计价,金银比交易的核心标的。")
+# 原油(2)
+_q("布伦特原油", "Brent", "brent", "oil", "oil", "OIL", "oil",
+   "布伦特(Brent)是北海布伦特油田原油基准,全球约 2/3 原油现货以此定价,美元/桶计价,1 桶 = 158.97 升。")
+_q("WTI 原油", "WTI", "wti", "oil", "oil", "CL", "oil",
+   "WTI 是美国西德州中质原油基准,纽约商品交易所交易,受美国库存、页岩油产量与管道运输影响。")
+# 股指(7)
+_q("上证指数", "上证指数", "sh000001", "gp", "idx", "", "indices",
+   "上证指数是上海证券交易所全部上市股票的综合指数,是中国 A 股市场的代表性指数,基点 100 点(1990 年)。")
+_q("深证成指", "深证成指", "sz399001", "gp", "idx", "", "indices",
+   "深证成指是深圳证券交易所成分股指数,代表深市核心资产走势。")
+_q("创业板指", "创业板指", "sz399006", "gp", "idx", "", "indices",
+   "创业板指是深交所创业板市场核心指数,成分以科技创新与成长型企业为主,波动率高于主板。")
+_q("恒生指数", "恒生指数", "hsi", "gp", "idx", "", "indices",
+   "恒生指数是香港股市最重要的市场指数,成分涵盖港交所市值最大的上市公司。")
+_q("道琼斯指数", "道琼斯指数", "djia", "gp", "idx", "", "indices",
+   "道琼斯工业平均指数是美国 30 家蓝筹公司的价格加权指数,是全球历史最悠久的股指之一。")
+_q("纳斯达克指数", "纳斯达克指数", "ixic", "gp", "idx", "", "indices",
+   "纳斯达克综合指数涵盖纳斯达克全部上市股票,科技股权重极高,是全球科技股风向标。")
+_q("标普 500", "标普指数", "spx", "gp", "idx", "", "indices",
+   "标普 500 是美国 500 家大市值公司的市值加权指数,被普遍视为衡量美国大盘股表现的最佳指标。")
+
+
+SYMBOL_SLUG = {qd["symbol"]: qd["slug"] for qd in QUOTE_DEFS}
 
 METAL_DEFS = [("gold", "黄金", "Au99.99"), ("silver", "白银", "Ag99.99"),
               ("platinum", "铂金", "Pt99.95"), ("palladium", "钯金", "Pd99.95")]
@@ -1440,7 +1756,23 @@ def grouped_rows(data):
 
 def heat_grid(data):
     """全品种涨跌热力图:SGE+期货+股指+国际现货,色阶映射涨跌幅。"""
-    def cell(name, last, base, link="./index.html#quotes"):
+    def cell(name, last, base, link=None):
+        # 品种页直链(items symbol / futures code / intl code / oil key)
+        if link is None:
+            sym = None
+            for x in data.get("items") or []:
+                if x.get("label") == name or x.get("symbol") == name:
+                    sym = x.get("symbol"); break
+            if not sym:
+                for x in (data.get("extra") or {}).get("futures") or []:
+                    if x.get("name") == name:
+                        sym = x.get("code"); break
+            if not sym:
+                for x in (data.get("extra") or {}).get("intl") or []:
+                    if x.get("name") == name:
+                        sym = x.get("code"); break
+            slug = SYMBOL_SLUG.get(sym)
+            link = f"./quote-{slug}.html" if slug else "./index.html#quotes"
         try:
             if last is None or base in (None, 0, ""):
                 raise ValueError
@@ -1733,6 +2065,7 @@ def page_index(data):
     payload = dict(data)
     payload["alert_mail"] = ALERT_MAIL
     payload["oil_retail"] = OIL_RETAIL
+    payload["symbol_slug"] = SYMBOL_SLUG
     data_json = json.dumps(payload, ensure_ascii=False)
 
     return f"""{head_html(
@@ -2528,6 +2861,8 @@ def sitemap_xml(lastmod):
         (SITE + "history.html", "daily", "0.7"),
         (SITE + "about.html", "monthly", "0.5"),
         (SITE + "privacy.html", "yearly", "0.3"),
+    ] + [
+        (SITE + f"quote-{qd['slug']}.html", "hourly", "0.8") for qd in QUOTE_DEFS
     ]
     body = "".join(
         f"<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod>"
@@ -3335,6 +3670,17 @@ def main():
         (os.path.join(DOCS, "privacy.html"), page_privacy(data)),
         (os.path.join(DOCS, "history.html"), page_history(data, hist)),
     ]
+    # 品种详情页(34 页,每品种一个独立 URL)
+    quote_pages = 0
+    for qd in QUOTE_DEFS:
+        try:
+            path = os.path.join(DOCS, f"quote-{qd['slug']}.html")
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(page_quote(qd, data))
+            quote_pages += 1
+        except Exception as e:
+            print(f"[warn] 品种页 {qd['slug']} 生成失败: {e}", file=sys.stderr)
+    print(f"[ok] 品种详情页 {quote_pages} 页")
     for path, content in pages:
         with open(path, "w", encoding="utf-8") as f:
             f.write(content)
