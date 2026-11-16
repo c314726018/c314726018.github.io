@@ -20,10 +20,17 @@ results = {"time": datetime.now(CST).strftime("%Y-%m-%d %H:%M:%S"), "js_errors":
 
 
 def http(url, timeout=20):
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0",
+                                               "Accept-Encoding": "gzip"})
     t0 = time.time()
-    body = urllib.request.urlopen(req, timeout=timeout).read()
-    return body, (time.time() - t0) * 1000
+    resp = urllib.request.urlopen(req, timeout=timeout)
+    raw = resp.read()  # gzip 开启时 raw = 压缩传输体积(真实带宽)
+    if resp.headers.get("Content-Encoding") == "gzip":
+        import gzip as _g
+        body = _g.decompress(raw)
+    else:
+        body = raw
+    return body, (time.time() - t0) * 1000, len(raw)  # body=解压后, raw=传输体积
 
 
 # ===== 1) JS 运行时错误扫描(headless 逐页收集 console error / uncaught) =====
@@ -68,9 +75,9 @@ except Exception as e:
 # ===== 3) 性能(每页加载耗时 + 体积) =====
 for page in PAGES:
     try:
-        body, ms = http(f"{BASE}/{page}", timeout=25)
-        results["perf"].append({"page": page, "ms": round(ms), "kb": round(len(body) / 1024, 1),
-                                "ok": ms < 3000 and len(body) < 500 * 1024})
+        body, ms, raw_len = http(f"{BASE}/{page}", timeout=25)
+        results["perf"].append({"page": page, "ms": round(ms), "kb": round(raw_len / 1024, 1),
+                                "ok": ms < 3000 and raw_len < 500 * 1024})
     except Exception as e:
         results["perf"].append({"page": page, "ms": -1, "kb": 0, "ok": False, "err": str(e)[:60]})
 
