@@ -27,6 +27,7 @@ def page_feedback(data):
         "留言反馈 - 意见建议与需求沟通 - 金衡网",
         "向金衡网发送意见、建议与功能需求,直达站长邮箱。",
         SITE + "feedback.html")
+    s += promo_bar()
     s += topbar_html(data)
     s += ticker_html(data)
     s += nav_html("feedback")
