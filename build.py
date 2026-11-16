@@ -271,8 +271,9 @@ header.nav{position:sticky;top:0;z-index:60;background:var(--surface);
 .section-head .side{color:var(--sub);font-size:12px}
 
 /* 卡片 / 表格 */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-  padding:20px;box-shadow:var(--shadow)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:22px;box-shadow:0 1px 3px rgba(15,20,35,.05);transition:box-shadow .2s,transform .2s,border-color .2s}
+.card:hover{box-shadow:0 6px 24px rgba(15,20,35,.09);transform:translateY(-2px);border-color:var(--gold-2)}
 .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
 .card-head h3{font-size:15px;margin:0;display:flex;align-items:center;gap:8px;font-weight:700}
 .card-head h3::before{content:"";width:3px;height:15px;border-radius:2px;background:var(--gold-2)}
@@ -315,7 +316,7 @@ tbody tr:last-child td{border-bottom:none}
 .alert-row select,.alert-row input{background:var(--surface-2);border:1px solid var(--line);
   color:var(--ink);border-radius:var(--r-sm);padding:9px 11px;font-size:13.5px;min-width:0}
 .alert-row input{width:126px}
-.btn{background:var(--gold);color:#fff;border:none;border-radius:var(--r-sm);padding:9px 16px;
+.btn{background:var(--gold);color:#fff;border:none;border-radius:99px;padding:9px 18px;
   font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s;display:inline-block}
 .btn:hover{background:var(--gold-ink);color:#fff}
 .btn.ghost{background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
@@ -530,6 +531,20 @@ select:focus{outline:none;border-color:var(--gold-2)}
 .skel-box{position:absolute;inset:0;z-index:1}
 .tq-chart,.chart-box{position:relative}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.search-hero{background:linear-gradient(135deg,var(--gold-soft),var(--surface));padding:34px 0 26px;border-bottom:1px solid var(--line)}
+.sh-title{text-align:center;font-size:26px;font-weight:780;color:var(--ink);margin:0 0 18px;letter-spacing:.5px}
+.sh-box{position:relative;max-width:640px;margin:0 auto 18px}
+.sh-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:17px}
+.sh-box input{width:100%;box-sizing:border-box;border:2px solid var(--gold-2);border-radius:99px;padding:14px 22px 14px 48px;font-size:15px;background:var(--surface);color:var(--ink);outline:none;transition:.15s;box-shadow:0 2px 12px rgba(184,134,11,.12)}
+.sh-box input:focus{border-color:var(--gold);box-shadow:0 4px 20px rgba(184,134,11,.2)}
+.sh-sug{position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-top:8px;box-shadow:0 8px 28px rgba(15,20,35,.14);max-height:320px;overflow:auto;z-index:50}
+.sh-sug a{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;color:var(--ink);font-size:13.5px;cursor:pointer;text-decoration:none}
+.sh-sug a:hover{background:var(--gold-soft)}
+.sh-sug a .s-mod{font-size:11px;color:var(--sub)}
+.sh-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.shc{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink);transition:.15s}
+.shc:hover{border-color:var(--gold-2);background:var(--gold-soft);transform:translateY(-1px)}
+.shc.gold{background:var(--gold);border-color:var(--gold);color:#fff}
 .rel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
 .rel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow);transition:.15s}
 .rel:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 40%,var(--line))}
@@ -1075,6 +1090,30 @@ def topbar_html(data):
     <a class="tb-btn gold" href="./index.html#alerts">🔔 金市异动提醒</a>
   </div>
 </div></div>"""
+
+
+def search_hero_html(data):
+    """Pixabay 式大搜索框 + 分类快速跳转 chips(仅首页)。"""
+    return """<section class="search-hero">
+  <div class="wrap">
+    <div class="sh-title">金衡网 · 一站式贵金属行情门户</div>
+    <div class="sh-box">
+      <span class="sh-icon">🔍</span>
+      <input id="siteSearch" type="text" autocomplete="off" placeholder="搜索品种:黄金 / 沪铜 / 布伦特 / 美元 / 汽油……" aria-label="搜索品种">
+      <div class="sh-sug" id="searchSug" style="display:none"></div>
+    </div>
+    <div class="sh-chips">
+      <a class="shc" href="#quotes">📈 实时行情</a>
+      <a class="shc" href="#heat">🔥 涨跌热力图</a>
+      <a class="shc" href="#physical">💰 实物金价</a>
+      <a class="shc" href="#brands">🏅 标准金条</a>
+      <a class="shc" href="#fuel">⛽ 汽柴油</a>
+      <a class="shc" href="#oil">🛢 国际原油</a>
+      <a class="shc" href="#fx">💱 人民币汇率</a>
+      <a class="shc gold" href="#alerts">🔔 金市异动提醒</a>
+    </div>
+  </div>
+</section>"""
 
 
 def ticker_html(data):
@@ -1702,6 +1741,7 @@ def page_index(data):
         SITE, ld)}
 <body>
 {topbar_html(data)}
+{search_hero_html(data)}
 {ticker_html(data)}
 {nav_html('quotes')}
 {subnav_html('quotes')}

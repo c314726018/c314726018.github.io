@@ -1198,6 +1198,65 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
     });
   }
 
+  // ---------- 全站品种快搜 ----------
+  var SEARCH_INDEX = [
+    // SGE 合约 → #quotes
+    { n: "黄金 Au99.99", mod: "quotes" }, { n: "黄金延期 Au(T+D)", mod: "quotes" },
+    { n: "白银 Ag99.99", mod: "quotes" }, { n: "白银延期 Ag(T+D)", mod: "quotes" },
+    { n: "铂金 Pt99.95", mod: "quotes" }, { n: "钯金 Pd99.95", mod: "quotes" },
+    { n: "金 99.95", mod: "quotes" }, { n: "金 100g", mod: "quotes" }, { n: "国际板金 iAu99.99", mod: "quotes" },
+    // 期货主力 → 能源与商品模块(切换 tab)
+    { n: "沪铜主力", mod: "energy", tab: 3 }, { n: "沪铝主力", mod: "energy", tab: 4 },
+    { n: "沪锌主力", mod: "energy", tab: 5 }, { n: "沪镍主力", mod: "energy", tab: 6 },
+    { n: "沪锡主力", mod: "energy", tab: 7 }, { n: "螺纹钢主力", mod: "energy", tab: 8 },
+    { n: "豆粕主力", mod: "energy", tab: 9 }, { n: "铁矿石主力", mod: "energy", tab: 10 },
+    { n: "玉米主力", mod: "energy", tab: 11 }, { n: "棉花主力", mod: "energy", tab: 12 },
+    { n: "布伦特原油", mod: "energy", tab: 0 }, { n: "WTI 原油", mod: "energy", tab: 1 },
+    { n: "上海原油 SC", mod: "energy", tab: 2 },
+    // 板块/页面
+    { n: "实物金价", mod: "physical" }, { n: "品牌金饰", mod: "brands" },
+    { n: "标准金条", mod: "brands" }, { n: "汽柴油", mod: "fuel" },
+    { n: "人民币汇率", mod: "fx" }, { n: "价格提醒", mod: "alerts" },
+    { n: "模拟交易盘", mod: "sim" }, { n: "工具计算", mod: "tools" },
+    { n: "涨跌热力图", mod: "heat" }, { n: "溢价对照", mod: "premium" },
+    { n: "数据中心", mod: "data", page: "data.html" }, { n: "财经日历", mod: "fomc", page: "calendar.html" },
+    { n: "金融快讯", mod: "live", page: "news.html" }, { n: "投资学院", mod: "articles", page: "academy.html" },
+  ];
+  function bindSiteSearch() {
+    var inp = document.getElementById("siteSearch"), sug = document.getElementById("searchSug");
+    if (!inp || !sug) return;
+    inp.addEventListener("input", function () {
+      var q = (inp.value || "").trim().toLowerCase();
+      if (!q) { sug.style.display = "none"; return; }
+      var hits = SEARCH_INDEX.filter(function (x) {
+        return x.n.toLowerCase().indexOf(q) >= 0;
+      }).slice(0, 8);
+      if (!hits.length) { sug.innerHTML = '<a>无匹配结果</a>'; sug.style.display = ""; return; }
+      sug.innerHTML = hits.map(function (h, i) {
+        var modName = { quotes: "实时行情", energy: "能源与商品", physical: "实物金价", brands: "标准金条",
+          fuel: "汽柴油", fx: "人民币汇率", alerts: "价格提醒", sim: "模拟交易盘", tools: "工具计算",
+          heat: "涨跌热力图", premium: "溢价对照", data: "数据中心", fomc: "财经日历", live: "金融快讯", articles: "投资学院" }[h.mod] || "";
+        return '<a data-i="' + i + '"><span>' + h.n + '</span><span class="s-mod">' + modName + '</span></a>';
+      }).join("");
+      sug.style.display = "";
+      sug.querySelectorAll("a[data-i]").forEach(function (a) {
+        a.addEventListener("click", function () {
+          var h = hits[+a.getAttribute("data-i")];
+          sug.style.display = "none"; inp.value = "";
+          if (h.page) { location.href = "./" + h.page; return; }
+          document.getElementById(h.mod).scrollIntoView({ behavior: "smooth" });
+          if (h.tab != null) {
+            var tab = document.querySelector('#qm3 .tq-tabs a[data-i="' + h.tab + '"]');
+            if (tab) tab.click();
+          }
+        });
+      });
+    });
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".sh-box")) sug.style.display = "none";
+    });
+  }
+
   // ---------- AI 日报渲染 ----------
   function bindDailyReport() {
     var dr = (window.DATA && window.DATA.daily_report) || {};
@@ -1317,6 +1376,7 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
     bindHeat();
     bindConverters();
     renderAll(DATA);
+    bindSiteSearch();
     bindDailyReport();
     bindSim();
     bindCmpPicker();
