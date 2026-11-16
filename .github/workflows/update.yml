@@ -54,7 +54,8 @@ jobs:
           git add data.json docs/
           [ -f alerts_state.json ] && git add alerts_state.json || true
           (git diff --cached --quiet || git commit -m "chore: 更新行情 $(date +%Y-%m-%dT%H:%M)")
-          git push
+          git pull --rebase -X theirs origin main || git pull --rebase origin main || true
+          git push || { sleep 20; git pull --rebase -X theirs origin main || true; git push; }
       - name: IndexNow 推送（Bing / 360 / 搜狗 / Yandex 收录）
         run: |
           KEY="7f62035e56707ee1c721b77b11de07f8"
