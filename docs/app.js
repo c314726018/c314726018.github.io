@@ -1168,15 +1168,18 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
   }
   function renderAll(d) {
     DATA = d;
-    renderOverview(d);
-    renderQM(d);
-    renderDeriv(d);
-    renderTable(d);
-    renderMetals(d);
-    renderEnergy(d);
-    renderFx(d);
-    renderPhysical(d);
-    renderCharts(d);
+    $all("[data-skel]").forEach(function (s) { s.remove(); });  // 骨架先行移除:渲染异常也不留遮罩
+    try {
+      renderOverview(d);
+      renderQM(d);
+      renderDeriv(d);
+      renderTable(d);
+      renderMetals(d);
+      renderEnergy(d);
+      renderFx(d);
+      renderPhysical(d);
+      renderCharts(d);
+    } catch (e) { console.error("renderAll 异常(已容错)", e); }
   }
 
   function loadData() {
