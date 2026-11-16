@@ -542,6 +542,15 @@ select:focus{outline:none;border-color:var(--gold-2)}
 .subnav-search .sh-sug{right:0}
 .shc{display:inline-flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--ink);transition:.15s}
 .shc:hover{border-color:var(--gold-2);background:var(--gold-soft)}
+.promo-bar{background:linear-gradient(90deg,#0e1626 0%,#1b3a5c 45%,#0e1626 100%);color:#e8eef5;font-size:12.5px;position:relative;z-index:80}
+.promo-bar .pb-in{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:8px 16px;flex-wrap:wrap}
+.pb-badge{background:var(--gold);color:#fff;border-radius:6px;padding:2px 8px;font-weight:700;font-size:11px;white-space:nowrap}
+.pb-text{flex:1;min-width:260px;line-height:1.5}
+.pb-text b{color:#f5c542}
+.pb-cta{background:#f5c542;color:#0e1626;border-radius:99px;padding:4px 14px;font-weight:700;font-size:12px;white-space:nowrap;text-decoration:none}
+.pb-cta:hover{filter:brightness(1.08)}
+.pb-x{background:none;border:none;color:#8895a8;font-size:16px;cursor:pointer;padding:2px 6px;line-height:1}
+.pb-x:hover{color:#fff}
 .rel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
 .rel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow);transition:.15s}
 .rel:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 40%,var(--line))}
@@ -1351,7 +1360,8 @@ def page_quote(qd, data):
          "itemListElement": [
              {"@type": "ListItem", "position": 1, "name": "行情中心", "item": SITE + "index.html#quotes"},
              {"@type": "ListItem", "position": 2, "name": qd["name"], "item": SITE + f"quote-{qd['slug']}.html"}]})
-    body = f"""{topbar_html(data)}
+    body = f"""{promo_bar()}
+{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("quotes")}
 {subnav_html("quotes")}
@@ -1605,10 +1615,11 @@ document.addEventListener("click", function (e) {
   if (tr) location.href = tr.getAttribute("data-goto");
 });
 </script>''')
-    body = (f'{topbar_html(data)}\n'
-            f'{ticker_html(data)}\n'
-            f'{nav_html("quotes")}\n'
-            f'{subnav_html("quotes")}\n'
+    body = (promo_bar() + '\n'
+            + f'{topbar_html(data)}\n'
+            + f'{ticker_html(data)}\n'
+            + f'{nav_html("quotes")}\n'
+            + f'{subnav_html("quotes")}\n'
             '<div class="wrap"><div class="portal">' + side_left("quotes") + '<div class="portal-main">\n'
             f'  <h1 class="sr-only">{ch["name"]}</h1>\n'
             '  <section class="section" id="chList" style="padding-top:20px">\n'
@@ -1687,6 +1698,34 @@ def faq_ld(faq):
           "mainEntity": [{"@type": "Question", "name": f["q"],
                           "acceptedAnswer": {"@type": "Answer", "text": f["a"]}} for f in faq]}
     return json.dumps(ld, ensure_ascii=False)
+
+
+def promo_bar():
+    """即梦式顶部公告横条:会员推广,可关闭(24h 记忆),全站顶部。"""
+    return """<div class="promo-bar" id="promoBar">
+  <div class="pb-in">
+    <span class="pb-badge">🔔 会员</span>
+    <span class="pb-text">金市异动第一时间知道:议息日 / 非农夜 / 品种触价自动邮件通知 —— <b>免费版 3 条规则</b> · <b>会员版不限 + 涨跌幅触发 + AI 日报直达邮箱</b></span>
+    <a class="pb-cta" href="./feedback.html?type=member">了解与开通 →</a>
+    <button class="pb-x" id="pbClose" type="button" aria-label="关闭公告">×</button>
+  </div>
+</div>
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("promo_hidden_until") > Date.now()) {
+      var el = document.getElementById("promoBar");
+      if (el) el.style.display = "none";
+      return;
+    }
+  } catch (e) {}
+  var x = document.getElementById("pbClose");
+  if (x) x.addEventListener("click", function () {
+    document.getElementById("promoBar").style.display = "none";
+    try { localStorage.setItem("promo_hidden_until", Date.now() + 864e5); } catch (e) {}
+  });
+})();
+</script>"""
 
 
 def ad_slot():
@@ -2200,6 +2239,7 @@ def page_index(data):
         "实时黄金白银铂金价格、今日油价（布伦特/WTI/上海原油）与人民币汇率：上海黄金交易所 Au99.99、Au(T+D)、Ag99.99 等合约最新价，国际现货 XAU/XAG/XPT，多品种国内溢价对照，附走势图表与知识百科。",
         SITE, ld)}
 <body>
+{promo_bar()}
 {topbar_html(data)}
 {search_hero_html(data)}
 {ticker_html(data)}
@@ -2848,6 +2888,7 @@ def page_about(data):
         "金衡网的数据来源、更新机制、国内溢价与国际折算价的计算口径，以及完整免责声明与常见问题。",
         SITE + "about.html")}
 <body>
+{promo_bar()}
 {topbar_html(data)}
 {ticker_html(data)}
 {nav_html('about')}
@@ -2912,6 +2953,7 @@ def page_privacy(data):
         "金衡网的隐私政策：说明本站如何使用 localStorage、浏览器通知、第三方广告 Cookie 以及你的选择权。",
         SITE + "privacy.html")}
 <body>
+{promo_bar()}
 {topbar_html(data)}
 {ticker_html(data)}
 {nav_html()}
@@ -3145,6 +3187,7 @@ def page_history(data, hist):
         "上海黄金交易所沪金主力连续日线(约一年历史)+ Au99.99 逐时精确累积：每日开高低收与涨跌幅，日线蜡烛图，数据逐日自动累积。",
         SITE + "history.html")}
 <body>
+{promo_bar()}
 {topbar_html(data)}
 {ticker_html(data)}
 {nav_html('data')}
@@ -3278,7 +3321,8 @@ def page_news(data):
         "财经快讯 - 7×24 实时金融快讯 - 金衡网",
         "7×24 小时实时财经快讯:覆盖贵金属、宏观央行、能源商品、外汇与全球股市,按分类筛选阅读,30 分钟随数据管道自动更新。",
         SITE + "news.html")
-    body = f"""{topbar_html(data)}
+    body = f"""{promo_bar()}
+{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("news")}
 {subnav_html("news")}
@@ -3397,7 +3441,8 @@ def page_calendar(data):
         "财经日历 - 美联储议息/非农/CPI 时间表 - 金衡网",
         "2026-2027 年重要财经事件日历：美联储 FOMC 八次议息日程、美国非农与 CPI 公布时间、各国央行利率决议节奏。日期来源为官方公开日程。",
         SITE + "calendar.html")
-    body = f"""{topbar_html(data)}
+    body = f"""{promo_bar()}
+{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("calendar")}
 {subnav_html("calendar")}
@@ -3585,7 +3630,8 @@ def page_academy(data):
         "投资学院 - 黄金投资入门到进阶 - 金衡网",
         "黄金投资学院：18 篇系统科普（基础入门、实物黄金、投资工具、宏观分析、数据指标、风险教育）+ 15 条术语速查 + 常见问题。",
         SITE + "academy.html")
-    body = f"""{topbar_html(data)}
+    body = f"""{promo_bar()}
+{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("academy")}
 {subnav_html("academy")}
@@ -3715,7 +3761,8 @@ def page_data(data, hist):
         "数据中心 - 金银比/国内溢价/汇率/历史走势 - 金衡网",
         "贵金属数据中心：金银比、金油比、金铂比等关键指标看板，国内溢价明细，11 币种汇率表，Au99.99 历史日线数据。",
         SITE + "data.html")
-    body = f"""{topbar_html(data)}
+    body = f"""{promo_bar()}
+{topbar_html(data)}
 {ticker_html(data)}
 {nav_html("data")}
 {subnav_html("data")}
