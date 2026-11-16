@@ -554,6 +554,65 @@ def main():
     _hm2 = None
 
 
+    # AI 每日金市日报(规则模板:行情回顾+技术面+资金面+明日关注)
+    def _rsi14(closes, p=14):
+        if len(closes) < p + 1:
+            return None
+        gains, losses = [], []
+        for i in range(1, len(closes)):
+            diff = closes[i] - closes[i - 1]
+            gains.append(max(diff, 0)); losses.append(max(-diff, 0))
+        ag = sum(gains[-p:]) / p; al = sum(losses[-p:]) / p
+        return round(100 - 100 / (1 + ag / al), 1) if al else 100.0
+    _rep_lines = []
+    try:
+        _au_it = next((x for x in items if x.get("symbol") == "Au99.99"), None)
+        _au_kl = klines.get("AU0") or []
+        _closes = [x.get("c") for x in _au_kl]
+        _rsi = _rsi14(_closes)
+        _xau = intl.get("xau_usd")
+        _fx = intl.get("usd_cny")
+        _prem = intl.get("premium_pct")
+        _lines = ["【行情回顾】"]
+        if _au_it:
+            _d = _au_it.get("pct") or 0
+            _arrow = "▲" if _d > 0 else "▼" if _d < 0 else "—"
+            _lines.append(f"- Au99.99 报 {_au_it.get('last')} 元/克({_arrow}{abs(_d):.2f}%),今开 {_au_it.get('open')},最高 {_au_it.get('max')},最低 {_au_it.get('min')}")
+        if _xau and _fx:
+            _lines.append(f"- 国际现货黄金 {_xau} 美元/盎司;USD/CNY {_fx};折算约 {_xau * _fx / 31.1035:.1f} 元/克")
+        _lines.append("")
+        _lines.append("【技术面】")
+        if _rsi is not None:
+            _tag = "超买区(>70),注意回调风险" if _rsi > 70 else "超卖区(<30),关注反弹机会" if _rsi < 30 else "中性区(30-70)"
+            _lines.append(f"- 沪金主力 RSI(14)={_rsi},{_tag}")
+        if len(_closes) >= 20:
+            _ma5 = sum(_closes[-5:]) / 5
+            _ma20 = sum(_closes[-20:]) / 20
+            _lines.append(f"- MA5={_ma5:.1f} / MA20={_ma20:.1f},价格{'站上' if _closes[-1] > _ma20 else '跌破'} MA20")
+        _lines.append("")
+        _lines.append("【资金与溢价】")
+        if _prem is not None:
+            _lines.append(f"- 国内溢价 {_prem:+.2f}%({'境内偏贵' if _prem > 0 else '境内贴水'})")
+        try:
+            _brent = (oil or {}).get("brent", {}).get("last")
+            _g_oil = float(_xau) / float(_brent) if _xau and _brent else 0
+            if _g_oil > 0:
+                _lines.append(f"- 金油比 {_g_oil:.1f}(1 盎司黄金可兑布伦特桶数)")
+        except Exception:
+            pass
+        _lines.append("")
+        _lines.append("【明日关注】")
+        _lines.append("- 关注美联储官员表态与美债收益率;议息日前后波动放大")
+        _lines.append("- 夜盘 20:00 开盘,注意伦敦金隔夜动向")
+        _rep_lines = _lines
+    except Exception as e:
+        _rep_lines = ["日报生成异常: " + str(e)[:80]]
+    daily_report = {
+        "date": datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d"),
+        "generated_at": datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M"),
+        "body": "\n".join(_rep_lines),
+    }
+
     # 布伦特/WTI 升级为 hf_ 实时价(新浪外盘),保留 30 日收盘线供画图
     intl_by_code = {x["code"]: x for x in extra.get("intl") or []}
     for key, code in (("brent", "hf_OIL"), ("wti", "hf_CL")):
