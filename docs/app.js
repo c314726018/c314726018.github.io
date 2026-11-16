@@ -1230,6 +1230,12 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
   function bindSiteSearch() {
     var inp = document.getElementById("siteSearch"), sug = document.getElementById("searchSug");
     if (!inp || !sug) return;
+    inp.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        var first = sug.querySelector("a[data-i]");
+        if (first && sug.style.display !== "none") first.click();
+      }
+    });
     inp.addEventListener("input", function () {
       var q = (inp.value || "").trim().toLowerCase();
       if (!q) { sug.style.display = "none"; return; }

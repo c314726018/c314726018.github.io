@@ -8,9 +8,9 @@
   // 尽早设置主题，避免首屏闪白
   try {
     var stored = localStorage.getItem("gold_theme");
-    if (stored === "dark" || (!stored && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    if (stored === "dark") {
       root.classList.add("dark");
-    }
+    }  // 金投网式:默认浅色,手动切深色
   } catch (e) { /* localStorage 不可用时忽略 */ }
 
   function fireTheme() {
