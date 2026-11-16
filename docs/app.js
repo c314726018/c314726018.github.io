@@ -132,26 +132,30 @@
     var tb = $("#tbody");
     if (!tb) return;
     var h = "";
-    h += '<tr class="grow"><td colspan="9">◆ 上海黄金交易所 SGE</td></tr>';
-    (d.items || []).forEach(function (it) {
+    var LIM = 4;  // 首页轻量化:每类限 4 行,全量在频道页
+    function moreLink(href, label) {
+      return '<tr class="grow"><td colspan="9"><a href="' + href + '" style="color:var(--gold);font-weight:600">' + label + ' →</a></td></tr>';
+    }
+    h += '<tr class="grow"><td colspan="9">◆ 上海黄金交易所 SGE · <a href="./channel-gjs.html" style="color:var(--gold)">贵金属频道全部 9 品种 →</a></td></tr>';
+    (d.items || []).slice(0, LIM).forEach(function (it) {
       h += gRow(it.label, it.symbol, it.last, it.open, it.open, it.max, it.min, it.unit);
     });
     var ex = d.extra || {};
     if ((ex.futures || []).length) {
-      h += '<tr class="grow"><td colspan="9">◆ 国内期货主力 · 上期所 / 上期能源</td></tr>';
-      ex.futures.forEach(function (x) {
+      h += '<tr class="grow"><td colspan="9">◆ 国内期货主力 · <a href="./channel-qh.html" style="color:var(--gold)">期货频道全部 13 品种 →</a></td></tr>';
+      ex.futures.slice(0, LIM).forEach(function (x) {
         h += gRow(x.name, x.code, x.last, x.prev, x.open, x.high, x.low, x.unit);
       });
     }
     if ((ex.indices || []).length) {
-      h += '<tr class="grow"><td colspan="9">◆ 全球股指</td></tr>';
-      ex.indices.forEach(function (x) {
+      h += '<tr class="grow"><td colspan="9">◆ 全球股指 · <a href="./channel-gp.html" style="color:var(--gold)">股指频道 →</a></td></tr>';
+      ex.indices.slice(0, LIM).forEach(function (x) {
         h += gRow(x.name, x.code, x.last, x.prev, x.open, x.high, x.low, x.unit || "点");
       });
     }
     if ((ex.intl || []).length || ex.dxy) {
-      h += '<tr class="grow"><td colspan="9">◆ 国际现货 · 能源 · 美元指数</td></tr>';
-      (ex.intl || []).forEach(function (x) {
+      h += '<tr class="grow"><td colspan="9">◆ 国际现货 · 能源 · <a href="./channel-intl.html" style="color:var(--gold)">国际市场频道 →</a></td></tr>';
+      (ex.intl || []).slice(0, LIM).forEach(function (x) {
         h += gRow(x.name, x.code, x.last, x.prev, x.open, x.high, x.low, x.unit);
       });
       if (ex.dxy) {
@@ -159,6 +163,7 @@
         h += gRow(D.name, "USD Index", D.last, D.prev, D.open, D.high, D.low, D.unit || "点");
       }
     }
+    h += moreLink("./channel-gjs.html", "全部品种列表(贵金属/期货/国际/股指/汇率五大频道)");
     tb.innerHTML = h;
     tb.onclick = function (e) {
       var g = e.target.closest("[data-goto]"); if (g) { location.href = g.getAttribute("data-goto"); return; }

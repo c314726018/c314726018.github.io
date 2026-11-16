@@ -1146,6 +1146,11 @@ def ticker_html(data):
 NAV_SECTIONS = [
     ("quotes", "行情中心", "./index.html", [
         ("行情概览", "./index.html#overview"),
+        ("贵金属频道", "./channel-gjs.html"),
+        ("期货频道", "./channel-qh.html"),
+        ("国际市场", "./channel-intl.html"),
+        ("全球股指", "./channel-gp.html"),
+        ("汇率频道", "./channel-fx.html"),
         ("实物金价", "./index.html#physical"),
         ("标准金条", "./index.html#brands"),
         ("汽柴油", "./index.html#fuel"),
@@ -1487,6 +1492,150 @@ var QD = {qd_data};
 }})();
 </script>
 """
+    return head + body
+
+
+CHANNEL_DEFS = [
+    {"slug": "gjs", "name": "贵金属行情", "desc": "上海黄金交易所全部现货与延期合约实时行情:Au99.99、Au(T+D)、Ag99.99 等九大品种,人民币计价,5 分钟自动更新。",
+     "ids": ["au9999", "au9995", "au100g", "iau9999", "autd", "mautd", "ag9999", "agtd", "pt9995"]},
+    {"slug": "qh", "name": "国内期货主力", "desc": "上期所/大商所/郑商所/上期能源主力连续合约:沪金沪银、有色、黑色系、农产品与原油,共 13 个品种。",
+     "ids": ["au0", "ag0", "cu0", "al0", "zn0", "ni0", "sn0", "rb0", "sc0", "m0", "i0", "c0", "cf0"]},
+    {"slug": "intl", "name": "国际市场行情", "desc": "伦敦金 XAU、COMEX 黄金白银与布伦特/WTI 原油实时行情,美元计价,覆盖全球定价基准。",
+     "ids": ["xau", "gc", "si", "brent", "wti"]},
+    {"slug": "gp", "name": "全球股指", "desc": "A 股三大指数+恒生+美股三大指数,中美港三地市场一览。",
+     "ids": ["sh000001", "sz399001", "sz399006", "hsi", "djia", "ixic", "spx"]},
+    {"slug": "fx", "name": "人民币汇率", "desc": "11 大主流货币兑人民币实时汇率,含双向换算器与中间价口径说明。",
+     "ids": []},
+]
+
+
+def _channel_row(qd, data):
+    """频道页品种行。"""
+    q = _quote_data(qd, data)
+    pct = q["pct"]
+    cls = "up" if (pct or 0) > 0 else "down" if (pct or 0) < 0 else "flat"
+    arrow = "▲" if (pct or 0) > 0 else "▼" if (pct or 0) < 0 else "—"
+    pct_txt = f"{arrow} {abs(pct or 0):.2f}%" if pct is not None else "—"
+    return {"name": qd["name"], "symbol": qd["symbol"], "last": q["last"], "pct_txt": pct_txt,
+            "open": q["open"], "high": q["high"], "low": q["low"], "slug": qd["slug"],
+            "unit": q["unit"] or "", "cls": cls}
+
+
+def page_channel(ch, data):
+    """频道列表页:该品类全部品种行情表,行直达品种页(金投网式)。"""
+    gen = data.get("generated_at") or ""
+    fx_mode = ch["slug"] == "fx"
+    if fx_mode:
+        fx = data.get("fx") or []
+        rows_html = "".join(
+            f'<tr><td class="lbl">{esc(x["name"])}</td><td class="sym">{esc(x["code"])}</td>'
+            f'<td class="num strong">{fmt(x["cny"])}</td><td class="unit">{esc(x.get("unit") or "元")}</td>'
+            f'<td class="unit">{esc(x.get("note") or "")}</td></tr>'
+            for x in fx)
+        table_head = '<thead><tr><th>币种</th><th>代码</th><th>兑人民币</th><th>单位</th><th>说明</th></tr></thead>'
+    else:
+        items = [x for x in QUOTE_DEFS if x["slug"] in ch["ids"]]
+        rows_html = ""
+        for qd in items:
+            r = _channel_row(qd, data)
+            rows_html += (f'<tr style="cursor:pointer" data-goto="./quote-{r["slug"]}.html">'
+                          f'<td class="lbl">{esc(r["name"])}</td><td class="sym">{esc(r["symbol"])}</td>'
+                          f'<td class="num strong">{fmt(r["last"])}</td>'
+                          f'<td class="num strong {r["cls"]}">{r["pct_txt"]}</td>'
+                          f'<td class="num">{fmt(r["open"])}</td>'
+                          f'<td class="num up">{fmt(r["high"])}</td>'
+                          f'<td class="num down">{fmt(r["low"])}</td>'
+                          f'<td class="unit">{r["unit"]}</td></tr>')
+        table_head = '<thead><tr><th>品种</th><th>代码</th><th>最新价</th><th>涨跌幅</th><th>今开</th><th>最高</th><th>最低</th><th>单位</th></tr></thead>'
+    chs = "".join(f'<a class="shc" href="./channel-{x["slug"]}.html">{esc(x["name"])}</a>'
+                  for x in CHANNEL_DEFS if x["slug"] != ch["slug"])
+    ld = {"@context": "https://schema.org", "@type": "BreadcrumbList",
+          "itemListElement": [
+              {"@type": "ListItem", "position": 1, "name": "行情中心", "item": SITE + "index.html#quotes"},
+              {"@type": "ListItem", "position": 2, "name": ch["name"], "item": SITE + f"channel-{ch['slug']}.html"}]}
+    head = head_html(
+        f"{ch['name']} - 行情列表 - 金衡网",
+        ch["desc"],
+        SITE + f"channel-{ch['slug']}.html",
+        ld)
+    fx_extra = ""
+    fx_scripts = ""
+    if fx_mode:
+        fx_extra = '''
+  <section class="section" id="fxtool">
+    <div class="section-head"><div><div class="lbl">CONVERTER</div><h2>外币 ⇄ 人民币 换算器</h2></div></div>
+    <div class="card">
+      <div class="assume-row">
+        <div class="a-item"><label>金额</label><input id="fcAmt" type="number" step="0.01" value="1000"></div>
+        <div class="a-item"><label>从币种</label><select id="fcCur"><option value="USD">美元 USD</option><option value="EUR">欧元 EUR</option><option value="JPY">日元 JPY</option><option value="HKD">港币 HKD</option><option value="GBP">英镑 GBP</option><option value="CNY">人民币 CNY</option></select></div>
+        <div class="a-item"><label>兑换到</label><select id="fcCur2"><option value="CNY">人民币 CNY</option><option value="USD">美元 USD</option><option value="EUR">欧元 EUR</option><option value="JPY">日元 JPY</option><option value="HKD">港币 HKD</option><option value="GBP">英镑 GBP</option></select></div>
+      </div>
+      <div class="phys-card" style="margin:10px 0"><div class="pk">换算结果</div><div class="pv" id="fcOut">—</div><div class="pn" id="fcRate">汇率:—</div></div>
+      <div class="hint">以兑人民币中间价为锚交叉计算;实际兑换含银行点差。</div>
+    </div>
+  </section>'''
+        fx_data = json.dumps({"fx": data.get("fx") or []}, ensure_ascii=False)
+        fx_scripts = (f'<script>var DATA={fx_data};window.DATA=DATA;function fmt(v){{return (v==null||isNaN(v))?"—":(+v).toFixed(2);}}</script>'
+                      '<script src="./vendor/chart.umd.min.js"></script>'
+                      '<script src="./app.js?v=' + TS + '"></script>'
+                      '<script src="./common.js?v=' + TS + '"></script>'
+                      '''<script>
+(function(){
+  var fx=(window.DATA&&window.DATA.fx)||[];var RATE={CNY:1};
+  fx.forEach(function(r){RATE[r.code]=r.cny;});
+  var NAMES={CNY:"人民币",USD:"美元",EUR:"欧元",JPY:"日元",HKD:"港币",GBP:"英镑",KRW:"韩元",AUD:"澳元",SGD:"新加坡元",CHF:"瑞士法郎",CAD:"加元",THB:"泰铢"};
+  var J100={JPY:1,KRW:1};
+  var amt=document.getElementById("fcAmt"),cur=document.getElementById("fcCur"),cur2=document.getElementById("fcCur2"),out=document.getElementById("fcOut"),rate=document.getElementById("fcRate");
+  function fc(){var a=parseFloat(amt.value),f=cur.value,t=cur2.value,rf=RATE[f],rt=RATE[t];
+    if(!isFinite(a)||!rf||!rt){out.textContent="—";rate.textContent="汇率:—";return;}
+    var cny=J100[f]?a/100*rf:a*rf;var res=J100[t]?cny*100/rt:cny/rt;
+    out.textContent=fmt(res)+" "+(NAMES[t]||t);
+    var cross=J100[t]?(rf/rt*100):(rf/rt);
+    rate.textContent="1 "+(NAMES[f]||f)+" = "+fmt(cross)+" "+(NAMES[t]||t)+"(经人民币中间价交叉)";
+  }
+  amt.addEventListener("input",fc);cur.addEventListener("change",fc);cur2.addEventListener("change",fc);fc();
+})();
+</script>''')
+    else:
+        fx_scripts = ('<script src="./common.js?v=' + TS + '"></script>'
+                      '<script src="./app.js?v=' + TS + '"></script>'
+                      '''<script>
+document.addEventListener("click", function (e) {
+  var tr = e.target.closest("tr[data-goto]");
+  if (tr) location.href = tr.getAttribute("data-goto");
+});
+</script>''')
+    body = (f'{topbar_html(data)}\n'
+            f'{ticker_html(data)}\n'
+            f'{nav_html("quotes")}\n'
+            f'{subnav_html("quotes")}\n'
+            '<div class="wrap"><div class="portal">' + side_left("quotes") + '<div class="portal-main">\n'
+            f'  <h1 class="sr-only">{ch["name"]}</h1>\n'
+            '  <section class="section" id="chList" style="padding-top:20px">\n'
+            '    <div class="section-head">\n'
+            f'      <div><div class="lbl">QUOTES · 频道</div><h1>{esc(ch["name"])}</h1>\n'
+            f'        <p>{ch["desc"]}</p></div>\n'
+            f'      <div class="side">数据更新:{esc(gen)}</div>\n'
+            '    </div>\n'
+            '    <div class="card">\n'
+            f'      <table class="mega-table">\n'
+            f'        {table_head}\n'
+            f'        <tbody>{rows_html}</tbody>\n'
+            '      </table>\n'
+            '      <div class="hint">点击任意行进入品种详情页(分时/K线/百科/同类品种)。</div>\n'
+            '    </div>\n'
+            f'{fx_extra}\n'
+            '    <div class="card" style="margin-top:14px">\n'
+            '      <div class="card-head"><h3 style="font-size:14px">其他频道</h3></div>\n'
+            f'      <div class="sh-chips" style="justify-content:flex-start">{chs}</div>\n'
+            '    </div>\n'
+            '  </section>\n'
+            '</div>' + side_right(data) + '</div></div>\n'
+            f'{footer_html()}\n'
+            '<script src="./vendor/chart.umd.min.js"></script>\n'
+            f'{fx_scripts}\n'
+            '<script src="./ads.js"></script>\n'
+            '</body></html>')
     return head + body
 
 
@@ -2841,6 +2990,8 @@ def sitemap_xml(lastmod):
         (SITE + "privacy.html", "yearly", "0.3"),
     ] + [
         (SITE + f"quote-{qd['slug']}.html", "hourly", "0.8") for qd in QUOTE_DEFS
+    ] + [
+        (SITE + f"channel-{ch['slug']}.html", "hourly", "0.8") for ch in CHANNEL_DEFS
     ]
     body = "".join(
         f"<url><loc>{loc}</loc><lastmod>{lastmod}</lastmod>"
@@ -3659,6 +3810,13 @@ def main():
         except Exception as e:
             print(f"[warn] 品种页 {qd['slug']} 生成失败: {e}", file=sys.stderr)
     print(f"[ok] 品种详情页 {quote_pages} 页")
+    for ch in CHANNEL_DEFS:
+        try:
+            with open(os.path.join(DOCS, f"channel-{ch['slug']}.html"), "w", encoding="utf-8") as f:
+                f.write(page_channel(ch, data))
+        except Exception as e:
+            print(f"[warn] 频道页 {ch['slug']} 失败: {e}", file=sys.stderr)
+    print(f"[ok] 频道页 {len(CHANNEL_DEFS)} 页")
     for path, content in pages:
         with open(path, "w", encoding="utf-8") as f:
             f.write(content)
