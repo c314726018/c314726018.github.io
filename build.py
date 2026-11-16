@@ -1736,6 +1736,18 @@ def page_index(data):
   </section>
 
   <!-- ============ 三大报价模块（金投网式,tab 切换） ============ -->
+  <section class="section" id="dailyReport" style="display:none">
+    <div class="section-head">
+      <div><div class="lbl">DAILY BRIEF · AI 日报</div><h2>今日金市日报</h2>
+        <p>自动生成:行情回顾 / 技术面 / 资金面 / 明日关注,每日随数据管道更新</p></div>
+      <div class="side" id="drDate">—</div>
+    </div>
+    <div class="card">
+      <div class="dr-body" id="drBody" style="font-size:13px;line-height:2;color:var(--ink);white-space:pre-wrap"></div>
+      <div class="hint">日报由规则引擎自动生成,仅供参考,不构成投资建议。</div>
+    </div>
+  </section>
+
   <section class="hero-wrap" id="overview" style="margin:14px 0 0">
     <div class="three-quote">
       <div class="tq" id="qm1">
@@ -1746,7 +1758,7 @@ def page_index(data):
         </div>
         <div class="tq-chart"><div class="skel skel-box" data-skel="qm1"></div><canvas id="qm1Chart" height="132"></canvas></div>
         <div class="tq-subchart" id="qm1SubBox" style="display:none"><canvas id="qm1Sub" height="90"></canvas></div>
-        <div class="tq-tools" id="qm1Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
+        <div class="tq-tools" id="qm1Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a><a data-sub="rsi">RSI</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm1Spark" style="display:none"></div>
       </div>
       <div class="tq" id="qm2">
@@ -1770,7 +1782,7 @@ def page_index(data):
         </div>
         <div class="tq-chart"><div class="skel skel-box" data-skel="qm3"></div><canvas id="qm3Chart" height="132"></canvas></div>
         <div class="tq-subchart" id="qm3SubBox" style="display:none"><canvas id="qm3Sub" height="90"></canvas></div>
-        <div class="tq-tools" id="qm3Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
+        <div class="tq-tools" id="qm3Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a><a data-sub="rsi">RSI</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm3Spark" style="display:none"></div>
       </div>
     </div>
@@ -2257,6 +2269,32 @@ def page_index(data):
         <div class="field"><label>现价 (元/克)</label><input id="t4n" type="number" step="0.01"></div>
         <div class="tool-out" id="t4out">—</div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ 模拟交易盘 ============ -->
+  <section class="section" id="sim">
+    <div class="section-head">
+      <div><div class="lbl">PAPER TRADING · 模拟盘</div><h2>黄金模拟交易盘</h2>
+        <p>虚拟资金 100 万元,按实时金价模拟买卖,零风险练习。数据仅存本机浏览器。</p></div>
+      <div class="side">按 Au99.99 实时价成交</div>
+    </div>
+    <div class="card">
+      <div class="plan-cards" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+        <div class="plan-card"><div class="pk">虚拟现金</div><div class="pv" id="simCash">1,000,000 <span style="font-size:12px">元</span></div></div>
+        <div class="plan-card"><div class="pk">持仓市值</div><div class="pv" id="simHoldVal">0 <span style="font-size:12px">元</span></div></div>
+        <div class="plan-card"><div class="pk">总资产盈亏</div><div class="pv" id="simPnl">—</div></div>
+      </div>
+      <div class="assume-row">
+        <div class="a-item"><label>操作</label><select id="simDir"><option value="buy">📥 买入(基准+工费70)</option><option value="sell">📤 卖出(回收价:基准-15)</option></select></div>
+        <div class="a-item"><label>克重 (g)</label><input id="simG" type="number" step="1" value="100"></div>
+        <div class="a-item"><button class="btn" id="simGo" type="button">执行交易</button><button class="btn ghost" id="simReset" type="button">重置账户</button></div>
+      </div>
+      <table class="mega-table" style="margin-top:12px">
+        <thead><tr><th>买入时间</th><th>克重</th><th>买入价(元/克)</th><th>现价</th><th>浮动盈亏</th></tr></thead>
+        <tbody id="simRows"><tr><td colspan="5" style="color:var(--sub)">暂无持仓——用上方表单买入第一笔模拟黄金</td></tr></tbody>
+      </table>
+      <div class="hint">模拟盘仅供练习;买入按 基准+70 工费,卖出按 基准-15 回收价,还原真实价差体验。刷新页面数据保留(localStorage)。</div>
     </div>
   </section>
 
@@ -3212,12 +3250,13 @@ def page_data(data, hist):
 
   <section class="section" id="history">
     <div class="section-head">
-      <div><div class="lbl">HISTORY</div><h2>Au99.99 历史日线（近 15 日）</h2>
-        <p>每日开高低收数据，随站点运行逐日累积。</p></div>
+      <div><div class="lbl">HISTORY</div><h1>沪金主力日线(近 90 日)</h1>
+        <p>约一年真实日线(沪金主力连续)与 Au99.99 逐时精确累积合并;随站点运行继续累积。</p></div>
       <div class="side"><a class="btn ghost" href="./history.html">看完整走势图 →</a></div>
     </div>
     <div class="card">
-      <table>
+      <div class="card-head" style="margin-bottom:10px"><div><h3 style="font-size:14px">数据表</h3></div><div class="chip-row"><button class="btn mini" id="csvHist" type="button">⬇ 导出 CSV</button></div></div>
+      <table id="histTable">
         <thead><tr><th>日期</th><th>开盘</th><th>最高</th><th>最低</th><th>收盘</th><th>涨跌幅</th></tr></thead>
         <tbody>{hist_rows}</tbody>
       </table>

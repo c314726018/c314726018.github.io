@@ -581,6 +581,7 @@ def main():
         "fx": fx_table,
         "news": news_merged,
         "heat_multi": (heat_multi_data if heat_multi_data is not None else []),
+        "daily_report": daily_report,
         "extra": extra,
         "klines": klines,
     }

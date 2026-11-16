@@ -2,7 +2,7 @@ name: 更新贵金属行情
 
 on:
   # 仓库改名后 GitHub 的 schedule 调度失效（已知问题，恢复时间不定）。
-  # 改用「自续链」：每次运行结束睡约 28 分钟后自我触发下一轮，形成永久 30 分钟循环。
+  # 改用「自续链」：每次运行结束睡约 3 分钟后自我触发下一轮，形成永久 5 分钟准实时循环。
   # 断链时手动 dispatch 一次即可重启。
   workflow_dispatch: {}
 
@@ -65,7 +65,7 @@ jobs:
       - name: 自续链（约 30 分钟后触发下一轮）
         if: always()
         run: |
-          sleep 1720
+          sleep 180
           for i in 1 2 3; do
             gh workflow run update.yml --ref main && { echo "已触发下一轮 (attempt $i)"; exit 0; }
             echo "触发失败 attempt $i，60s 后重试"; sleep 60

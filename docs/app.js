@@ -568,6 +568,32 @@
     });
   }
 
+  // ---------- CSV 导出(表格→带 BOM 的 CSV,Excel 直接打开) ----------
+  function exportTableCsv(tableId, filename) {
+    var tb = document.getElementById(tableId);
+    if (!tb) return;
+    var rows = [];
+    tb.querySelectorAll("tr").forEach(function (tr) {
+      var cells = [];
+      tr.querySelectorAll("th,td").forEach(function (c) {
+        var txt = (c.textContent || "").replace(/\s+/g, " ").trim().replace(/"/g, '""');
+        cells.push('"' + txt + '"');
+      });
+      rows.push(cells.join(","));
+    });
+    var csv = "\ufeff" + rows.join("\r\n");
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+  var ch = document.getElementById("csvHist");
+  if (ch) ch.addEventListener("click", function () { exportTableCsv("histTable", "金衡网-沪金主力日线.csv"); });
+  var cs = document.getElementById("csvSge");
+  if (cs) cs.addEventListener("click", function () { exportTableCsv("sgeTable", "金衡网-SGE实时行情.csv"); });
+
   // ---------- 换算器:油价折算 + 外币⇄人民币 ----------
   function bindConverters() {
     var ocUsd = document.getElementById("ocUsd"), ocFx = document.getElementById("ocFx"), ocOut = document.getElementById("ocOut");
@@ -985,6 +1011,26 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
           { type: "line", label: "DIF", data: xy(dif), borderColor: "#f5a623", borderWidth: 1, pointRadius: 0, tension: .3 },
           { type: "line", label: "DEA", data: xy(dea), borderColor: "#4a90e2", borderWidth: 1, pointRadius: 0, tension: .3 }
         ];
+      } else if (type === "rsi") {
+        var P = 14, gains = [], losses = [], rsiArr = [];
+        for (var i = 1; i < closes.length; i++) {
+          var diff = closes[i] - closes[i - 1];
+          gains.push(Math.max(diff, 0));
+          losses.push(Math.max(-diff, 0));
+        }
+        for (var i = 0; i < gains.length; i++) {
+          if (i < P - 1) { rsiArr.push(null); continue; }
+          var ag = 0, al = 0;
+          for (var j = i - P + 1; j <= i; j++) { ag += gains[j]; al += losses[j]; }
+          ag /= P; al /= P;
+          var r = al === 0 ? 100 : 100 - 100 / (1 + ag / al);
+          rsiArr.push(+r.toFixed(2));
+        }
+        rsiArr.unshift(null);  // 对齐 closes[0]
+        var xy3 = function (arr) { return arr.map(function (v, i) { return { x: i + 1, y: v }; }); };
+        ds = [
+          { type: "line", label: "RSI(14)", data: xy3(rsiArr), borderColor: "#b8860b", borderWidth: 1.6, pointRadius: 0, tension: .3 }
+        ];
       } else {
         var n = 9, kv = [], hv = [], lv2 = [];
         for (var i = 0; i < closes.length; i++) {
@@ -1138,6 +1184,88 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
       .catch(function () { renderAll(DATA); });
   }
 
+  // ---------- AI 日报渲染 ----------
+  function bindDailyReport() {
+    var dr = (window.DATA && window.DATA.daily_report) || {};
+    var sec = document.getElementById("dailyReport");
+    if (!dr.body) { if (sec) sec.style.display = "none"; return; }
+    if (sec) sec.style.display = "";
+    var b = document.getElementById("drBody");
+    if (b) b.textContent = dr.body;
+    var dt = document.getElementById("drDate");
+    if (dt) dt.textContent = dr.date || "";
+    var mt = document.getElementById("drMeta");
+    if (mt) mt.textContent = "生成时间 " + (dr.generated_at || "") + " · 每日随数据管道自动更新";
+  }
+
+  // ---------- 模拟交易盘(localStorage 虚拟账户) ----------
+  var SIM_KEY = "simAccount_v1";
+  function simLoad() {
+    try { return JSON.parse(localStorage.getItem(SIM_KEY)) || { cash: 1000000, lots: [] }; }
+    catch (e) { return { cash: 1000000, lots: [] }; }
+  }
+  function simSave(a) { localStorage.setItem(SIM_KEY, JSON.stringify(a)); }
+  function simPrice() { return (window.DATA && window.DATA.primary && window.DATA.primary.last) || null; }
+  function simRender() {
+    var a = simLoad();
+    var base = simPrice();
+    var cashEl = document.getElementById("simCash");
+    if (cashEl) cashEl.innerHTML = fmt(a.cash) + '<span style="font-size:12px"> 元</span>';
+    var holdVal = 0, cost = 0;
+    (a.lots || []).forEach(function (l) { holdVal += l.g * base; cost += l.g * l.price; });
+    var hv = document.getElementById("simHoldVal");
+    if (hv) hv.innerHTML = fmt(holdVal) + '<span style="font-size:12px"> 元</span>';
+    var pnlEl = document.getElementById("simPnl");
+    if (pnlEl) {
+      var pnl = holdVal - cost;
+      pnlEl.innerHTML = '<span class="' + (pnl >= 0 ? "up" : "down") + '">' + (pnl >= 0 ? "+" : "") + fmt(pnl) + ' 元</span>';
+    }
+    var rows = document.getElementById("simRows");
+    if (rows) {
+      if (!(a.lots || []).length) {
+        rows.innerHTML = '<tr><td colspan="5" style="color:var(--sub)">暂无持仓</td></tr>';
+      } else {
+        rows.innerHTML = a.lots.map(function (l) {
+          var cur = l.g * base, c = l.g * l.price, pl = cur - c;
+          return "<tr><td>" + l.time + "</td><td class=\"num\">" + l.g + "g</td><td class=\"num\">" + fmt(l.price) + "</td><td class=\"num\">" + fmt(base) + "</td><td class=\"num " + (pl >= 0 ? "up" : "down") + "\">" + (pl >= 0 ? "+" : "") + fmt(pl) + "</td></tr>";
+        }).join("");
+      }
+    }
+  }
+  function bindSim() {
+    var go = document.getElementById("simGo");
+    if (go) go.addEventListener("click", function () {
+      var a = simLoad();
+      var dir = (document.getElementById("simDir") || {}).value;
+      var g = parseFloat((document.getElementById("simG") || {}).value || "0");
+      var base = simPrice();
+      if (!(g > 0)) { alert("请输入克重"); return; }
+      if (base == null) { alert("行情尚未加载"); return; }
+      if (dir === "buy") {
+        var cost = g * (base + 70);
+        if (cost > a.cash) { alert("虚拟现金不足(需 " + fmt(cost) + " 元)"); return; }
+        a.cash -= cost;
+        a.lots.push({ time: new Date().toLocaleString(), g: g, price: base + 70 });
+      } else {
+        var totalG = (a.lots || []).reduce(function (s, l) { return s + l.g; }, 0);
+        if (g > totalG) { alert("持仓仅 " + totalG + "g"); return; }
+        var remain = g;
+        a.lots = a.lots.filter(function (l) {
+          if (remain <= 0) return true;
+          var take = Math.min(l.g, remain);
+          l.g -= take; remain -= take;
+          return l.g > 0;
+        });
+        a.cash += g * (base - 15);
+      }
+      simSave(a); simRender();
+    });
+    var rs = document.getElementById("simReset");
+    if (rs) rs.addEventListener("click", function () {
+      if (confirm("重置模拟账户为初始 100 万?")) { localStorage.removeItem(SIM_KEY); simRender(); }
+    });
+    simRender();
+  }
   // ---------- 启动 ----------
   document.addEventListener("DOMContentLoaded", function () {
     bindTheme();
@@ -1149,6 +1277,9 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
     bindHeat();
     bindConverters();
     renderAll(DATA);
+    bindDailyReport();
+    bindSim();
+    setInterval(simRender, 60000);
     loadData();                 // 拉取最新 baked 数据
     setInterval(loadData, 60000); // 每 60s 检查一次（新构建发布即更新）
   });

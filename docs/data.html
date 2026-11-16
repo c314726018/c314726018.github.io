@@ -89,12 +89,13 @@
 
   <section class="section" id="history">
     <div class="section-head">
-      <div><div class="lbl">HISTORY</div><h2>Au99.99 历史日线（近 15 日）</h2>
-        <p>每日开高低收数据，随站点运行逐日累积。</p></div>
+      <div><div class="lbl">HISTORY</div><h1>沪金主力日线(近 90 日)</h1>
+        <p>约一年真实日线(沪金主力连续)与 Au99.99 逐时精确累积合并;随站点运行继续累积。</p></div>
       <div class="side"><a class="btn ghost" href="./history.html">看完整走势图 →</a></div>
     </div>
     <div class="card">
-      <table>
+      <div class="card-head" style="margin-bottom:10px"><div><h3 style="font-size:14px">数据表</h3></div><div class="chip-row"><button class="btn mini" id="csvHist" type="button">⬇ 导出 CSV</button></div></div>
+      <table id="histTable">
         <thead><tr><th>日期</th><th>开盘</th><th>最高</th><th>最低</th><th>收盘</th><th>涨跌幅</th></tr></thead>
         <tbody><tr><td class="num" data-label="日期">2026-11-16</td><td class="num" data-label="开盘">837.55</td><td class="num up" data-label="最高">841.00</td><td class="num down" data-label="最低">828.70</td><td class="num strong" data-label="收盘">828.70</td><td data-label="涨跌幅"><span class="chg down">-0.28%</span></td></tr><tr><td class="num" data-label="日期">2026-11-15</td><td class="num" data-label="开盘">837.55</td><td class="num up" data-label="最高">841.00</td><td class="num down" data-label="最低">831.00</td><td class="num strong" data-label="收盘">831.00</td><td data-label="涨跌幅"><span class="chg flat">0.00%</span></td></tr><tr><td class="num" data-label="日期">2026-11-14</td><td class="num" data-label="开盘">837.55</td><td class="num up" data-label="最高">841.00</td><td class="num down" data-label="最低">831.00</td><td class="num strong" data-label="收盘">831.00</td><td data-label="涨跌幅"><span class="chg flat">0.00%</span></td></tr><tr><td class="num" data-label="日期">2026-11-13</td><td class="num" data-label="开盘">851.33</td><td class="num up" data-label="最高">857.80</td><td class="num down" data-label="最低">827.99</td><td class="num strong" data-label="收盘">831.00</td><td data-label="涨跌幅"><span class="chg down">-2.83%</span></td></tr><tr><td class="num" data-label="日期">2026-11-12</td><td class="num" data-label="开盘">872.98</td><td class="num up" data-label="最高">872.98</td><td class="num down" data-label="最低">855.18</td><td class="num strong" data-label="收盘">855.18</td><td data-label="涨跌幅"><span class="chg down">-2.04%</span></td></tr><tr><td class="num" data-label="日期">2026-11-11</td><td class="num" data-label="开盘">883.42</td><td class="num up" data-label="最高">883.42</td><td class="num down" data-label="最低">860.05</td><td class="num strong" data-label="收盘">873.00</td><td data-label="涨跌幅">—</td></tr></tbody>
       </table>
