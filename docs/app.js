@@ -404,14 +404,16 @@
     destroyChart("cmp");
     var cc = $("#cmpChart");
     if (cc) {
-      var cmpSyms = ["Au99.99", "Ag99.99", "Pt99.95"];
+      var cb = document.getElementById("cmpBox");
+      var cmpSyms = cb ? $all(".sp.on", cb).map(function (x) { return x.getAttribute("data-v"); }) : ["Au99.99", "Ag99.99", "Pt99.95"];
+      if (!cmpSyms.length) cmpSyms = ["Au99.99"];
+      var PALETTE = ["#b8860b", "#2f6fed", "#7c3aed", "#d4380d", "#129b63", "#f5a623", "#e91e63", "#00bcd4", "#795548", "#607d8b"];
       var ds = cmpSyms.map(function (sym, idx) {
         var item = (d.items || []).filter(function (x) { return x.symbol === sym; })[0];
         var s = item ? item.series : [];
         var base = s[0];
         var norm = base ? s.map(function (v) { return (v / base - 1) * 100; }) : [];
-        var colors = ["#b8860b", "#2f6fed", "#7c3aed"];
-        return { label: sym, data: norm, borderColor: colors[idx], borderWidth: 1.6, pointRadius: 0, tension: .2 };
+        return { label: sym, data: norm, borderColor: PALETTE[idx % PALETTE.length], borderWidth: 1.6, pointRadius: 0, tension: .2 };
       }).filter(function (x) { return x.data.length; });
       if (ds.length) {
         charts.cmp = new Chart(cc, {
@@ -1184,6 +1186,18 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
       .catch(function () { renderAll(DATA); });
   }
 
+  // ---------- 对比图品种多选 ----------
+  function bindCmpPicker() {
+    var cb = document.getElementById("cmpBox");
+    if (!cb) return;
+    cb.addEventListener("click", function (e) {
+      var p = e.target.closest(".sp"); if (!p) return;
+      p.classList.toggle("on");
+      if (!cb.querySelector(".sp.on")) p.classList.add("on");  // 至少保留 1 个
+      renderAll(window.DATA || DATA);
+    });
+  }
+
   // ---------- AI 日报渲染 ----------
   function bindDailyReport() {
     var dr = (window.DATA && window.DATA.daily_report) || {};
@@ -1267,6 +1281,32 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
     simRender();
   }
   // ---------- 启动 ----------
+  // ---------- 图表 PNG 分享(带品牌水印) ----------
+  function shareChart(canvasId) {
+    var src = document.getElementById(canvasId);
+    if (!src || !src.chart) src = Chart.getChart(document.getElementById(canvasId));
+    var inst = (typeof Chart !== "undefined") && Chart.getChart(document.getElementById(canvasId));
+    if (!inst) { alert("图表尚未渲染"); return; }
+    var tmp = document.createElement("canvas");
+    tmp.width = src.width || 900; tmp.height = (src.height || 420) + 44;
+    var ctx = tmp.getContext("2d");
+    ctx.fillStyle = "#1a1f2b"; ctx.fillRect(0, 0, tmp.width, tmp.height);
+    try { ctx.drawImage(src, 0, 44, tmp.width, tmp.height - 44); } catch (e) {}
+    ctx.fillStyle = "#b8860b"; ctx.font = "bold 16px sans-serif";
+    ctx.fillText("金衡网 · 贵金属行情门户", 16, 26);
+    ctx.fillStyle = "#8895a8"; ctx.font = "12px sans-serif";
+    var dt = new Date().toLocaleString();
+    ctx.fillText(dt, tmp.width - 150, 26);
+    var a = document.createElement("a");
+    a.download = "金衡网-" + canvasId + "-" + Date.now() + ".png";
+    a.href = tmp.toDataURL("image/png");
+    a.click();
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-share]");
+    if (b) { e.preventDefault(); shareChart(b.getAttribute("data-share")); }
+  });
+
   document.addEventListener("DOMContentLoaded", function () {
     bindTheme();
     bindAlerts();
@@ -1279,6 +1319,7 @@ function _set(id, txt) { var el = $("#" + id); if (el) el.textContent = txt; }
     renderAll(DATA);
     bindDailyReport();
     bindSim();
+    bindCmpPicker();
     setInterval(simRender, 60000);
     loadData();                 // 拉取最新 baked 数据
     setInterval(loadData, 60000); // 每 60s 检查一次（新构建发布即更新）

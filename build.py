@@ -1758,7 +1758,7 @@ def page_index(data):
         </div>
         <div class="tq-chart"><div class="skel skel-box" data-skel="qm1"></div><canvas id="qm1Chart" height="132"></canvas></div>
         <div class="tq-subchart" id="qm1SubBox" style="display:none"><canvas id="qm1Sub" height="90"></canvas></div>
-        <div class="tq-tools" id="qm1Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a><a data-sub="rsi">RSI</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
+        <div class="tq-tools" id="qm1Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a><a data-sub="rsi">RSI</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-share="qm1Chart">📷 分享</a><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm1Spark" style="display:none"></div>
       </div>
       <div class="tq" id="qm2">
@@ -1782,7 +1782,7 @@ def page_index(data):
         </div>
         <div class="tq-chart"><div class="skel skel-box" data-skel="qm3"></div><canvas id="qm3Chart" height="132"></canvas></div>
         <div class="tq-subchart" id="qm3SubBox" style="display:none"><canvas id="qm3Sub" height="90"></canvas></div>
-        <div class="tq-tools" id="qm3Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a><a data-sub="rsi">RSI</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-act="fs">⛶ 全屏</a></span></div>
+        <div class="tq-tools" id="qm3Tools"><span class="tt-g" data-g="ind"><a data-ind="ma" class="on">MA</a><a data-ind="boll">BOLL</a><a data-ind="none">无</a></span><span class="tt-g" data-g="sub"><a data-sub="macd">MACD</a><a data-sub="kdj">KDJ</a><a data-sub="rsi">RSI</a></span><span class="tt-g" data-g="period"><a data-p="d" class="on">日</a><a data-p="w">周</a><a data-p="m">月</a></span><span class="tt-g"><a data-share="qm3Chart">📷 分享</a><a data-act="fs">⛶ 全屏</a></span></div>
         <div class="tq-spark" id="qm3Spark" style="display:none"></div>
       </div>
     </div>
@@ -2309,8 +2309,11 @@ def page_index(data):
         <div class="chart-box"><div class="skel skel-box" data-skel="lineChart"></div><canvas id="lineChart"></canvas></div></div>
       <div class="card"><div class="card-head"><h3>{esc(sym)} K 线</h3><span class="badge">分时聚合</span></div>
         <div class="chart-box"><div class="skel skel-box" data-skel="kChart"></div><canvas id="kChart"></canvas></div></div>
-      <div class="card full"><div class="card-head"><h3>多品种日内强弱对比</h3>
-        <div class="chip-row"><span class="chip">Au99.99 黄金</span><span class="chip">Ag99.99 白银</span><span class="chip">Pt99.95 铂金</span></div></div>
+      <div class="card full"><div class="card-head"><h3>多品种日内强弱对比(任意叠加)</h3> <button class="btn mini" data-share="cmpChart" type="button">📷 分享</button>
+        <div class="sym-multi" id="cmpBox" style="margin:6px 0">
+          <a class="sp on" data-v="Au99.99">黄金 Au99.99</a><a class="sp on" data-v="Ag99.99">白银 Ag99.99</a><a class="sp on" data-v="Pt99.95">铂金 Pt99.95</a><a class="sp" data-v="Au99.95">金 99.95</a><a class="sp" data-v="Au100g">金 100g</a><a class="sp" data-v="Au(T+D)">金延期</a><a class="sp" data-v="Ag(T+D)">银延期</a><a class="sp" data-v="iAu99.99">国际板金</a><a class="sp" data-v="mAu(T+D)">迷你延期</a><a class="sp" data-v="Pd99.95">钯金</a>
+        </div>
+        <div class="hint" style="margin:0 0 8px">点击品种名切换叠加,至少保留 1 个;全部以各自开盘价归一化为 0%。</div></div>
         <div class="hint" style="margin:6px 0 10px"><b>读法</b>:三条线都以各自品种「今日开盘价」为零点归一化——线上方 = 日内跑赢开盘,下方 = 跑输,直接对比金/银/铂今天谁更强;悬停曲线可看任意时刻的具体数值。</div>
         <div class="chart-box tall"><div class="skel skel-box" data-skel="cmpChart"></div><canvas id="cmpChart"></canvas></div></div>
     </div>
