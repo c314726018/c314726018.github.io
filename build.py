@@ -33,6 +33,7 @@ def page_feedback(data):
     s += '<div class="wrap"><div class="portal">'
     s += side_left("feedback")
     s += '<div class="portal-main">'
+    s += '<h1 class="sr-only">留言反馈</h1>'
     s += fb
     s += '</div>'
     s += side_right(data)
@@ -528,6 +529,7 @@ select:focus{outline:none;border-color:var(--gold-2)}
 .skel{background:linear-gradient(90deg,var(--surface-2) 25%,var(--line) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:8px}
 .skel-box{position:absolute;inset:0;z-index:1}
 .tq-chart,.chart-box{position:relative}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .rel-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}
 .rel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow);transition:.15s}
 .rel:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--gold-2) 40%,var(--line))}
@@ -2737,6 +2739,7 @@ def page_news(data):
 {subnav_html("news")}
 <div class="wrap"><div class="portal">{side_left("news")}<div class="portal-main">
 <main>
+  <h1 class="sr-only">金融快讯 · 7×24 实时资讯流</h1>
   <section class="section" id="live">
     <div class="mbox-h"><span class="mh-l">7×24 实时快讯</span>
       <div class="news-filter" id="newsFilter">
