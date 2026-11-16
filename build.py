@@ -1707,7 +1707,7 @@ def promo_bar():
   <div class="pb-in">
     <span class="pb-badge">🔔 会员</span>
     <span class="pb-text">金市异动第一时间知道:议息日 / 非农夜 / 品种触价自动邮件通知 —— <b>免费版 3 条规则</b> · <b>会员版不限 + 涨跌幅触发 + AI 日报直达邮箱</b></span>
-    <a class="pb-cta" href="./feedback.html?type=member">了解与开通 →</a>
+    <a class="pb-cta" href="./feedback.html?type=member">了解与开通</a>
     <button class="pb-x" id="pbClose" type="button" aria-label="关闭公告">×</button>
   </div>
 </div>
