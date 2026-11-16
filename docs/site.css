@@ -142,7 +142,7 @@ header.nav{position:sticky;top:0;z-index:60;background:var(--surface);
 .section{padding-top:38px}
 .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
 .section-head .lbl{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);font-weight:700}
-.section-head h2{letter-spacing:.5px;font-size:21px;margin:5px 0 0;letter-spacing:-.3px;font-weight:700}
+.section-head h1,.section-head h2{letter-spacing:.5px;font-size:21px;margin:5px 0 0;letter-spacing:-.3px;font-weight:700}
 .section-head p{color:var(--sub);font-size:13px;margin:5px 0 0}
 .section-head .side{color:var(--sub);font-size:12px}
 

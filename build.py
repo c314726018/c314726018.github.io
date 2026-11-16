@@ -265,7 +265,7 @@ header.nav{position:sticky;top:0;z-index:60;background:var(--surface);
 .section{padding-top:38px}
 .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
 .section-head .lbl{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);font-weight:700}
-.section-head h2{letter-spacing:.5px;font-size:21px;margin:5px 0 0;letter-spacing:-.3px;font-weight:700}
+.section-head h1,.section-head h2{letter-spacing:.5px;font-size:21px;margin:5px 0 0;letter-spacing:-.3px;font-weight:700}
 .section-head p{color:var(--sub);font-size:13px;margin:5px 0 0}
 .section-head .side{color:var(--sub);font-size:12px}
 
@@ -1778,7 +1778,7 @@ def page_index(data):
   <!-- ============ 标准金条企业名录(上金所) ============ -->
   <section class="section" id="brands">
     <div class="section-head">
-      <div><div class="lbl">STANDARD GOLD BARS · 标准金条</div><h2>标准金条企业名录</h2>
+      <div><div class="lbl">STANDARD GOLD BARS · 标准金条</div><h1>标准金条企业名录</h1>
         <p>上海黄金交易所可提供标准金条的签约精炼企业名录(共 12 家),名录以交易所官网公布为准。投资金条买卖参考价随基准价自动更新。</p></div>
       <div class="side">名录来源:上海黄金交易所公开信息</div>
     </div>
@@ -2856,7 +2856,7 @@ def page_calendar(data):
 <div class="wrap"><div class="portal">{side_left('calendar')}<div class="portal-main">
   <section class="section" id="events">
     <div class="section-head">
-      <div><div class="lbl">CALENDAR · 财经日历</div><h2>重要经济事件日历</h2>
+      <div><div class="lbl">CALENDAR · 财经日历</div><h1>重要经济事件日历</h1>
         <p>与金价直接相关的核心事件：非农、CPI、美联储议息、各国央行决议。时间为北京时间。</p></div>
       <div class="side">日期来源：官方公开日程</div>
     </div>
@@ -3044,7 +3044,7 @@ def page_academy(data):
 <div class="wrap"><div class="portal">{side_left('academy')}<div class="portal-main">
   <section class="section" id="articles">
     <div class="section-head">
-      <div><div class="lbl">ACADEMY · 投资学院</div><h2>黄金投资系统学习</h2>
+      <div><div class="lbl">ACADEMY · 投资学院</div><h1>黄金投资系统学习</h1>
         <p>从「一克黄金多少钱」到「美联储利率如何影响金价」，18 篇科普按六大主题分类，零基础也能看懂。</p></div>
       <div class="side">18 篇 · 6 大主题</div>
     </div>
@@ -3174,7 +3174,7 @@ def page_data(data, hist):
 <div class="wrap"><div class="portal">{side_left('data')}<div class="portal-main">
   <section class="section" id="indicators">
     <div class="section-head">
-      <div><div class="lbl">DATA CENTER · 数据中心</div><h2>关键指标看板</h2>
+      <div><div class="lbl">DATA CENTER · 数据中心</div><h1>关键指标看板</h1>
         <p>金银比、金油比、溢价与汇率——一屏看懂贵金属的相对价值与境内外价差。随数据管道每 30 分钟更新。</p></div>
       <div class="side">数据生成：{esc(data.get("generated_at") or "—")}</div>
     </div>
