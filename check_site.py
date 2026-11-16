@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """金衡网每日健康检查:可用性/数据新鲜度/完整性/双轨同步/引擎状态。输出 JSON 报告。"""
 import json
+import re
 import subprocess
 import sys
 import time
@@ -54,6 +55,15 @@ try:
     check("金价合理性", 300 < p < 2000, f"Au99.99={p} 元/克")
 except Exception as e:
     check("data.json 加载", False, f"{type(e).__name__}: {str(e)[:100]}", "critical")
+
+# 2.5 SEO 结构(每页 h1 唯一)
+try:
+    for pg in ("index", "data", "calendar", "news", "feedback"):
+        h = http(f"{BASE}/{pg}.html").decode("utf-8", "ignore")
+        n = len(re.findall(r"<h1[ >]", h))
+        check(f"h1 唯一[{pg}]", n == 1, f"h1 数量={n}(应为 1)")
+except Exception as e:
+    check("SEO 结构", False, str(e)[:80])
 
 # 3. 功能抽查
 try:
