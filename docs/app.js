@@ -118,6 +118,7 @@
         '<td><span class="pill ' + ch.cls + '">' + (ch.d > 0 ? "▲ +" : ch.d < 0 ? "▼ " : "— ") + fmt(Math.abs(ch.pct)) + "%</span></td>"
       : '<td class="num">—</td><td><span class="pill flat">—</span></td>';
     var star = '<span class="fav' + (isFav(code) ? " on" : "") + '" data-code="' + esc(code) + '" title="加入/移出自选">' + (isFav(code) ? "★" : "☆") + "</span>";
+    var slug = ((window.DATA && window.DATA.symbol_slug) || {})[code];
     var goto = slug ? ' style="cursor:pointer" data-goto="./quote-' + slug + '.html"' : "";
     return "<tr" + goto + ">" +
       '<td class="lbl">' + star + esc(name) + "</td>" +
