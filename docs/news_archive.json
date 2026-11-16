@@ -1,5 +1,12 @@
 [
  {
+  "title": "明晟公司MSCI北欧国家指数跌0.2%，报410.78点",
+  "text": "明晟公司MSCI北欧国家指数跌0.2%，报410.78点。\n\n在十个板块中，北欧工业板块跌幅最大。\n\nSvenska Cellulosa AB SCA跌3.4%，在一众北欧个股里表现最差。",
+  "time": "2026-11-16 16:39",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3200764"
+ },
+ {
   "title": "周一（11月16日）欧市尾盘，ICE英国天然气期货跌7.62%，报209.751",
   "text": "周一（11月16日）欧市尾盘，ICE英国天然气期货跌7.62%，报209.7510便士/千卡。\n\nTTF基准荷兰天然气期货跌6.68%，报83.650欧元/兆瓦时。\n\nICE欧盟碳排放交易许可（期货价格）跌0.96%，报87.30欧元/吨。",
   "time": "2026-11-16 16:38",
@@ -54,6 +61,13 @@
   "time": "2026-11-16 16:11",
   "source": "华尔街见闻",
   "uri": "https://wallstreetcn.com/livenews/3200755"
+ },
+ {
+  "title": "OpenAI引入四家机构开展AI安全评估",
+  "text": "OpenAI宣布与Apollo Research、Goodfire、METR和Transluce四家独立机构合作，启动首阶段嵌入式安全评估，允许外部专家访问内部模型、源代码、训练数据及监控系统，审查模型对齐和安全防护措施。其中，Apollo Research重点评估模型是否会暗中违背开发者意图；Goodfire研究模型内部机制及训练监控；METR审查大规模强化学习训练中的模型失调行为；Transluce评估后训练阶段的安全测试质量。",
+  "time": "2026-11-16 16:08",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3200754"
  },
  {
   "title": "OpenAI：已与包括Apollo Research在内的评估机构签署协议",
@@ -2084,19 +2098,5 @@
   "time": "2026-11-16 07:53",
   "source": "华尔街见闻",
   "uri": "https://wallstreetcn.com/livenews/3200507"
- },
- {
-  "title": "日经225指数期货在早盘交易中上涨0.75%",
-  "text": "日经225指数期货在早盘交易中上涨0.75%。",
-  "time": "2026-11-16 07:50",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3200259"
- },
- {
-  "title": "日本三季度实际GDP平减指数同比初值 2.4%，预期 2.7%，前值 2.6%",
-  "text": "日本三季度实际GDP平减指数同比初值 2.4%，预期 2.7%，前值 2.6%。",
-  "time": "2026-11-16 07:50",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3200258"
  }
 ]
