@@ -1,5 +1,12 @@
 [
  {
+  "title": "美国石油协会（API）数据显示，上周，美国API原油库存 +527.8万桶，之前",
+  "text": "美国石油协会（API）数据显示，上周，美国API原油库存 +527.8万桶，之前一周 +896.8万桶。",
+  "time": "2026-11-17 21:37",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3201529"
+ },
+ {
   "title": "英伟达：未来数周将披露10-Q报告",
   "text": "英伟达：未来数周将披露10-Q报告。",
   "time": "2026-11-17 21:27",
@@ -98,8 +105,8 @@
   "uri": "https://wallstreetcn.com/livenews/3201514"
  },
  {
-  "title": "纳斯达克金龙中国指数初步收跌1.9%",
-  "text": "纳斯达克金龙中国指数初步收跌1.9%。\n\n热门中概股里，京东初步收跌7.7%，腾讯跌4.4%，阿里跌4.4%。\n\nETF中，KWEB跌2.1%，CQQQ跌1.5%。",
+  "title": "纳斯达克金龙中国指数收跌1.89%，报5363.99点",
+  "text": "纳斯达克金龙中国指数收跌1.89%，报5363.99点。\n\n热门中概股里，京东初步收跌7.7%，腾讯跌4.4%，阿里跌4.4%。\n\nETF中，中概互联网指数ETF（KWEB）收跌2.13%，中国科技指数ETF（CQQQ）收跌1.51%。\n\nMSCI新兴市场ex中国ETF（EMXC）收跌1.02%，XtrackersHarvest中证50（ASHS）收跌0.28%，德银嘉实沪深300指数ETF（ASHR）收跌0.27%。",
   "time": "2026-11-17 21:00",
   "source": "华尔街见闻",
   "uri": "https://wallstreetcn.com/livenews/3201513"
@@ -110,6 +117,13 @@
   "time": "2026-11-17 21:00",
   "source": "华尔街见闻",
   "uri": "https://wallstreetcn.com/livenews/3201510"
+ },
+ {
+  "title": "纳斯达克金龙中国指数初步收跌1.9%",
+  "text": "纳斯达克金龙中国指数初步收跌1.9%。\n\n热门中概股里，京东初步收跌7.7%，腾讯跌4.4%，阿里跌4.4%。\n\nETF中，KWEB跌2.1%，CQQQ跌1.5%。",
+  "time": "2026-11-17 21:00",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3201513"
  },
  {
   "title": "黄仁勋离职之际，美国证券交易委员会（SEC）正调查其公司英伟达",
@@ -2084,19 +2098,5 @@
   "time": "2026-11-17 09:00",
   "source": "华尔街见闻",
   "uri": "https://wallstreetcn.com/livenews/3201170"
- },
- {
-  "title": "俄罗斯称下一轮乌克兰问题会谈还没有具体日期",
-  "text": "俄罗斯称下一轮乌克兰问题会谈还没有具体日期。（塔斯社）",
-  "time": "2026-11-17 09:00",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3201170"
- },
- {
-  "title": "蚂蚁技术研究院与西湖心辰共同发布世界模型Duo",
-  "text": "11月17日，蚂蚁技术研究院与西湖心辰共同发布Duo，Reciprocal World Model（RWM，双向世界模型）的首个实现。据介绍，它通过Intent和Realization两个紧密耦合的模块，将智能主体内化为世界的一部分，原生支持全双体、实时、双向的交互。（界面新闻）",
-  "time": "2026-11-17 08:59",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3201169"
  }
 ]
