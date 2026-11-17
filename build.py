@@ -3805,7 +3805,7 @@ def page_data(data, hist):
 
   <section class="section" id="history">
     <div class="section-head">
-      <div><div class="lbl">HISTORY</div><h1>沪金主力日线(近 90 日)</h1>
+      <div><div class="lbl">HISTORY</div><h2>沪金主力日线(近 90 日)</h2>
         <p>约一年真实日线(沪金主力连续)与 Au99.99 逐时精确累积合并;随站点运行继续累积。</p></div>
       <div class="side"><a class="btn ghost" href="./history.html">看完整走势图 →</a></div>
     </div>
