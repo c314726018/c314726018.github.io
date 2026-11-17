@@ -1,0 +1,55 @@
+erySelector(".fav"); if(!f) return false;
+    var before=document.querySelectorAll(".fav.on").length;
+    click(f); return document.querySelectorAll(".fav.on").length === before+1;
+  });
+  // 17 公告条关闭
+  t("公告条关闭", function(){
+    var x=document.getElementById("pbClose"); if(!x) return false;
+    click(x); return document.getElementById("promoBar").style.display === "none";
+  });
+  // 18 主题切换
+  t("主题切换", function(){
+    var b=document.getElementById("themeBtn") || document.querySelector('[aria-label*="主题"]');
+    if(!b) return false;
+    var before=document.documentElement.classList.contains("dark");
+    click(b); var after=document.documentElement.classList.contains("dark");
+    click(b); return before !== after;
+  });
+  // 19 行情表行跳转属性
+  t("行情表行直链", function(){
+    var tr=document.querySelector("#tbody tr[data-goto]");
+    return tr &amp;&amp; tr.getAttribute("data-goto").indexOf("quote-") === 0;
+  });
+  // 20 返回顶部按钮存在
+  t("返回顶部", function(){ return !!document.querySelector("#backTop") || !!document.querySelector('[aria-label*="返回"]'); });
+  // 21 热力图周期切换
+  t("热力图周期", function(){
+    var a=document.querySelector("#heatTabs a[data-p]");
+    if(!a) return false; click(a); return a.classList.contains("on");
+  });
+  // 22 骨架清理
+  t("骨架清理", function(){ return document.querySelectorAll("[data-skel]").length === 0; });
+  var dv = document.createElement("div");
+  dv.id = "auditOut";
+  dv.textContent = "SMOKE|" + out.join(" | ");
+  document.body.appendChild(dv);
+})();
+
+
+</body></html>
+
+===STDERR===
+[56098:4283006:1117/101451.028821:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[56098:4283006:1117/101451.029016:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[56098:4283006:1117/101451.029206:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[56098:4283006:1117/101451.029292:ERROR:ui/display/mac/cv_display_link_mac.mm:195] CVDisplayLinkCreateWithCGDisplay failed. CVReturn: -6670
+[56108:4283145:1117/101451.044284:WARNING:content/child/runtime_features.cc:563] SharedStorage cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI in addition.
+[56108:4283145:1117/101451.044523:WARNING:content/child/runtime_features.cc:573] AttributionReporting cannot be enabled in this configuration. Use --enable-features=ConversionMeasurement in addition.
+[56107:4283144:1117/101451.044274:WARNING:content/child/runtime_features.cc:563] SharedStorage cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI in addition.
+[56107:4283144:1117/101451.044536:WARNING:content/child/runtime_features.cc:573] AttributionReporting cannot be enabled in this configuration. Use --enable-features=ConversionMeasurement in addition.
+[56109:4283184:1117/101451.176731:WARNING:content/child/runtime_features.cc:563] SharedStorage cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI in addition.
+[56109:4283184:1117/101451.176936:WARNING:content/child/runtime_features.cc:573] AttributionReporting cannot be enabled in this configuration. Use --enable-features=ConversionMeasurement in addition.
+[56110:4283185:1117/101451.187339:WARNING:content/child/runtime_features.cc:563] SharedStorage cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI in addition.
+[56110:4283185:1117/101451.187592:WARNING:content/child/runtime_features.cc:573] AttributionReporting cannot be enabled in this configuration. Use --enable-features=ConversionMeasurement in addition.
+[56111:4283187:1117/101451.191970:WARNING:content/child/runtime_features.cc:563] SharedStorage cannot be enabled in this configuration. Use --enable-features=SharedStorageAPI in addition.
+[56111:4283187:1117/101451.192185:WARNING:content/child/runtime_features.cc:573] AttributionReporting cannot be enabled in this configuration. Use --enable-features=ConversionMeasurement in addition.

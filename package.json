@@ -1,0 +1,26 @@
+{
+  "name": "gold-site",
+  "version": "1.0.0",
+  "description": "一个**零依赖、零服务器成本**的贵金属行情网站，部署在 **GitHub Pages**（免费），数据每小时自动刷新。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c314726018/c314726018.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/c314726018/c314726018.github.io/issues"
+  },
+  "homepage": "https://github.com/c314726018/c314726018.github.io#readme",
+  "dependencies": {
+    "puppeteer-core": "^25.17.0"
+  }
+}

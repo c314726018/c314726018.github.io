@@ -1,0 +1,39 @@
+{
+ "time": "2026-11-17 10:12:30",
+ "code": [
+  {
+   "check": "内联 script 语法",
+   "ok": true,
+   "detail": "13 段通过"
+  }
+ ],
+ "visual": [
+  {
+   "check": "3 视口 × 9 页截图+横滚",
+   "ok": true,
+   "detail": "27 张截图于 /Users/cuisiqi/Documents/workbuddy项目/金衡网/gold-site/shots/full"
+  }
+ ],
+ "action": [
+  {
+   "check": "index 交互冒烟",
+   "total": 0,
+   "pass": 0,
+   "results": []
+  }
+ ],
+ "logic": [
+  {
+   "check": "34 品种页价格比对",
+   "checked": 23,
+   "ok": true,
+   "detail": "全部一致"
+  }
+ ],
+ "summary": {
+  "verdict": "四维全部通过",
+  "action_pass": "0/0",
+  "quote_mismatch": 0,
+  "visual_issues": 0
+ }
+}
