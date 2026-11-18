@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-19 03:22:52",
+  "generated_at": "2026-11-19 03:28:04",
   "source": "上海黄金交易所 (SGE) · 国际现货贵金属 · 美元兑人民币 · 新浪财经 · 华尔街见闻",
   "live": 9,
   "items": [
@@ -15779,49 +15779,49 @@
     "symbol": "Au99.99"
   },
   "intl": {
-    "xau_usd": 3730.25,
+    "xau_usd": 3731.45,
     "usd_cny": 6.6799,
-    "intl_cny_per_g": 801.12,
+    "intl_cny_per_g": 801.38,
     "sge_cny_per_g": 801.5,
-    "premium_pct": 0.05,
+    "premium_pct": 0.01,
     "metals": {
       "gold": {
         "name": "黄金",
         "sge_symbol": "Au99.99",
         "intl_symbol": "XAU/USD",
         "unit": "元/克",
-        "intl_usd": 3730.25,
-        "intl_cny": 801.12,
+        "intl_usd": 3731.45,
+        "intl_cny": 801.38,
         "sge": 801.5,
-        "premium_pct": 0.05
+        "premium_pct": 0.01
       },
       "silver": {
         "name": "白银",
         "sge_symbol": "Ag99.99",
         "intl_symbol": "XAG/USD",
         "unit": "元/千克",
-        "intl_usd": 44.94,
-        "intl_cny": 9652.07,
+        "intl_usd": 44.96,
+        "intl_cny": 9655.73,
         "sge": 11071.0,
-        "premium_pct": 14.7
+        "premium_pct": 14.66
       },
       "platinum": {
         "name": "铂金",
         "sge_symbol": "Pt99.95",
         "intl_symbol": "XPT/USD",
         "unit": "元/克",
-        "intl_usd": 1363.05,
-        "intl_cny": 292.73,
+        "intl_usd": 1362.95,
+        "intl_cny": 292.71,
         "sge": 346.0,
-        "premium_pct": 18.2
+        "premium_pct": 18.21
       },
       "palladium": {
         "name": "钯金",
         "sge_symbol": "Pd99.95",
         "intl_symbol": "XPD/USD",
         "unit": "元/克",
-        "intl_usd": 950.5,
-        "intl_cny": 204.13,
+        "intl_usd": 951.0,
+        "intl_cny": 204.24,
         "sge": null,
         "premium_pct": null
       }
@@ -15832,7 +15832,7 @@
       "name": "布伦特原油",
       "symbol": "OIL",
       "unit": "美元/桶",
-      "last": 91.66,
+      "last": 92.215,
       "open": 93.36,
       "high": 93.54,
       "low": 90.34,
@@ -15875,7 +15875,7 @@
       "name": "WTI原油",
       "symbol": "CL",
       "unit": "美元/桶",
-      "last": 82.055,
+      "last": 82.341,
       "open": 84.5,
       "high": 84.77,
       "low": 81.2,
@@ -16006,6 +16006,20 @@
     }
   ],
   "news": [
+    {
+      "title": "报道：英伟达董事会所聘猎头公司接洽Arm首席执行官Rene Haas",
+      "text": "一位了解相关流程的知情人士透露，猎头公司Heidrick & Struggles已就英伟达首席执行官一职接洽Arm Holdings Plc首席执行官Rene Haas；该公司受英伟达董事会聘请，负责物色黄仁勋的继任者。\n\n这位因流程非公开而要求匿名的知情人士表示，黄仁勋上周离开公司后，Heidrick & Struggles已经开始接洽可能有能力接任这一职位的高管。（彭博）",
+      "time": "2026-11-18 19:26",
+      "source": "华尔街见闻",
+      "uri": "https://wallstreetcn.com/livenews/3202132"
+    },
+    {
+      "title": "NASA与SpaceX因天气原因推迟龙飞船货运舱的脱离对接",
+      "text": "NASA与SpaceX因天气原因推迟龙飞船货运舱的脱离对接。",
+      "time": "2026-11-18 19:22",
+      "source": "华尔街见闻",
+      "uri": "https://wallstreetcn.com/livenews/3202131"
+    },
     {
       "title": "对冲基金第三季重新拥抱阿里和富途，传奇投资人清仓百度",
       "text": "对冲基金第三季度重燃对阿里巴巴的兴趣，同时转而减持百度。汇总了1191家对冲基金的13F申报发现，它们第三季净增持阿里巴巴ADR共计550万份，扭转了前两个季度的连续减仓。\n\n与此同时，对冲基金第三季减持百度384万份（第二季增持350万份）。美国知名对冲基金管理人David Tepper旗下Appaloosa LP在报告期内减持了前季增持的百度。传奇投资人Stanley Druckenmiller旗下的家族办公室Duquesne Family Office LLC也清仓前季建仓的百度。医药股继续获得对冲基金增持，包括再鼎医药和百济神州。蔚来和小鹏等电动汽车股遭减持。（彭博）",
@@ -18091,20 +18105,6 @@
       "time": "2026-11-18 06:31",
       "source": "华尔街见闻",
       "uri": "https://wallstreetcn.com/livenews/3201731"
-    },
-    {
-      "title": "新台币兑美元下跌0.5%至33.015",
-      "text": "新台币兑美元下跌0.5%至33.015。",
-      "time": "2026-11-18 06:30",
-      "source": "华尔街见闻",
-      "uri": "https://wallstreetcn.com/livenews/3201730"
-    },
-    {
-      "title": "A股有色金属板块震荡走弱，中国稀土触及跌停，闽发铝业、贝特利、中金黄金、山金国际",
-      "text": "A股有色金属板块震荡走弱，中国稀土触及跌停，闽发铝业、贝特利、中金黄金、山金国际、紫金矿业、华阳新材等跟跌。",
-      "time": "2026-11-18 06:13",
-      "source": "华尔街见闻",
-      "uri": "https://wallstreetcn.com/livenews/3201729"
     }
   ],
   "heat_multi": [
@@ -18207,8 +18207,8 @@
   ],
   "daily_report": {
     "date": "2026-11-19",
-    "generated_at": "2026-11-19 03:22",
-    "body": "【行情回顾】\n- Au99.99 报 801.5 元/克(—0.00%),今开 810.79,最高 816.0,最低 803.0\n- 国际现货黄金 3730.25 美元/盎司;USD/CNY 6.6799;折算约 801.1 元/克\n\n【技术面】\n- 沪金主力 RSI(14)=36.3,中性区(30-70)\n- MA5=834.2 / MA20=858.8,价格跌破 MA20\n\n【资金与溢价】\n- 国内溢价 +0.05%(境内偏贵)\n- 金油比 40.6(1 盎司黄金可兑布伦特桶数)\n\n【明日关注】\n- 关注美联储官员表态与美债收益率;议息日前后波动放大\n- 夜盘 20:00 开盘,注意伦敦金隔夜动向"
+    "generated_at": "2026-11-19 03:28",
+    "body": "【行情回顾】\n- Au99.99 报 801.5 元/克(—0.00%),今开 810.79,最高 816.0,最低 803.0\n- 国际现货黄金 3731.45 美元/盎司;USD/CNY 6.6799;折算约 801.4 元/克\n\n【技术面】\n- 沪金主力 RSI(14)=36.3,中性区(30-70)\n- MA5=834.2 / MA20=858.8,价格跌破 MA20\n\n【资金与溢价】\n- 国内溢价 +0.01%(境内偏贵)\n- 金油比 40.7(1 盎司黄金可兑布伦特桶数)\n\n【明日关注】\n- 关注美联储官员表态与美债收益率;议息日前后波动放大\n- 夜盘 20:00 开盘,注意伦敦金隔夜动向"
   },
   "symbol_slug": {
     "Au99.99": "au9999",
@@ -18456,18 +18456,18 @@
       {
         "code": "hf_XAU",
         "name": "伦敦金",
-        "last": 3729.31,
+        "last": 3728.32,
         "prev": 3849.17,
         "open": 3852.93,
         "high": 3857.33,
-        "low": 3726.77,
+        "low": 3726.26,
         "unit": "美元/盎司",
         "date": "伦敦金（现货黄金）"
       },
       {
         "code": "hf_XAG",
         "name": "伦敦银",
-        "last": 45.07,
+        "last": 45.03,
         "prev": 47.38,
         "open": 47.49,
         "high": 47.6,
@@ -18478,18 +18478,18 @@
       {
         "code": "hf_GC",
         "name": "COMEX黄金",
-        "last": 3732.1,
+        "last": 3730.658,
         "prev": 3864.2,
         "open": 3855.2,
         "high": 3859.3,
-        "low": 3729.4,
+        "low": 3728.7,
         "unit": "美元/盎司",
         "date": "纽约黄金"
       },
       {
         "code": "hf_SI",
         "name": "COMEX白银",
-        "last": 44.959,
+        "last": 44.916,
         "prev": 47.357,
         "open": 47.41,
         "high": 47.525,
@@ -18500,7 +18500,7 @@
       {
         "code": "hf_OIL",
         "name": "布伦特原油",
-        "last": 91.66,
+        "last": 92.215,
         "prev": 93.14,
         "open": 93.36,
         "high": 93.54,
@@ -18511,7 +18511,7 @@
       {
         "code": "hf_CL",
         "name": "WTI原油",
-        "last": 82.055,
+        "last": 82.341,
         "prev": 84.65,
         "open": 84.5,
         "high": 84.77,
@@ -18523,7 +18523,7 @@
     "dxy": {
       "code": "DINIW",
       "name": "美元指数",
-      "last": 103.8339,
+      "last": 103.8492,
       "prev": 103.5625,
       "open": 103.5632,
       "high": 103.9117,
