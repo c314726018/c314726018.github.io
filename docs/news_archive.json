@@ -1,5 +1,19 @@
 [
  {
+  "title": "腾讯控股：三季度回购1586.76万股，耗资约70亿港元",
+  "text": "腾讯控股披露财报显示，截至9月30日止三个月内，公司于联交所以总代价约70亿港元（未计开支）购回合共1586.76万股股份。购回的股份其后已被注销。",
+  "time": "2026-11-18 08:56",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3201822"
+ },
+ {
+  "title": "中信证券：获中国证监会批准发行不超过200亿元科技创新公司债券",
+  "text": "中信证券：获中国证监会批准发行不超过200亿元科技创新公司债券。",
+  "time": "2026-11-18 08:54",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3201821"
+ },
+ {
   "title": "英国国债价格延续涨势，30年期国债收益率下跌5个基点至5.77%",
   "text": "英国国债价格延续涨势，30年期国债收益率下跌5个基点至5.77%。",
   "time": "2026-11-18 08:49",
@@ -33,6 +47,13 @@
   "time": "2026-11-18 08:42",
   "source": "华尔街见闻",
   "uri": "https://wallstreetcn.com/livenews/3201812"
+ },
+ {
+  "title": "腾讯控股：三季度录得负自由现金流人民币691亿元，但若剔除算力采购预付款，自由现金流将转正",
+  "text": "腾讯控股：第三季，本集团录得负自由现金流人民币691亿元，乃由于经营活动所产生的现金净额人民币26亿元，被资本开支付款人民币651亿元、媒体内容付款人民币46亿元及租赁负债付款人民币20亿元超额抵销。我们的经营现金流包括大额算力采购预付款，用于支持Hy系列模型升级、WorkBuddy推理需求，以及我们各项产品与服务的AI能力建设，同时满足外部客户对我们云服务的需求。若剔除算力采购的预付款，我们的自由现金流将转正至人民币169亿元。",
+  "time": "2026-11-18 08:39",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3201810"
  },
  {
   "title": "腾讯控股：三季度负自由现金流扩大至691亿元，但若剔除算力采购预付款，自由现金流将转正",
@@ -2077,26 +2098,5 @@
   "time": "2026-11-17 18:13",
   "source": "华尔街见闻",
   "uri": "https://wallstreetcn.com/livenews/3201459"
- },
- {
-  "title": "微软：在GitHub Copilot上推出MAI Code 2 Flash，并在",
-  "text": "微软：在GitHub Copilot上推出MAI Code 2 Flash，并在Foundry中进行有限访问预览。\n\n在Ignite大会上宣布推出MAI Cyber 2 Flash，即将登陆微软安全产品。\n\n在Foundry公开预览版、MAI Playground、OpenRouter、Genspark和Vercel上推出MAI Image 2.7。\n\n在GitHub Copilot上推出MAI Code 2。\n\n借助MAI Code 2 Flash，AT&T测试表现优于GPT 6.1 Sol，同时成本低50倍。\n\n语音AI模型MAI Realtime 1在公开基准测试和微软产品评估中表现优于GPT Realtime 2.1。\n\nMAI Transcribe 2现已在Dragon Copilot中推出，用于医疗场景。",
-  "time": "2026-11-17 18:11",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3201458"
- },
- {
-  "title": "英伟达董事会新设委员会 监督国家安全政策、出口管制合规等事务",
-  "text": "英伟达董事会成立了一个新的委员会，负责监督国家安全和出口管制事务。英伟达周二表示，新设立的委员会将由董事、前高盛高管Suzanne Nora Johnson担任主席，另外两名董事Stephen Neal和John Dabiri也将加入该委员会。这是临时首席执行官Colette Kress上周获任命后推动的首批调整之一。此前，黄仁勋辞去了英伟达首席执行官一职。",
-  "time": "2026-11-17 18:09",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3201457"
- },
- {
-  "title": "耐克：致力于赢得新一代中国消费者的青睐",
-  "text": "耐克：致力于赢得新一代中国消费者的青睐。",
-  "time": "2026-11-17 17:59",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3201456"
  }
 ]
