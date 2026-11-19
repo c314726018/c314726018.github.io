@@ -1,5 +1,19 @@
 [
  {
+  "title": "日经225指数收盘上涨0.7%，报59,444.21点",
+  "text": "日经225指数收盘上涨0.7%，报59,444.21点。日本东证指数收盘下跌0.04%，报3,822.47点。",
+  "time": "2026-11-19 06:32",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3202377"
+ },
+ {
+  "title": "中国台湾扩大放空禁令以支撑股市",
+  "text": "中国台湾宣布稳定股市措施，相关措施将于11月20日起实施。中国台湾宣布进一步限制卖空，将监测市场变动并调整措施。",
+  "time": "2026-11-19 06:19",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3202375"
+ },
+ {
   "title": "中国台湾宣布稳定股市措施",
   "text": "中国台湾宣布稳定股市措施，相关措施将于11月20日起实施。中国台湾宣布进一步限制卖空，将监测市场变动并调整措施。",
   "time": "2026-11-19 06:19",
@@ -40,6 +54,13 @@
   "time": "2026-11-19 06:00",
   "source": "华尔街见闻",
   "uri": "https://wallstreetcn.com/livenews/3202369"
+ },
+ {
+  "title": "欧盟委员会遭网络攻击 情况已持续超过10天",
+  "text": "据Politico援引欧盟官员报道，欧盟委员会遭遇网络攻击，个人数据可能受到影响，部分员工无法录入薪资信息。欧盟机构网络安全应急响应机构CERT-EU本月早些时候发现，黑客使用了ARTEX。这是一款公开可用、利用人工智能(AI)技术识别IT系统漏洞的工具。欧盟委员会认为已遏制大部分攻击，但具体损害程度仍不清楚。该官员表示，部分系统可能正在恢复运行，调查仍在继续。作为预防措施，部分应用程序曾被暂时停用，目前大部分已恢复访问。",
+  "time": "2026-11-19 05:57",
+  "source": "华尔街见闻",
+  "uri": "https://wallstreetcn.com/livenews/3202366"
  },
  {
   "title": "欧盟委员会遭网络攻击",
@@ -2077,26 +2098,5 @@
   "time": "2026-11-18 15:26",
   "source": "华尔街见闻",
   "uri": "https://wallstreetcn.com/livenews/3202040"
- },
- {
-  "title": "OpenAI总裁Brockman确认，他向马斯克要求算力（支持）",
-  "text": "OpenAI总裁Brockman确认，他向马斯克要求算力（支持）。",
-  "time": "2026-11-18 15:26",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3202039"
- },
- {
-  "title": "黑石集团Jon Gray在TomorrowX Summit警告称：市场存在“高度",
-  "text": "黑石集团Jon Gray在TomorrowX Summit警告称：市场存在“高度泡沫警报”。\n\n形势并非与互联网泡沫时期一样糟糕。\n\nAI基础设施供不应求“非常突出”。",
-  "time": "2026-11-18 15:26",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3202040"
- },
- {
-  "title": "OpenAI的Brockman确认，他向马斯克要求算力（支持）",
-  "text": "OpenAI的Brockman确认，他向马斯克要求算力（支持）。",
-  "time": "2026-11-18 15:26",
-  "source": "华尔街见闻",
-  "uri": "https://wallstreetcn.com/livenews/3202039"
  }
 ]
