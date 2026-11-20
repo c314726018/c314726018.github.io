@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-21 02:52:15",
+  "generated_at": "2026-11-21 02:57:16",
   "source": "上海黄金交易所 (SGE) · 国际现货贵金属 · 美元兑人民币 · 新浪财经 · 华尔街见闻",
   "live": 8,
   "items": [
@@ -14201,39 +14201,39 @@
     "symbol": "Au99.99"
   },
   "intl": {
-    "xau_usd": 3506.05,
+    "xau_usd": 3523.77,
     "usd_cny": 6.692,
-    "intl_cny_per_g": 754.33,
+    "intl_cny_per_g": 758.15,
     "sge_cny_per_g": 758.0,
-    "premium_pct": 0.49,
+    "premium_pct": -0.02,
     "metals": {
       "gold": {
         "name": "黄金",
         "sge_symbol": "Au99.99",
         "intl_symbol": "XAU/USD",
         "unit": "元/克",
-        "intl_usd": 3506.05,
-        "intl_cny": 754.33,
+        "intl_usd": 3523.77,
+        "intl_cny": 758.15,
         "sge": 758.0,
-        "premium_pct": 0.49
+        "premium_pct": -0.02
       },
       "silver": {
         "name": "白银",
         "sge_symbol": "Ag99.99",
         "intl_symbol": "XAG/USD",
         "unit": "元/千克",
-        "intl_usd": 40.78,
-        "intl_cny": 8772.83,
+        "intl_usd": 40.76,
+        "intl_cny": 8768.53,
         "sge": 10077.0,
-        "premium_pct": 14.87
+        "premium_pct": 14.92
       },
       "platinum": {
         "name": "铂金",
         "sge_symbol": "Pt99.95",
         "intl_symbol": "XPT/USD",
         "unit": "元/克",
-        "intl_usd": 1284.35,
-        "intl_cny": 276.33,
+        "intl_usd": 1288.75,
+        "intl_cny": 277.28,
         "sge": null,
         "premium_pct": null
       },
@@ -14242,8 +14242,8 @@
         "sge_symbol": "Pd99.95",
         "intl_symbol": "XPD/USD",
         "unit": "元/克",
-        "intl_usd": 891.25,
-        "intl_cny": 191.75,
+        "intl_usd": 891.5,
+        "intl_cny": 191.81,
         "sge": null,
         "premium_pct": null
       }
@@ -14254,7 +14254,7 @@
       "name": "布伦特原油",
       "symbol": "OIL",
       "unit": "美元/桶",
-      "last": 92.182,
+      "last": 92.214,
       "open": 92.38,
       "high": 92.89,
       "low": 90.06,
@@ -14297,7 +14297,7 @@
       "name": "WTI原油",
       "symbol": "CL",
       "unit": "美元/桶",
-      "last": 83.103,
+      "last": 83.143,
       "open": 83.1,
       "high": 83.25,
       "low": 80.78,
@@ -14428,6 +14428,13 @@
     }
   ],
   "news": [
+    {
+      "title": "云基础设施公司CloudFerro考虑波兰IPO",
+      "text": "云基础设施公司CloudFerro考虑波兰IPO。",
+      "time": "2026-11-20 18:53",
+      "source": "华尔街见闻",
+      "uri": "https://wallstreetcn.com/livenews/3203537"
+    },
     {
       "title": "美国总统特朗普：未对美国商务部长卢特尼克失去信心",
       "text": "美国总统特朗普：未对美国商务部长卢特尼克失去信心。",
@@ -16520,13 +16527,6 @@
       "time": "2026-11-20 06:56",
       "source": "华尔街见闻",
       "uri": "https://wallstreetcn.com/livenews/3203042"
-    },
-    {
-      "title": "腾讯云：2026年11月18日12时起 DeepSeek原厂服务端联网搜索免费",
-      "text": "腾讯云公告，自北京时间2026年11月18日12时起，调用DeepSeek原厂直供模型（即模型名称中带「原厂直供」标识的模型）时触发的服务端搜索（Search）、网页抓取（Fetch）不再计费，仅按模型Token用量计费。使用以下接口时会触发服务端搜索：AnthropicAPI的web_search工具、Responses API的web_search工具。对于11月18日12:00:00后产生的服务端联网搜索费用，我们将启动退费，费用将于11月30日23:59:59前统一退还。",
-      "time": "2026-11-20 06:50",
-      "source": "华尔街见闻",
-      "uri": "https://wallstreetcn.com/livenews/3203041"
     }
   ],
   "heat_multi": [
@@ -16629,8 +16629,8 @@
   ],
   "daily_report": {
     "date": "2026-11-21",
-    "generated_at": "2026-11-21 02:52",
-    "body": "【行情回顾】\n- Au99.99 报 758.0 元/克(—0.00%),今开 764.55,最高 773.0,最低 760.0\n- 国际现货黄金 3506.05 美元/盎司;USD/CNY 6.692;折算约 754.3 元/克\n\n【技术面】\n- 沪金主力 RSI(14)=33.6,中性区(30-70)\n- MA5=810.5 / MA20=850.1,价格跌破 MA20\n\n【资金与溢价】\n- 国内溢价 +0.49%(境内偏贵)\n- 金油比 38.2(1 盎司黄金可兑布伦特桶数)\n\n【明日关注】\n- 关注美联储官员表态与美债收益率;议息日前后波动放大\n- 夜盘 20:00 开盘,注意伦敦金隔夜动向"
+    "generated_at": "2026-11-21 02:57",
+    "body": "【行情回顾】\n- Au99.99 报 758.0 元/克(—0.00%),今开 764.55,最高 773.0,最低 760.0\n- 国际现货黄金 3523.77 美元/盎司;USD/CNY 6.692;折算约 758.1 元/克\n\n【技术面】\n- 沪金主力 RSI(14)=33.6,中性区(30-70)\n- MA5=810.5 / MA20=850.1,价格跌破 MA20\n\n【资金与溢价】\n- 国内溢价 -0.02%(境内贴水)\n- 金油比 38.4(1 盎司黄金可兑布伦特桶数)\n\n【明日关注】\n- 关注美联储官员表态与美债收益率;议息日前后波动放大\n- 夜盘 20:00 开盘,注意伦敦金隔夜动向"
   },
   "symbol_slug": {
     "Au99.99": "au9999",
@@ -16878,7 +16878,7 @@
       {
         "code": "hf_XAU",
         "name": "伦敦金",
-        "last": 3508.78,
+        "last": 3537.21,
         "prev": 3625.01,
         "open": 3628.88,
         "high": 3636.63,
@@ -16889,7 +16889,7 @@
       {
         "code": "hf_XAG",
         "name": "伦敦银",
-        "last": 41.0,
+        "last": 41.54,
         "prev": 42.85,
         "open": 43.03,
         "high": 43.21,
@@ -16900,7 +16900,7 @@
       {
         "code": "hf_GC",
         "name": "COMEX黄金",
-        "last": 3508.418,
+        "last": 3533.427,
         "prev": 3685.5,
         "open": 3633.8,
         "high": 3638.1,
@@ -16911,7 +16911,7 @@
       {
         "code": "hf_SI",
         "name": "COMEX白银",
-        "last": 41.348,
+        "last": 41.869,
         "prev": 44.881,
         "open": 43.55,
         "high": 43.68,
@@ -16922,7 +16922,7 @@
       {
         "code": "hf_OIL",
         "name": "布伦特原油",
-        "last": 92.182,
+        "last": 92.214,
         "prev": 91.98,
         "open": 92.38,
         "high": 92.89,
@@ -16933,7 +16933,7 @@
       {
         "code": "hf_CL",
         "name": "WTI原油",
-        "last": 83.103,
+        "last": 83.143,
         "prev": 82.44,
         "open": 83.1,
         "high": 83.25,
@@ -16945,7 +16945,7 @@
     "dxy": {
       "code": "DINIW",
       "name": "美元指数",
-      "last": 103.8711,
+      "last": 103.8351,
       "prev": 103.9423,
       "open": 103.9573,
       "high": 103.9618,
