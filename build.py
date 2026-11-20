@@ -2042,6 +2042,11 @@ def metals_rows(intl, data=None):
 # ---------------------------------------------------------------- 首页
 
 def page_index(data):
+    _real = data.get("brands_real") or {}
+    _real_mode = bool(_real.get("brands"))
+    _BRAND_NOTE = ("<b>说明：</b>以上为各品牌官网<b>今日实际挂牌价</b>（不含工费，经金价查询网聚合，报价时间见行内），实际成交以门店为准；铂金列为各品牌铂金挂牌价。"
+                   if _real_mode else
+                   "<b>说明：</b>以上为「基准金价 + 行业典型加价 / 折价」的<b>参考估算值</b>，用于理解实物金买卖价差结构，<b>非周大福、老凤祥等品牌实时挂牌价</b>。品牌金价由各家每日公布、含独立工费与促销，需以门店为准。")
     items = data.get("items") or []
     intl = data.get("intl") or {}
     prim = data.get("primary") or {}
@@ -2121,8 +2126,12 @@ def page_index(data):
     _ag_base = next((it.get("last") for it in items if it.get("symbol") == "Ag99.99"), None)
     _ag_unit_div = 1000.0 if _ag_base and _ag_base > 100 else 1.0
     brand_rows = ""
+    _real = data.get("brands_real") or {}
+    _real_map = {x.get("name"): x for x in (_real.get("brands") or [])}
+    _real_mode = bool(_real.get("brands"))
     _brs = (BRANDS.get("brands_gold") or [])
     for _b in _brs:
+        _rb = _real_map.get(_b.get("name"))
         _prem = _b.get("premium") or 0
         _bb = _b.get("buyback") or 0
         _today = _au_base_price + _prem if _au_base_price else None
@@ -2130,15 +2139,24 @@ def page_index(data):
         _chg = _today - _yest if (_today and _yest) else None
         _cls = "up" if (_chg or 0) > 0 else "down" if (_chg or 0) < 0 else "flat"
         _chg_txt = ('<span class="chg ' + _cls + '">' + ("+" if _chg > 0 else "") + fmt(_chg) + "</span>") if _chg is not None else "—"
-        _rec = _au_base_price - _bb if _au_base_price else None
-        _bar_b = _au_base_price + (BRANDS.get("gold_bar_premium") or 22) if _au_base_price else None
-        brand_rows += (
-            f'<tr><td class="lbl">{esc(_b.get("name"))}</td>'
-            f'<td class="num strong">{fmt(_today)}</td>'
-            f'<td class="num">{fmt(_yest)}</td>'
-            f'<td class="num">{_chg_txt}</td>'
-            f'<td class="num">{fmt(_rec)}</td>'
-            f'<td class="num">{fmt(_bar_b)}</td></tr>')
+        if _rb and _rb.get("price"):
+            # 实价模式:今日挂牌价+铂金挂牌价(涨跌需昨日数据,首日显示报价日期)
+            _pt_txt = fmt(_rb.get("platinum")) + " 元/克" if _rb.get("platinum") else "—"
+            brand_rows += (
+                f'<tr><td class="lbl">{esc(_b.get("name"))}</td>'
+                f'<td class="num strong">{fmt(_rb.get("price"))}</td>'
+                f'<td colspan="3" class="unit">{esc(_rb.get("date") or "")} 报价</td>'
+                f'<td class="num">{_pt_txt}</td></tr>')
+        else:
+            _rec = _au_base_price - _bb if _au_base_price else None
+            _bar_b = _au_base_price + (BRANDS.get("gold_bar_premium") or 22) if _au_base_price else None
+            brand_rows += (
+                f'<tr><td class="lbl">{esc(_b.get("name"))}</td>'
+                f'<td class="num strong">{fmt(_today)}</td>'
+                f'<td class="num">{fmt(_yest)}</td>'
+                f'<td class="num">{_chg_txt}</td>'
+                f'<td class="num">{fmt(_rec)}</td>'
+                f'<td class="num">{fmt(_bar_b)}</td></tr>')
     _bar_prem = BRANDS.get("gold_bar_premium") or 22
     bar_p = fmt(_au_base_price + _bar_prem) if _au_base_price else "—"
     bar_prem = _bar_prem
@@ -2684,9 +2702,25 @@ def page_index(data):
         </tbody>
       </table>
       <div class="hint">以上折价为行业常见区间,具体以回收商当日挂牌与检测结论为准;建议保留购买凭证与证书,大额回收多家比价。</div>
-      <div class="phys-note"><b>说明：</b>以上为「基准金价 + 行业典型加价 / 折价」的<b>参考估算值</b>，用于理解实物金买卖价差结构，<b>非周大福、老凤祥等品牌实时挂牌价</b>。品牌金价由各家每日公布、含独立工费与促销，需以门店为准。调整上方假设可观察不同加价下的估算结果。</div>
+      <div class="phys-note">{_BRAND_NOTE}</div>
     </div>
   </section>
+
+  <section class="section" id="brandPrice">
+    <div class="section-head">
+      <div><div class="lbl">BRAND PRICES · 品牌金价</div><h2>品牌今日挂牌价</h2>
+        <p>各品牌官网每日公布的足金饰品挂牌价（不含工费），与 SGE 基准价对照，看懂品牌溢价来自哪里。</p></div>
+      <div class="side">每日随各品牌官网更新</div>
+    </div>
+    <div class="card">
+      <table class="mega-table">
+        <thead><tr><th>品牌</th><th>今日足金挂牌价</th><th colspan="3">报价时间</th><th>铂金挂牌价</th></tr></thead>
+        <tbody>{brand_rows}</tbody>
+      </table>
+      <div class="phys-note">{_BRAND_NOTE}</div>
+    </div>
+  </section>
+
 
   <!-- ============ 油价与汇率 ============ -->
   <!-- ============ 国际原油(P0 拆分) ============ -->

@@ -188,6 +188,55 @@ def _sina_daily(sym):
     return arr
 
 
+def fetch_brands_real():
+    """抓取各品牌今日实价(金价查询网聚合,来源为各品牌官网挂牌价)。失败返回 None,降级用估算。"""
+    def _parse(url):
+        try:
+            h = _get_text(url)
+        except Exception:
+            return None
+        rows = re.findall(r"<tr[^>]*>([\s\S]*?)</tr>", h)
+        brands, date, gold_price = [], "", None
+        for r in rows:
+            cells = [c.strip() for c in re.findall(r"<t[dh][^>]*>([^<]*)</t[dh]>", r) if c.strip()]
+            if len(cells) >= 6 and cells[1] == "黄金价格":
+                name = cells[0]
+                m = re.search(r"(\d+(?:\.\d+)?)", cells[2])
+                pt = re.search(r"(\d+(?:\.\d+)?)", cells[4]) if len(cells) > 4 else None
+                if name and m:
+                    brands.append({"name": name, "price": float(m.group(1)),
+                                   "platinum": float(pt.group(1)) if pt else None,
+                                   "date": cells[5] if len(cells) > 5 else ""})
+                if brands and not date:
+                    date = brands[-1]["date"]
+            elif len(cells) >= 3 and "元/克" in cells[1] and gold_price is None and cells[0].endswith("元/克"):
+                try:
+                    gold_price = float(re.search(r"(\d+(?:\.\d+)?)", cells[0]).group(1))
+                except Exception:
+                    pass
+        return {"brands": brands, "date": date, "gold_price": gold_price} if brands else None
+    # 1) 固定文章 URL(该站每日更新同 URL)
+    try:
+        r = _parse("https://www.huangjinjiage.cn/golden/88643.html")
+        if r and r.get("brands"):
+            today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y年%m月%d日")
+            if today in str(r["date"]):
+                r["source"] = "https://www.huangjinjiage.cn/golden/88643.html"
+                return r
+            # 2) 日期过期:从文章内相关链接找新的
+            h = _get_text("https://www.huangjinjiage.cn/golden/88643.html")
+            links = list(dict.fromkeys(re.findall(r'href="(/golden/\d+\.html)"', h)))[:6]
+            for link in links:
+                r2 = _parse("https://www.huangjinjiage.cn" + link)
+                if r2 and r2.get("brands") and today in str(r2.get("date")):
+                    r2["source"] = "https://www.huangjinjiage.cn" + link
+                    return r2
+            return r  # 有数据但日期旧,仍返回(标注日期)
+    except Exception as e:
+        print("[warn] 品牌实价抓取失败:", str(e)[:60])
+    return None
+
+
 def fetch_oil():
     """布伦特 / WTI（新浪全球期货日线收盘）+ 上海原油 SC（INE 主力连续实时）。"""
     out = {}
@@ -649,6 +698,7 @@ def main():
         "news": news_merged,
         "heat_multi": (heat_multi_data if heat_multi_data is not None else []),
         "daily_report": daily_report,
+        "brands_real": fetch_brands_real(),
         "symbol_slug": SYMBOL_SLUG,
         "extra": extra,
         "klines": klines,
