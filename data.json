@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24 05:22:20",
+  "generated_at": "2026-11-24 05:27:20",
   "source": "上海黄金交易所 (SGE) · 国际现货贵金属 · 美元兑人民币 · 新浪财经 · 华尔街见闻",
   "live": 9,
   "items": [
@@ -15779,21 +15779,21 @@
     "symbol": "Au99.99"
   },
   "intl": {
-    "xau_usd": 3635.15,
+    "xau_usd": 3637.35,
     "usd_cny": 6.6813,
-    "intl_cny_per_g": 780.87,
+    "intl_cny_per_g": 781.34,
     "sge_cny_per_g": 774.0,
-    "premium_pct": -0.88,
+    "premium_pct": -0.94,
     "metals": {
       "gold": {
         "name": "黄金",
         "sge_symbol": "Au99.99",
         "intl_symbol": "XAU/USD",
         "unit": "元/克",
-        "intl_usd": 3635.15,
-        "intl_cny": 780.87,
+        "intl_usd": 3637.35,
+        "intl_cny": 781.34,
         "sge": 774.0,
-        "premium_pct": -0.88
+        "premium_pct": -0.94
       },
       "silver": {
         "name": "白银",
@@ -15801,27 +15801,27 @@
         "intl_symbol": "XAG/USD",
         "unit": "元/千克",
         "intl_usd": 42.95,
-        "intl_cny": 9225.03,
+        "intl_cny": 9226.1,
         "sge": 10205.0,
-        "premium_pct": 10.62
+        "premium_pct": 10.61
       },
       "platinum": {
         "name": "铂金",
         "sge_symbol": "Pt99.95",
         "intl_symbol": "XPT/USD",
         "unit": "元/克",
-        "intl_usd": 1312.45,
-        "intl_cny": 281.93,
+        "intl_usd": 1314.95,
+        "intl_cny": 282.46,
         "sge": 322.5,
-        "premium_pct": 14.39
+        "premium_pct": 14.18
       },
       "palladium": {
         "name": "钯金",
         "sge_symbol": "Pd99.95",
         "intl_symbol": "XPD/USD",
         "unit": "元/克",
-        "intl_usd": 893.5,
-        "intl_cny": 191.93,
+        "intl_usd": 893.0,
+        "intl_cny": 191.83,
         "sge": null,
         "premium_pct": null
       }
@@ -15832,7 +15832,7 @@
       "name": "布伦特原油",
       "symbol": "OIL",
       "unit": "美元/桶",
-      "last": 89.294,
+      "last": 89.302,
       "open": 92.2,
       "high": 93.12,
       "low": 88.6,
@@ -15875,7 +15875,7 @@
       "name": "WTI原油",
       "symbol": "CL",
       "unit": "美元/桶",
-      "last": 80.243,
+      "last": 80.262,
       "open": 83.67,
       "high": 83.95,
       "low": 79.87,
@@ -16007,8 +16007,8 @@
   ],
   "news": [
     {
-      "title": "思科与OpenAI推出Shirudo",
-      "text": "思科与OpenAI推出Shirudo。",
+      "title": "思科与OpenAI推出用于保护AI智能体的开源安全新项目Shirudo",
+      "text": "思科与OpenAI推出用于保护AI智能体的开源安全新项目Shirudo。",
       "time": "2026-11-23 21:20",
       "source": "华尔街见闻",
       "uri": "https://wallstreetcn.com/livenews/3204515"
@@ -16019,6 +16019,13 @@
       "time": "2026-11-23 21:20",
       "source": "华尔街见闻",
       "uri": "https://wallstreetcn.com/livenews/3204514"
+    },
+    {
+      "title": "思科与OpenAI推出Shirudo",
+      "text": "思科与OpenAI推出Shirudo。",
+      "time": "2026-11-23 21:20",
+      "source": "华尔街见闻",
+      "uri": "https://wallstreetcn.com/livenews/3204515"
     },
     {
       "title": "AMD提交招股说明书，拟由售股股东转售至多逾3.369亿股普通股",
@@ -18098,13 +18105,6 @@
       "time": "2026-11-23 08:30",
       "source": "华尔街见闻",
       "uri": "https://wallstreetcn.com/livenews/3204063"
-    },
-    {
-      "title": "德国11月制造业PMI初值 55，前值 54.2",
-      "text": "德国11月制造业PMI初值 55，前值 54.2。",
-      "time": "2026-11-23 08:30",
-      "source": "华尔街见闻",
-      "uri": "https://wallstreetcn.com/livenews/3204062"
     }
   ],
   "heat_multi": [
@@ -18200,15 +18200,15 @@
     },
     {
       "name": "COMEX白银",
-      "p5": -7.31,
-      "p20": -19.54,
-      "p60": -35.31
+      "p5": -7.44,
+      "p20": -19.65,
+      "p60": -35.4
     }
   ],
   "daily_report": {
     "date": "2026-11-24",
-    "generated_at": "2026-11-24 05:22",
-    "body": "【行情回顾】\n- Au99.99 报 774.0 元/克(—0.00%),今开 781.4,最高 794.0,最低 776.0\n- 国际现货黄金 3635.15 美元/盎司;USD/CNY 6.6813;折算约 780.9 元/克\n\n【技术面】\n- 沪金主力 RSI(14)=35.9,中性区(30-70)\n- MA5=800.5 / MA20=846.0,价格跌破 MA20\n\n【资金与溢价】\n- 国内溢价 -0.88%(境内贴水)\n- 金油比 40.7(1 盎司黄金可兑布伦特桶数)\n\n【明日关注】\n- 关注美联储官员表态与美债收益率;议息日前后波动放大\n- 夜盘 20:00 开盘,注意伦敦金隔夜动向"
+    "generated_at": "2026-11-24 05:27",
+    "body": "【行情回顾】\n- Au99.99 报 774.0 元/克(—0.00%),今开 781.4,最高 794.0,最低 776.0\n- 国际现货黄金 3637.35 美元/盎司;USD/CNY 6.6813;折算约 781.3 元/克\n\n【技术面】\n- 沪金主力 RSI(14)=35.9,中性区(30-70)\n- MA5=800.5 / MA20=846.0,价格跌破 MA20\n\n【资金与溢价】\n- 国内溢价 -0.94%(境内贴水)\n- 金油比 40.7(1 盎司黄金可兑布伦特桶数)\n\n【明日关注】\n- 关注美联储官员表态与美债收益率;议息日前后波动放大\n- 夜盘 20:00 开盘,注意伦敦金隔夜动向"
   },
   "brands_real": {
     "brands": [
@@ -18541,7 +18541,7 @@
       {
         "code": "hf_XAU",
         "name": "伦敦金",
-        "last": 3635.44,
+        "last": 3636.33,
         "prev": 3534.64,
         "open": 3559.83,
         "high": 3689.57,
@@ -18552,7 +18552,7 @@
       {
         "code": "hf_XAG",
         "name": "伦敦银",
-        "last": 43.06,
+        "last": 43.08,
         "prev": 41.18,
         "open": 41.82,
         "high": 44.23,
@@ -18563,7 +18563,7 @@
       {
         "code": "hf_GC",
         "name": "COMEX黄金",
-        "last": 3641.694,
+        "last": 3641.86,
         "prev": 3515.4,
         "open": 3570.5,
         "high": 3691.0,
@@ -18585,7 +18585,7 @@
       {
         "code": "hf_OIL",
         "name": "布伦特原油",
-        "last": 89.294,
+        "last": 89.302,
         "prev": 92.57,
         "open": 92.2,
         "high": 93.12,
@@ -18596,7 +18596,7 @@
       {
         "code": "hf_CL",
         "name": "WTI原油",
-        "last": 80.243,
+        "last": 80.262,
         "prev": 83.41,
         "open": 83.67,
         "high": 83.95,
@@ -18608,7 +18608,7 @@
     "dxy": {
       "code": "DINIW",
       "name": "美元指数",
-      "last": 104.3289,
+      "last": 104.3287,
       "prev": 103.8404,
       "open": 103.798,
       "high": 104.5332,
@@ -49897,7 +49897,7 @@
         "o": 41.55,
         "h": 44.67,
         "l": 41.905,
-        "c": 43.47
+        "c": 43.41
       }
     ],
     "OIL": [
