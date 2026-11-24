@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25 07:24:59",
+  "generated_at": "2026-11-25 07:30:04",
   "source": "上海黄金交易所 (SGE) · 国际现货贵金属 · 美元兑人民币 · 新浪财经 · 华尔街见闻",
   "live": 9,
   "items": [
@@ -15779,49 +15779,49 @@
     "symbol": "Au99.99"
   },
   "intl": {
-    "xau_usd": 3557.35,
+    "xau_usd": 3558.6,
     "usd_cny": 6.6793,
-    "intl_cny_per_g": 763.92,
+    "intl_cny_per_g": 764.19,
     "sge_cny_per_g": 763.8,
-    "premium_pct": -0.02,
+    "premium_pct": -0.05,
     "metals": {
       "gold": {
         "name": "黄金",
         "sge_symbol": "Au99.99",
         "intl_symbol": "XAU/USD",
         "unit": "元/克",
-        "intl_usd": 3557.35,
-        "intl_cny": 763.92,
+        "intl_usd": 3558.6,
+        "intl_cny": 764.19,
         "sge": 763.8,
-        "premium_pct": -0.02
+        "premium_pct": -0.05
       },
       "silver": {
         "name": "白银",
         "sge_symbol": "Ag99.99",
         "intl_symbol": "XAG/USD",
         "unit": "元/千克",
-        "intl_usd": 40.81,
-        "intl_cny": 8764.37,
+        "intl_usd": 40.9,
+        "intl_cny": 8783.05,
         "sge": 10109.0,
-        "premium_pct": 15.34
+        "premium_pct": 15.1
       },
       "platinum": {
         "name": "铂金",
         "sge_symbol": "Pt99.95",
         "intl_symbol": "XPT/USD",
         "unit": "元/克",
-        "intl_usd": 1260.6,
-        "intl_cny": 270.71,
+        "intl_usd": 1261.5,
+        "intl_cny": 270.9,
         "sge": 319.17,
-        "premium_pct": 17.9
+        "premium_pct": 17.82
       },
       "palladium": {
         "name": "钯金",
         "sge_symbol": "Pd99.95",
         "intl_symbol": "XPD/USD",
         "unit": "元/克",
-        "intl_usd": 860.5,
-        "intl_cny": 184.79,
+        "intl_usd": 861.25,
+        "intl_cny": 184.95,
         "sge": null,
         "premium_pct": null
       }
@@ -15875,7 +15875,7 @@
       "name": "WTI原油",
       "symbol": "CL",
       "unit": "美元/桶",
-      "last": 81.623,
+      "last": 81.657,
       "open": 81.68,
       "high": 81.73,
       "low": 81.42,
@@ -18207,8 +18207,8 @@
   ],
   "daily_report": {
     "date": "2026-11-25",
-    "generated_at": "2026-11-25 07:24",
-    "body": "【行情回顾】\n- Au99.99 报 763.8 元/克(—0.00%),今开 780.0,最高 784.0,最低 765.0\n- 国际现货黄金 3557.35 美元/盎司;USD/CNY 6.6793;折算约 763.9 元/克\n\n【技术面】\n- 沪金主力 RSI(14)=27.1,超卖区(<30),关注反弹机会\n- MA5=789.7 / MA20=842.0,价格跌破 MA20\n\n【资金与溢价】\n- 国内溢价 -0.02%(境内贴水)\n- 金油比 40.3(1 盎司黄金可兑布伦特桶数)\n\n【明日关注】\n- 关注美联储官员表态与美债收益率;议息日前后波动放大\n- 夜盘 20:00 开盘,注意伦敦金隔夜动向"
+    "generated_at": "2026-11-25 07:30",
+    "body": "【行情回顾】\n- Au99.99 报 763.8 元/克(—0.00%),今开 780.0,最高 784.0,最低 765.0\n- 国际现货黄金 3558.6 美元/盎司;USD/CNY 6.6793;折算约 764.2 元/克\n\n【技术面】\n- 沪金主力 RSI(14)=27.1,超卖区(<30),关注反弹机会\n- MA5=789.7 / MA20=842.0,价格跌破 MA20\n\n【资金与溢价】\n- 国内溢价 -0.05%(境内贴水)\n- 金油比 40.3(1 盎司黄金可兑布伦特桶数)\n\n【明日关注】\n- 关注美联储官员表态与美债收益率;议息日前后波动放大\n- 夜盘 20:00 开盘,注意伦敦金隔夜动向"
   },
   "brands_real": {
     "brands": [
@@ -18541,10 +18541,10 @@
       {
         "code": "hf_XAU",
         "name": "伦敦金",
-        "last": 3560.75,
+        "last": 3567.28,
         "prev": 3555.83,
         "open": 3558.41,
-        "high": 3563.93,
+        "high": 3568.76,
         "low": 3557.11,
         "unit": "美元/盎司",
         "date": "伦敦金（现货黄金）"
@@ -18552,7 +18552,7 @@
       {
         "code": "hf_XAG",
         "name": "伦敦银",
-        "last": 41.01,
+        "last": 41.1,
         "prev": 40.89,
         "open": 40.95,
         "high": 41.14,
@@ -18563,10 +18563,10 @@
       {
         "code": "hf_GC",
         "name": "COMEX黄金",
-        "last": 3586.94,
+        "last": 3592.815,
         "prev": 3591.1,
         "open": 3586.9,
-        "high": 3591.3,
+        "high": 3596.0,
         "low": 3583.7,
         "unit": "美元/盎司",
         "date": "纽约黄金"
@@ -18574,7 +18574,7 @@
       {
         "code": "hf_SI",
         "name": "COMEX白银",
-        "last": 41.359,
+        "last": 41.389,
         "prev": 41.252,
         "open": 41.16,
         "high": 41.52,
@@ -18596,7 +18596,7 @@
       {
         "code": "hf_CL",
         "name": "WTI原油",
-        "last": 81.623,
+        "last": 81.657,
         "prev": 82.05,
         "open": 81.68,
         "high": 81.73,
@@ -18608,7 +18608,7 @@
     "dxy": {
       "code": "DINIW",
       "name": "美元指数",
-      "last": 103.8418,
+      "last": 103.8431,
       "prev": 103.825,
       "open": 103.8333,
       "high": 103.869,
