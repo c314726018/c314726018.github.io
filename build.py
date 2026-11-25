@@ -2099,7 +2099,7 @@ def page_index(data):
     au_item = next((it for it in items if it.get("symbol") == "Au99.99"), None)
     _au_last = au_item.get("last") if au_item else None
     _au_open = au_item.get("open") if au_item else None
-    _au_prev = au_item.get("open")  # 今开基准
+    _au_prev = au_item.get("open") if au_item else None  # 今开基准
     gold_chg_html = '<span class="flat">—</span>'
     if au_item and _au_last and _au_open:
         _d = _au_last - _au_open
