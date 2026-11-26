@@ -61,7 +61,7 @@ jobs:
           KEY="7f62035e56707ee1c721b77b11de07f8"
           curl -s -m 20 -X POST "https://api.indexnow.org/indexnow" \
             -H "Content-Type: application/json; charset=utf-8" \
-            -d '{"host":"c314726018.github.io","key":"'"$KEY"'","urlList":["https://c314726018.github.io/","https://c314726018.github.io/history.html","https://c314726018.github.io/about.html","https://c314726018.github.io/privacy.html"]}' \
+            -d '{"host":"www.jinhengwang.cn","key":"'"$KEY"'","urlList":["https://www.jinhengwang.cn/","https://www.jinhengwang.cn/history.html","https://www.jinhengwang.cn/about.html","https://www.jinhengwang.cn/privacy.html","https://www.jinhengwang.cn/quote-au9999.html","https://www.jinhengwang.cn/quote-xau.html","https://www.jinhengwang.cn/calendar.html","https://www.jinhengwang.cn/news.html"]}' \
             -o /dev/null -w "IndexNow HTTP %{http_code}\n" || echo "IndexNow 推送失败（不影响构建）"
       - name: 自续链（约 30 分钟后触发下一轮）
         if: always()

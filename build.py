@@ -70,7 +70,7 @@ CACHE = os.path.join(HERE, "data.json")
 DOCS = os.path.join(HERE, "docs")
 OUT = os.path.join(DOCS, "index.html")
 
-SITE = "https://c314726018.github.io/"
+SITE = "https://www.jinhengwang.cn/"
 TS = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y%m%d%H%M")  # 构建时间戳(资源版本号)
 ALERT_MAIL = "314726018@qq.com"
 
