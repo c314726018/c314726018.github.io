@@ -2043,6 +2043,18 @@ def metals_rows(intl, data=None):
 # ---------------------------------------------------------------- 首页
 
 def page_index(data):
+    # 备案合规模式:金条板块导购措辞中性化;开关关闭后原文案自动还原
+    _bar_lead = ("上海黄金交易所可提供标准金条的签约精炼企业名录(共 12 家),名录以交易所官网公布为准。标准金条参考价随基准价自动更新。"
+                 if COMPLIANCE_MODE else
+                 "上海黄金交易所可提供标准金条的签约精炼企业名录(共 12 家),名录以交易所官网公布为准。投资金条买卖参考价随基准价自动更新。")
+    _bar_hint = ("名录为公开信息整理,签约企业名单与规格请以上海黄金交易所官网公布为准。标准金条由上述签约企业按交易所标准提供,具体规格与成色以各企业公告为准。"
+                 if COMPLIANCE_MODE else
+                 "名录为公开信息整理,签约企业名单与规格请以上海黄金交易所官网公布为准。标准金条可通过上金所交易平台或上述企业柜台购买,回购规则以各企业公告为准。")
+    _bar_title = "标准金条参考价(随基准价联动)" if COMPLIANCE_MODE else "投资金条买卖参考(随基准价联动)"
+    _bar_buy = "标准金条参考价" if COMPLIANCE_MODE else "标准金条买入"
+    _bar_buy_note = "(渠道加价参考)" if COMPLIANCE_MODE else "(企业柜台升水)"
+    _bar_rec = "金条折算价" if COMPLIANCE_MODE else "金条回购"
+    _bar_rec_note = "基准 −5 ~ −10 元/克折价(估算口径)" if COMPLIANCE_MODE else "基准 −5 ~ −10 元/克折价,验重+损耗费"
     _real = data.get("brands_real") or {}
     _real_mode = bool(_real.get("brands"))
     _BRAND_NOTE = ("<b>说明：</b>以上为各品牌官网<b>今日实际挂牌价</b>（不含工费，经金价查询网聚合，报价时间见行内），实际成交以门店为准；铂金列为各品牌铂金挂牌价。"
@@ -2353,7 +2365,7 @@ def page_index(data):
   <section class="section" id="brands">
     <div class="section-head">
       <div><div class="lbl">STANDARD GOLD BARS · 标准金条</div><h1>标准金条企业名录</h1>
-        <p>上海黄金交易所可提供标准金条的签约精炼企业名录(共 12 家),名录以交易所官网公布为准。投资金条买卖参考价随基准价自动更新。</p></div>
+        <p>{_bar_lead}</p></div>
       <div class="side">名录来源:上海黄金交易所公开信息</div>
     </div>
     <div class="card">
@@ -2376,16 +2388,16 @@ def page_index(data):
           <tr><td class="lbl">成都印钞有限公司</td><td>四川成都</td><td>造币企业</td><td>投资金条铸造</td></tr>
         </tbody>
       </table>
-      <div class="hint">名录为公开信息整理,签约企业名单与规格请以上海黄金交易所官网公布为准。标准金条可通过上金所交易平台或上述企业柜台购买,回购规则以各企业公告为准。</div>
+      <div class="hint">{_bar_hint}</div>
     </div>
     <div class="card">
-      <div class="card-head"><h3>投资金条买卖参考(随基准价联动)</h3>
+      <div class="card-head"><h3>{_bar_title}</h3>
         <div class="chip-row"><span class="chip">基准 = SGE Au99.99</span><span class="chip">参考估算</span></div></div>
       <table class="mega-table">
         <thead><tr><th>品类</th><th>参考价</th><th>口径</th></tr></thead>
         <tbody>
-          <tr><td class="lbl">标准金条买入</td><td class="num strong">{bar_p} 元/克</td><td>基准 +{bar_prem} 元/克(企业柜台升水)</td></tr>
-          <tr><td class="lbl">金条回购</td><td class="num strong">{bar_rec} 元/克</td><td>基准 −5 ~ −10 元/克折价,验重+损耗费</td></tr>
+          <tr><td class="lbl">{_bar_buy}</td><td class="num strong">{bar_p} 元/克</td><td>基准 +{bar_prem} 元/克{_bar_buy_note}</td></tr>
+          <tr><td class="lbl">{_bar_rec}</td><td class="num strong">{bar_rec} 元/克</td><td>{_bar_rec_note}</td></tr>
           <tr><td class="lbl">18K 彩金(含 75% 金)</td><td class="num strong">{k18} 元/克</td><td>金价 × 75% + 工艺费,工费另计</td></tr>
           <tr><td class="lbl">铂金 Pt950 首饰</td><td class="num strong">{pt950} 元/克</td><td>SGE 铂金基准 +{pt_prem} 元/克首饰溢价</td></tr>
           <tr><td class="lbl">银饰 Ag999</td><td class="num strong">{ag} 元/克</td><td>银料价 +{ag_fee} 元/克工费,按件定价差异大</td></tr>
