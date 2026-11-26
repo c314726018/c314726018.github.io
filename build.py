@@ -87,8 +87,11 @@ try:
 except Exception:
     BRANDS = {"brands_gold": [], "gem_note": ""}  # 站长接收邮箱:填写后邮件订阅按钮将唤起邮件客户端预填订阅信息
 
-# AdSense 网站代码 —— 直接写入生成页的 <head>，确保验证时原始 HTML 抓取也能命中
-ADSENSE_LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>'
+# 备案期间合规开关:True=收起收费入口与广告(个人非经营形态);备案通过后改 False 重建即完整恢复
+COMPLIANCE_MODE = True
+ADSENSE_LOADER_REAL = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4401257427601930" crossorigin="anonymous"></script>'
+# AdSense 网站代码 — 合规模式下不注入
+ADSENSE_LOADER = '' if COMPLIANCE_MODE else ADSENSE_LOADER_REAL
 
 
 def load_data():
@@ -1676,10 +1679,8 @@ def footer_html():
       <a href="./academy.html#faq">常见问题</a><a href="./feedback.html">留言反馈</a><a href="./about.html">关于本站</a>
       <a href="./privacy.html">隐私政策</a></div>
     <div class="foot-col"><h4>联系我们</h4>
-      <a href="mailto:314726018@qq.com?subject=%E5%90%88%E4%BD%9C%E5%92%A8%E8%AF%A2">商务合作</a>
       <a href="mailto:314726018@qq.com?subject=%E6%84%8F%E8%A7%81%E5%BB%BA%E8%AE%AE">意见建议</a>
       <a href="mailto:314726018@qq.com?subject=%E6%95%B0%E6%8D%AE%E7%BA%A0%E9%94%99">数据纠错</a>
-      <a href="mailto:314726018@qq.com?subject=%E4%BC%9A%E5%91%98%E6%9C%8D%E5%8A%A1">会员开通</a>
       <a href="./feedback.html">在线留言板</a>
       <span style="font-size:11px">48h 内回复</span></div>
   </div>
@@ -1687,7 +1688,7 @@ def footer_html():
     <strong>免责声明：</strong>本站为行情信息聚合展示，价格以上海黄金交易所及相应机构官方发布为准。
     所有内容仅供信息参考，不构成任何投资建议、要约或交易依据。黄金价格波动较大，投资需自行判断并承担风险。<br>
     数据更新：每 30 分钟自动抓取 · 浏览器每 60 秒检查更新 · 非交易时段显示最近一次有效报价 · 快讯来自华尔街见闻公开流<br>
-    © 2026 金衡网 · 页面含第三方广告（Google AdSense），广告内容由第三方提供，与本站点立场无关。
+    © 2026 金衡网 · 本站为个人自建的行情信息整理页面,内容仅供参考,不构成投资建议。
   </div>
 </footer>
 <button class="back-top" id="backTop" type="button" aria-label="返回顶部">↑</button>
@@ -1706,8 +1707,8 @@ def promo_bar():
     return """<div class="promo-bar" id="promoBar">
   <div class="pb-in">
     <span class="pb-badge">🔔 会员</span>
-    <span class="pb-text">金市异动第一时间知道:议息日 / 非农夜 / 品种触价自动邮件通知 —— <b>免费版 3 条规则</b> · <b>会员版不限 + 涨跌幅触发 + AI 日报直达邮箱</b></span>
-    <a class="pb-cta" href="./feedback.html?type=member">了解与开通</a>
+    <span class="pb-text">价格提醒工具（个人自用·内测中）:品种触价后邮件通知,每 30 分钟巡检</span>
+    <a class="pb-cta" href="./index.html#alerts">查看提醒工具</a>
     <button class="pb-x" id="pbClose" type="button" aria-label="关闭公告">×</button>
   </div>
 </div>
@@ -1730,7 +1731,7 @@ def promo_bar():
 
 
 def ad_slot():
-    return '<div class="ad-slot" aria-label="广告位"></div>'
+    return '' if COMPLIANCE_MODE else '<div class="ad-slot" aria-label="广告位"></div>'
 
 
 
@@ -2495,55 +2496,32 @@ def page_index(data):
 
     <div class="plan-cards">
       <div class="plan-card">
-        <div class="pk">免费版</div>
-        <div class="pv">¥0 <span style="font-size:12px;color:var(--sub)">长期有效</span></div>
+        <div class="pk">价格提醒工具</div>
+        <div class="pv">个人自用 · 内测中</div>
         <ul>
           <li>✓ 3 条提醒规则</li>
           <li>✓ 全部 40+ 品种</li>
           <li>✓ 价格触发(高于/低于/等于)</li>
           <li>✓ 每 30 分钟巡检</li>
         </ul>
-        <a class="btn" href="#alertForm" style="width:100%">立即免费订阅</a>
-      </div>
-      <div class="plan-card featured">
-        <div class="hot">最受欢迎</div>
-        <div class="pk">季度会员</div>
-        <div class="pv">¥9.9 <span style="font-size:12px;color:var(--sub)">/ 季</span></div>
-        <ul>
-          <li>✓ 10 条提醒规则</li>
-          <li>✓ <b>涨跌幅触发</b>(单日 ±X% 异动)</li>
-          <li>✓ 新品种上线优先体验</li>
-          <li>✓ 触发邮件优先送达</li>
-        </ul>
-        <a class="btn gold" href="{bao_duo_link}" target="_blank" rel="noopener">面包多购买季度会员</a>
-      </div>
-      <div class="plan-card">
-        <div class="pk">年度会员</div>
-        <div class="pv">¥29.9 <span style="font-size:12px;color:var(--sub)">/ 年</span></div>
-        <ul>
-          <li>✓ 无限条提醒规则</li>
-          <li>✓ 涨跌幅 + 全类型触发</li>
-          <li>✓ 会员期内免费升级</li>
-          <li>✓ 问题优先响应</li>
-        </ul>
-        <a class="btn gold" href="{bao_duo_link}" target="_blank" rel="noopener">面包多购买年度会员</a>
+        <a class="btn" href="#alertForm" style="width:100%">添加提醒规则</a>
       </div>
     </div>
 
     <div class="card">
       <div class="steps-row">
-        <div class="sr-item"><b>① 购买</b><span>面包多付款,支持微信/支付宝</span></div>
-        <div class="sr-item"><b>② 回复订单</b><span>向提醒邮件回复订单号 + 监控邮箱</span></div>
-        <div class="sr-item"><b>③ 开通</b><span>24 小时内人工开通,邮件确认生效</span></div>
+        <div class="sr-item"><b>① 设规则</b><span>选择品种与触发价格</span></div>
+        <div class="sr-item"><b>② 填邮箱</b><span>填写接收提醒的邮箱地址</span></div>
+        <div class="sr-item"><b>③ 等通知</b><span>每 30 分钟巡检,触发后邮件提醒</span></div>
       </div>
     </div>
 
     <div class="card" id="alertForm">
       <div class="card-head" style="margin-bottom:10px"><h3>设置提醒规则</h3>
-        <div class="chip-row"><span class="badge">◷ 每 30 分钟巡检</span><span class="chip" id="quotaChip">免费版:3 条规则</span></div></div>
+        <div class="chip-row"><span class="badge">◷ 每 30 分钟巡检</span><span class="chip" id="quotaChip">可设 3 条规则</span></div></div>
       <div class="alert-type" id="alertTypeBox">
         <a class="on" data-t="price">🎯 价格触发</a>
-        <a data-t="pct">📈 涨跌幅触发 <span class="pro-tag">会员</span></a>
+        <a data-t="pct">📈 涨跌幅触发</a>
       </div>
       <div class="sym-multi" id="alertSymBox" aria-label="选择品种(可多选)">{sym_pills}</div>
       <div class="hint" style="margin:4px 2px">可多选品种;每个品种将分别建立提醒规则。</div>
@@ -2557,7 +2535,7 @@ def page_index(data):
       </div>
       <div class="alert-row">
         <input id="mailAddr" type="email" placeholder="接收邮箱" aria-label="接收邮箱" style="flex:1 1 180px">
-        <button class="btn" id="mailSubmit" type="button">提交订阅</button>
+        <button class="btn" id="mailSubmit" type="button">保存提醒</button>
       </div>
       <div class="hint" id="mailNote">邮箱仅用于发送提醒,不公开;当日同一规则重复触发不重复发送。</div>
       <button class="btn ghost" id="copyQuote" type="button" style="margin-top:4px">⧉ 复制当前行情摘要</button>
@@ -2570,9 +2548,9 @@ def page_index(data):
     <div class="card">
       <div class="card-head" style="margin-bottom:10px"><h3>常见问题</h3></div>
       <div class="faq-list">
-        <div class="faq"><b>Q:会员购买后如何开通?</b><p>面包多付款后在订单页备注或回复邮件提供「订单号 + 监控邮箱」,24 小时内人工开通并以邮件确认生效。</p></div>
-        <div class="faq"><b>Q:邮件多久能送达?</b><p>行情每 30 分钟巡检一次,触发后 30 分钟内送达;会员触发邮件优先发送。</p></div>
-        <div class="faq"><b>Q:免费版与会员的核心区别?</b><p>免费版支持 3 条价格触发规则;会员解锁「涨跌幅触发」(单日异动邮件)并提升规则数量上限,适合盯盘精力有限的投资者。</p></div>
+        <div class="faq"><b>Q:提醒规则怎么设置?</b><p>在下方选择品种、触发方向与价格,填写接收邮箱保存即可,无需注册账号。</p></div>
+        <div class="faq"><b>Q:邮件多久能送达?</b><p>行情每 30 分钟巡检一次,触发后 30 分钟内送达。</p></div>
+        <div class="faq"><b>Q:最多能设几条规则?</b><p>目前为个人自用内测阶段,每个邮箱最多 3 条价格触发规则。</p></div>
         <div class="faq"><b>Q:如何退订?</b><p>回复任意提醒邮件即可退订;或在本页删除对应规则。</p></div>
         <div class="faq"><b>Q:数据准确吗?</b><p>行情来源于上海黄金交易所公开数据与国际市场公开报价,每 30 分钟更新;提醒仅为信息通知,不构成投资建议。</p></div>
       </div>
@@ -2969,7 +2947,7 @@ def page_about(data):
   <div class="doc" style="margin-top:0">
     <p>本站所有内容仅用于行情信息展示与知识科普，<strong>不构成任何投资建议、要约、招揽或交易依据</strong>。黄金及其他贵金属价格波动较大，历史表现不代表未来结果。</p>
     <p>数据可能存在延迟、缺漏或上游口径调整，最终价格请以上海黄金交易所及相关机构官方发布为准。因使用本站信息而产生的任何直接或间接损失，本站不承担责任。</p>
-    <p>本页可能展示由第三方（Google AdSense）提供的广告。广告内容由广告主与广告平台决定，不代表本站立场；本站不对广告中的产品、服务或承诺作任何背书。</p>
+    <p>本站不投放第三方广告，也不向第三方共享你的个人信息。</p>
     <p class="muted">最后更新：2026 年 11 月 · <a href="./privacy.html" style="color:var(--gold)">查看隐私政策 →</a></p>
   </div>
   {ad_slot()}
@@ -3011,8 +2989,8 @@ def page_privacy(data):
     <h2>二、浏览器通知</h2>
     <p>价格提醒可选择开启浏览器桌面通知。开启时浏览器会向你请求授权，授权状态由浏览器管理，我们无法读取你的身份，也无法在页面关闭后向你推送消息。你可以随时在浏览器设置中撤回该授权。</p>
 
-    <h2>三、Cookie 与第三方广告</h2>
-    <p>本站使用 <strong>Google AdSense</strong> 展示广告。Google 及其合作伙伴可能会使用 Cookie 或类似技术，基于你访问本站及其他网站的记录投放个性化广告。</p>
+    <h2>三、Cookie 与本地存储</h2>
+    <p>本站仅使用浏览器本地存储保存提醒规则与主题偏好，不设置广告类 Cookie。</p>
     <ul>
       <li>你可以通过 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">Google 广告设置</a> 选择停用个性化广告；</li>
       <li>也可以访问 <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">aboutads.info</a> 停用部分第三方供应商的个性化广告 Cookie；</li>
@@ -3034,7 +3012,7 @@ def page_privacy(data):
 
     <h2>八、联系我们</h2>
     <p>如对本隐私政策或本站数据处理有疑问，可通过项目代码仓库的 Issue 功能留言，或查看 <a href="./about.html" style="color:var(--gold)">关于本站</a> 页面了解站点信息。</p>
-    <div class="callout"><p>简言之：本站没有账号、没有表单、没有后端数据库；除了浏览器本地保存的主题与提醒规则，以及第三方广告平台的 Cookie，我们不收集你的个人信息。</p></div>
+    <div class="callout"><p>简言之：本站没有账号、没有表单、没有后端数据库；除了浏览器本地保存的主题与提醒规则，我们不收集你的个人信息。</p></div>
   </div>
   {ad_slot()}
 </div>{side_right(data)}</div></div>
@@ -3864,6 +3842,48 @@ def page_data(data, hist):
 
 # ---------------------------------------------------------------- 入口
 
+
+def apply_static_compliance():
+    """备案期间:静态广告文件与 app.js 运行时文案改中性版;开关关闭时从备份原样还原。"""
+    bdir = os.path.join(HERE, "_compliance_backup")
+    if not os.path.isdir(bdir):
+        return
+    def _read_backup(name):
+        with open(os.path.join(bdir, name), "r", encoding="utf-8") as f:
+            return f.read()
+    def _write(name, text):
+        with open(os.path.join(DOCS, name), "w", encoding="utf-8") as f:
+            f.write(text)
+    if not COMPLIANCE_MODE:
+        for name in ("ads.txt", "ads.js", "app.js"):
+            try:
+                _write(name, _read_backup(name))
+            except OSError:
+                pass
+        return
+    _write("ads.txt", "# 备案期间暂不投放第三方广告\n")
+    _write("ads.js", "/* 备案期间:第三方广告脚本与广告位暂停 */\n")
+    app = _read_backup("app.js")
+    pairs = [
+        ('暂无本地规则;提交订阅后此处展示,可随时删除。', '暂无本地规则;保存后此处展示,可随时删除。'),
+        ('"免费版:已达 " + FREE_LIMIT + " 条上限(会员解锁更多)"', '"已达 " + FREE_LIMIT + " 条规则上限"'),
+        ('"免费版:" + rs.length + "/" + FREE_LIMIT + " 条"', '"提醒规则 " + rs.length + "/" + FREE_LIMIT + " 条"'),
+        ('"免费版上限 " + FREE_LIMIT + " 条规则。升级会员可解锁 10 条以上,并支持涨跌幅触发。"',
+         '"提醒规则上限 " + FREE_LIMIT + " 条,请先删除不用的规则。"'),
+        ("'邮件订阅通道即将开放。'", "'邮件提醒通道整理中,请稍后再试。'"),
+        ("""'已保存涨跌幅规则(本地)。该类型为会员功能——<a href="#alerts" style="color:var(--gold-2)">购买会员</a>后回复订单号+邮箱即可人工开通,开通前引擎按价格提醒处理。'""",
+         "'已保存涨跌幅规则(本地)。该类型目前处于内测阶段,引擎暂按价格提醒处理。'"),
+        ("'已保存规则(本地)。已唤起邮件客户端,请点击发送完成订阅;开通后触发时 30 分钟内自动送达。'",
+         "'已保存规则(本地)。已唤起邮件客户端,请点击发送完成登记;触发时 30 分钟内自动送达。'"),
+        (r'"订阅类型:邮件价格提醒\n品种("', r'"登记类型:邮件价格提醒\n品种("'),
+        ('"【金衡网】邮件提醒订阅 - "', '"【金衡网】邮件提醒登记 - "'),
+        ('ms.textContent = "提交订阅"', 'ms.textContent = "保存提醒"'),
+    ]
+    for a, b in pairs:
+        app = app.replace(a, b)
+    _write("app.js", app)
+
+
 def main():
     data = load_data()
     os.makedirs(DOCS, exist_ok=True)
@@ -3922,6 +3942,9 @@ def main():
         f.write(FAVICON)
     with open(os.path.join(DOCS, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(MANIFEST, f, ensure_ascii=False, indent=2)
+
+    apply_static_compliance()
+    print("[ok] 备案合规模式" if COMPLIANCE_MODE else "[ok] 完整模式")
 
     # IndexNow key 校验文件（必须位于 https://<host>/<key>.txt）
     with open(os.path.join(DOCS, INDEXNOW_KEY + ".txt"), "w", encoding="utf-8") as f:
