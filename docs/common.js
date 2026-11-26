@@ -5,13 +5,36 @@
   "use strict";
   var root = document.documentElement;
 
-  // 尽早设置主题，避免首屏闪白
-  try {
-    var stored = localStorage.getItem("gold_theme");
-    if (stored === "dark") {
-      root.classList.add("dark");
-    }  // 金投网式:默认浅色,手动切深色
-  } catch (e) { /* localStorage 不可用时忽略 */ }
+  // HIG:主题跟随系统(prefers-color-scheme)，用户手动选择后以本地存储为准。
+  // 尽早执行，避免首屏闪白；matchMedia 监听系统切换，未手动覆盖时实时跟随。
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  function systemDark() { return !!(mq && mq.matches); }
+  function applyTheme(dark) {
+    root.classList.toggle("dark", dark);
+    root.style.colorScheme = dark ? "dark" : "light";
+    var btn = document.getElementById("themeBtn");
+    if (btn) {
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+      var svg = btn.querySelector(".ico");
+      if (svg) {
+        svg.innerHTML = dark
+          ? '<circle cx="10" cy="10" r="3.6"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.3 4.3l1.4 1.4M14.3 14.3l1.4 1.4M15.7 4.3l-1.4 1.4M5.7 14.3l-1.4 1.4"/>'
+          : '<path d="M16.5 12.3A6.8 6.8 0 0 1 7.7 3.5a6.8 6.8 0 1 0 8.8 8.8Z"/>';
+      }
+    }
+  }
+  function hasStored() {
+    try { return !!localStorage.getItem("gold_theme"); } catch (e) { return false; }
+  }
+  (function initTheme() {
+    var stored = null;
+    try { stored = localStorage.getItem("gold_theme"); } catch (e) {}
+    applyTheme(stored ? stored === "dark" : systemDark());
+  })();
+  // 系统主题变化时，仅在用户未手动覆盖的情况下跟随
+  if (mq && mq.addEventListener) {
+    mq.addEventListener("change", function () { if (!hasStored()) { applyTheme(systemDark()); fireTheme(); } });
+  }
 
   function fireTheme() {
     try { window.dispatchEvent(new Event("themechange")); } catch (e) {
@@ -61,16 +84,19 @@
     var btn = document.getElementById("themeBtn");
     if (btn) {
       btn.addEventListener("click", function () {
-        var dark = root.classList.toggle("dark");
+        var dark = !root.classList.contains("dark");
+        applyTheme(dark);
         try { localStorage.setItem("gold_theme", dark ? "dark" : "light"); } catch (e) {}
-        btn.setAttribute("aria-pressed", dark ? "true" : "false");
         fireTheme();
       });
     }
 
     var toggle = document.getElementById("navToggle"), menu = document.getElementById("navMenu");
     if (toggle && menu) {
-      toggle.addEventListener("click", function () { menu.classList.toggle("open"); });
+      toggle.addEventListener("click", function () {
+        var open = menu.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
       menu.addEventListener("click", function (e) {
         if (e.target && e.target.tagName === "A") menu.classList.remove("open");
       });
