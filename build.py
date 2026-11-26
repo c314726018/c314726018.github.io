@@ -982,8 +982,11 @@ FAQ = [
     {"q": "一盎司黄金等于多少克？", "a": "金衡盎司（troy ounce）是国际贵金属计价单位，1 金衡盎司 = 31.1034768 克。注意它与日常用的常衡盎司（28.3495 克）不同。把国际金价换算成人民币每克，需要先乘以美元兑人民币汇率，再除以 31.1034768。"},
     {"q": "账户黄金和实物黄金有什么区别？", "a": "账户黄金（如 SGE 现货合约、银行积存金）不提取实物，交易便捷、买卖价差小；实物黄金（金条、金币、首饰）需额外考虑加工费、保管、鉴定与回购折价，实际买入成本通常显著高于交易所报价。"},
     {"q": "数据多久更新一次？非交易时段显示什么？", "a": "站点每小时抓取一次上海黄金交易所官方行情、国际现货金价与美元兑人民币汇率。非交易时段（夜间、周末、节假日）会显示最近一次有效报价，不会用空值或 0 填充。分时图展示的是最近一个交易时段采集到的价格序列。"},
-    {"q": "价格提醒会上传到服务器吗？", "a": "不会。提醒规则只保存在你当前浏览器的 localStorage 中，页面每 60 秒用本地数据比对一次，触发时通过浏览器桌面通知提示。我们不会收集你的邮箱、价格目标或任何个人信息。"},
 ]
+
+# 备案合规:移除"价格提醒"功能的 FAQ(同步影响首页 FAQ/JSON-LD、关于页、学院页)
+if COMPLIANCE_MODE:
+    FAQ = [f for f in FAQ if "价格提醒" not in f["q"] and "提醒规则" not in f["q"]]
 
 ARTICLES = [
     {"no": "01", "h": "国内金价与国际金价，为什么不一样？",
@@ -1198,6 +1201,13 @@ NAV_SECTIONS = [
         ("常见问题", "./academy.html#faq"),
     ]),
 ]
+
+# 备案合规:移除"价格提醒"入口(一级/二级/左栏共用此结构,过滤一次三处生效)
+if COMPLIANCE_MODE:
+    NAV_SECTIONS = [
+        (k, t, u, [(st, su) for st, su in subs if "价格提醒" not in st and "#alerts" not in su])
+        for k, t, u, subs in NAV_SECTIONS
+    ]
 
 
 def nav_html(active=""):
@@ -1704,6 +1714,8 @@ def faq_ld(faq):
 
 def promo_bar():
     """即梦式顶部公告横条:会员推广,可关闭(24h 记忆),全站顶部。"""
+    if COMPLIANCE_MODE:
+        return ""
     return """<div class="promo-bar" id="promoBar">
   <div class="pb-in">
     <span class="pb-badge">🔔 会员</span>
@@ -2208,6 +2220,75 @@ def page_index(data):
     sym_pills = "".join(
         f'<a class="sp" data-v="{esc(sv)}" title="点击选中/取消">{esc(sl)}</a>'
         for sv, sl in sym_pool)
+    # 备案合规:整块隐藏价格提醒/订阅板块,网站只做信息展示
+    alerts_block = "" if COMPLIANCE_MODE else f"""  <section class="section" id="alerts">
+    <div class="section-head">
+      <div><div class="lbl">PRICE ALERTS · 邮件提醒服务</div><h2>金市异动,第一时间知道</h2>
+        <p>覆盖 SGE 合约、国内期货、国际现货、股指与能源共 40+ 品种,每 30 分钟自动巡检。近 30 个交易日,黄金出现 <b style="color:var(--gold-2)">9 次</b>单日波动超 1.5%——每一次,都可以让邮件先告诉你。</p></div>
+    </div>
+
+    <div class="plan-cards">
+      <div class="plan-card">
+        <div class="pk">价格提醒工具</div>
+        <div class="pv">个人自用 · 内测中</div>
+        <ul>
+          <li>✓ 3 条提醒规则</li>
+          <li>✓ 全部 40+ 品种</li>
+          <li>✓ 价格触发(高于/低于/等于)</li>
+          <li>✓ 每 30 分钟巡检</li>
+        </ul>
+        <a class="btn" href="#alertForm" style="width:100%">添加提醒规则</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="steps-row">
+        <div class="sr-item"><b>① 设规则</b><span>选择品种与触发价格</span></div>
+        <div class="sr-item"><b>② 填邮箱</b><span>填写接收提醒的邮箱地址</span></div>
+        <div class="sr-item"><b>③ 等通知</b><span>每 30 分钟巡检,触发后邮件提醒</span></div>
+      </div>
+    </div>
+
+    <div class="card" id="alertForm">
+      <div class="card-head" style="margin-bottom:10px"><h3>设置提醒规则</h3>
+        <div class="chip-row"><span class="badge">◷ 每 30 分钟巡检</span><span class="chip" id="quotaChip">可设 3 条规则</span></div></div>
+      <div class="alert-type" id="alertTypeBox">
+        <a class="on" data-t="price">🎯 价格触发</a>
+        <a data-t="pct">📈 涨跌幅触发</a>
+      </div>
+      <div class="sym-multi" id="alertSymBox" aria-label="选择品种(可多选)">{sym_pills}</div>
+      <div class="hint" style="margin:4px 2px">可多选品种;每个品种将分别建立提醒规则。</div>
+      <div class="alert-row" id="rowPrice">
+        <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option><option value="equal">= 等于</option></select>
+        <input id="alertVal" type="number" step="0.01" placeholder="目标价格" aria-label="目标价格">
+      </div>
+      <div class="alert-row" id="rowPct" style="display:none">
+        <select id="pctDir" aria-label="涨跌方向"><option value="up">📈 单日涨幅超过</option><option value="down">📉 单日跌幅超过</option></select>
+        <input id="pctVal" type="number" step="0.1" placeholder="如 2 表示 2%" aria-label="涨跌幅">
+      </div>
+      <div class="alert-row">
+        <input id="mailAddr" type="email" placeholder="接收邮箱" aria-label="接收邮箱" style="flex:1 1 180px">
+        <button class="btn" id="mailSubmit" type="button">保存提醒</button>
+      </div>
+      <div class="hint" id="mailNote">邮箱仅用于发送提醒,不公开;当日同一规则重复触发不重复发送。</div>
+      <button class="btn ghost" id="copyQuote" type="button" style="margin-top:4px">⧉ 复制当前行情摘要</button>
+      <div style="margin-top:14px">
+        <div class="card-head" style="margin-bottom:8px"><h3 style="font-size:14px">我的提醒规则</h3><span class="chip" id="ruleCount">0 条</span></div>
+        <div id="ruleListBox" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head" style="margin-bottom:10px"><h3>常见问题</h3></div>
+      <div class="faq-list">
+        <div class="faq"><b>Q:提醒规则怎么设置?</b><p>在下方选择品种、触发方向与价格,填写接收邮箱保存即可,无需注册账号。</p></div>
+        <div class="faq"><b>Q:邮件多久能送达?</b><p>行情每 30 分钟巡检一次,触发后 30 分钟内送达。</p></div>
+        <div class="faq"><b>Q:最多能设几条规则?</b><p>目前为个人自用内测阶段,每个邮箱最多 3 条价格触发规则。</p></div>
+        <div class="faq"><b>Q:如何退订?</b><p>回复任意提醒邮件即可退订;或在本页删除对应规则。</p></div>
+        <div class="faq"><b>Q:数据准确吗?</b><p>行情来源于上海黄金交易所公开数据与国际市场公开报价,每 30 分钟更新;提醒仅为信息通知,不构成投资建议。</p></div>
+      </div>
+    </div>
+  </section>"""
 
     faq_html = "".join(
         f'<details><summary>{esc(f["q"])}</summary><div class="ans">{esc(f["a"])}</div></details>'
@@ -2500,74 +2581,7 @@ def page_index(data):
     </div>
   </section>
 
-  <section class="section" id="alerts">
-    <div class="section-head">
-      <div><div class="lbl">PRICE ALERTS · 邮件提醒服务</div><h2>金市异动,第一时间知道</h2>
-        <p>覆盖 SGE 合约、国内期货、国际现货、股指与能源共 40+ 品种,每 30 分钟自动巡检。近 30 个交易日,黄金出现 <b style="color:var(--gold-2)">9 次</b>单日波动超 1.5%——每一次,都可以让邮件先告诉你。</p></div>
-    </div>
-
-    <div class="plan-cards">
-      <div class="plan-card">
-        <div class="pk">价格提醒工具</div>
-        <div class="pv">个人自用 · 内测中</div>
-        <ul>
-          <li>✓ 3 条提醒规则</li>
-          <li>✓ 全部 40+ 品种</li>
-          <li>✓ 价格触发(高于/低于/等于)</li>
-          <li>✓ 每 30 分钟巡检</li>
-        </ul>
-        <a class="btn" href="#alertForm" style="width:100%">添加提醒规则</a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="steps-row">
-        <div class="sr-item"><b>① 设规则</b><span>选择品种与触发价格</span></div>
-        <div class="sr-item"><b>② 填邮箱</b><span>填写接收提醒的邮箱地址</span></div>
-        <div class="sr-item"><b>③ 等通知</b><span>每 30 分钟巡检,触发后邮件提醒</span></div>
-      </div>
-    </div>
-
-    <div class="card" id="alertForm">
-      <div class="card-head" style="margin-bottom:10px"><h3>设置提醒规则</h3>
-        <div class="chip-row"><span class="badge">◷ 每 30 分钟巡检</span><span class="chip" id="quotaChip">可设 3 条规则</span></div></div>
-      <div class="alert-type" id="alertTypeBox">
-        <a class="on" data-t="price">🎯 价格触发</a>
-        <a data-t="pct">📈 涨跌幅触发</a>
-      </div>
-      <div class="sym-multi" id="alertSymBox" aria-label="选择品种(可多选)">{sym_pills}</div>
-      <div class="hint" style="margin:4px 2px">可多选品种;每个品种将分别建立提醒规则。</div>
-      <div class="alert-row" id="rowPrice">
-        <select id="alertDir" aria-label="提醒方向"><option value="above">≥ 高于</option><option value="below">≤ 低于</option><option value="equal">= 等于</option></select>
-        <input id="alertVal" type="number" step="0.01" placeholder="目标价格" aria-label="目标价格">
-      </div>
-      <div class="alert-row" id="rowPct" style="display:none">
-        <select id="pctDir" aria-label="涨跌方向"><option value="up">📈 单日涨幅超过</option><option value="down">📉 单日跌幅超过</option></select>
-        <input id="pctVal" type="number" step="0.1" placeholder="如 2 表示 2%" aria-label="涨跌幅">
-      </div>
-      <div class="alert-row">
-        <input id="mailAddr" type="email" placeholder="接收邮箱" aria-label="接收邮箱" style="flex:1 1 180px">
-        <button class="btn" id="mailSubmit" type="button">保存提醒</button>
-      </div>
-      <div class="hint" id="mailNote">邮箱仅用于发送提醒,不公开;当日同一规则重复触发不重复发送。</div>
-      <button class="btn ghost" id="copyQuote" type="button" style="margin-top:4px">⧉ 复制当前行情摘要</button>
-      <div style="margin-top:14px">
-        <div class="card-head" style="margin-bottom:8px"><h3 style="font-size:14px">我的提醒规则</h3><span class="chip" id="ruleCount">0 条</span></div>
-        <div id="ruleListBox" style="display:flex;flex-direction:column;gap:6px"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-head" style="margin-bottom:10px"><h3>常见问题</h3></div>
-      <div class="faq-list">
-        <div class="faq"><b>Q:提醒规则怎么设置?</b><p>在下方选择品种、触发方向与价格,填写接收邮箱保存即可,无需注册账号。</p></div>
-        <div class="faq"><b>Q:邮件多久能送达?</b><p>行情每 30 分钟巡检一次,触发后 30 分钟内送达。</p></div>
-        <div class="faq"><b>Q:最多能设几条规则?</b><p>目前为个人自用内测阶段,每个邮箱最多 3 条价格触发规则。</p></div>
-        <div class="faq"><b>Q:如何退订?</b><p>回复任意提醒邮件即可退订;或在本页删除对应规则。</p></div>
-        <div class="faq"><b>Q:数据准确吗?</b><p>行情来源于上海黄金交易所公开数据与国际市场公开报价,每 30 分钟更新;提醒仅为信息通知,不构成投资建议。</p></div>
-      </div>
-    </div>
-  </section>
+  {alerts_block}
 
   <section class="section" id="quotes">
     <div class="section-head">
@@ -2908,6 +2922,8 @@ def page_about(data):
     faq_html = "".join(
         f'<details><summary>{esc(f["q"])}</summary><div class="ans">{esc(f["a"])}</div></details>'
         for f in FAQ)
+    _alert_about = ("" if COMPLIANCE_MODE else
+        "    <p>价格提醒功能完全在浏览器本地运行：规则保存在 localStorage，比对在客户端完成，触发时通过浏览器桌面通知提示。我们不会把你的提醒规则、目标价格或任何个人信息上传到服务器。</p>\n")
     return f"""{head_html(
         "关于本站 · 数据来源与指标算法 | 金衡网",
         "金衡网的数据来源、更新机制、国内溢价与国际折算价的计算口径，以及完整免责声明与常见问题。",
@@ -2948,8 +2964,7 @@ def page_about(data):
 
     <h2>三、更新与可用性</h2>
     <p>站点托管于 GitHub Pages，采用静态页面 + 定时构建的方式运行，没有后端数据库，也不要求用户登录。行情抓取、页面生成与发布均由自动化任务完成。页面本身可在桌面、平板与手机浏览器中使用，并支持浅色 / 深色主题，主题偏好保存在本机。</p>
-    <p>价格提醒功能完全在浏览器本地运行：规则保存在 localStorage，比对在客户端完成，触发时通过浏览器桌面通知提示。我们不会把你的提醒规则、目标价格或任何个人信息上传到服务器。</p>
-
+{_alert_about}
     <h2 id="faq">四、常见问题</h2>
     <p>以下是读者最常问的几个问题，点击可展开答案。</p>
   </div>
@@ -2973,6 +2988,13 @@ def page_about(data):
 # ---------------------------------------------------------------- 隐私页
 
 def page_privacy(data):
+    _alert_p1 = "" if COMPLIANCE_MODE else "你在本站填写的任何提醒规则都只保存在你自己的浏览器中。"
+    _alert_li = "" if COMPLIANCE_MODE else "      <li>你设置的价格提醒规则（合约、方向、目标价）。</li>\n"
+    _alert_sec2 = "" if COMPLIANCE_MODE else (
+        '    <h2>二、浏览器通知</h2>\n'
+        '    <p>价格提醒可选择开启浏览器桌面通知。开启时浏览器会向你请求授权，授权状态由浏览器管理，我们无法读取你的身份，也无法在页面关闭后向你推送消息。你可以随时在浏览器设置中撤回该授权。</p>\n')
+    _alert_cookie = "主题偏好" if COMPLIANCE_MODE else "提醒规则与主题偏好"
+    _alert_outro = "主题偏好" if COMPLIANCE_MODE else "主题与提醒规则"
     return f"""{head_html(
         "隐私政策 | 金衡网",
         "金衡网的隐私政策：说明本站如何使用 localStorage、浏览器通知、第三方广告 Cookie 以及你的选择权。",
@@ -2990,19 +3012,16 @@ def page_privacy(data):
     <p class="muted">生效日期：2026 年 11 月 11 日 · 最近更新：2026 年 11 月 11 日</p>
 
     <h2>一、我们收集哪些信息</h2>
-    <p><strong>我们不收集可识别个人身份的信息。</strong>本站是纯静态站点，没有用户账户系统，没有服务端数据库，也不提供评论、留言或上传功能。你在本站填写的任何提醒规则都只保存在你自己的浏览器中。</p>
+    <p><strong>我们不收集可识别个人身份的信息。</strong>本站是纯静态站点，没有用户账户系统，没有服务端数据库，也不提供评论、留言或上传功能。{_alert_p1}</p>
     <p>为了运行基本功能，站点会使用浏览器本地存储（localStorage）保存以下偏好：</p>
     <ul>
       <li>浅色 / 深色主题选择；</li>
-      <li>你设置的价格提醒规则（合约、方向、目标价）。</li>
-    </ul>
+{_alert_li}    </ul>
     <p>这些数据仅存在于你当前设备的当前浏览器中，不会上传给我们，也不会被用于跨设备追踪。你可以随时通过清除浏览器站点数据删除它们。</p>
 
-    <h2>二、浏览器通知</h2>
-    <p>价格提醒可选择开启浏览器桌面通知。开启时浏览器会向你请求授权，授权状态由浏览器管理，我们无法读取你的身份，也无法在页面关闭后向你推送消息。你可以随时在浏览器设置中撤回该授权。</p>
-
+{_alert_sec2}
     <h2>三、Cookie 与本地存储</h2>
-    <p>本站仅使用浏览器本地存储保存提醒规则与主题偏好，不设置广告类 Cookie。</p>
+    <p>本站仅使用浏览器本地存储保存{_alert_cookie}，不设置广告类 Cookie。</p>
     <ul>
       <li>你可以通过 <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">Google 广告设置</a> 选择停用个性化广告；</li>
       <li>也可以访问 <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" style="color:var(--gold)">aboutads.info</a> 停用部分第三方供应商的个性化广告 Cookie；</li>
@@ -3024,7 +3043,7 @@ def page_privacy(data):
 
     <h2>八、联系我们</h2>
     <p>如对本隐私政策或本站数据处理有疑问，可通过项目代码仓库的 Issue 功能留言，或查看 <a href="./about.html" style="color:var(--gold)">关于本站</a> 页面了解站点信息。</p>
-    <div class="callout"><p>简言之：本站没有账号、没有表单、没有后端数据库；除了浏览器本地保存的主题与提醒规则，我们不收集你的个人信息。</p></div>
+    <div class="callout"><p>简言之：本站没有账号、没有表单、没有后端数据库；除了浏览器本地保存的{_alert_outro}，我们不收集你的个人信息。</p></div>
   </div>
   {ad_slot()}
 </div>{side_right(data)}</div></div>
@@ -3513,7 +3532,7 @@ def page_calendar(data):
             <tr><td class="lbl">经济预测摘要</td><td>GDP/失业率/PCE 通胀预测更新</td><td>GDP 下调+通胀上调=滞胀信号,利多金价</td></tr>
           </tbody>
         </table>
-        <div class="hint">议息日建议提前设置价格提醒(首页价格提醒板块),抓住异动窗口。</div>
+        <div class="hint">议息日常伴随金价异动,可留意当日行情波动。</div>
       </div>
     </div>
     </div>
@@ -3543,7 +3562,7 @@ def page_calendar(data):
             <tr><td class="lbl">实际利率 = 名义利率 − 通胀</td><td class="num">核心变量</td><td>实际利率为负时(通胀高于利率)金价最强——这是过去数年金价牛市的底层逻辑</td></tr>
           </tbody>
         </table>
-        <div class="hint">央行议息当日金价波动往往放大(可配合价格提醒功能设置异动通知);点阵图与声明措辞的变化常比利率本身更重要。</div>
+        <div class="hint">央行议息当日金价波动往往放大;点阵图与声明措辞的变化常比利率本身更重要。</div>
       </div>
       <div class="card">
         <div class="card-head"><h3>主要央行的政策工具速查</h3><span class="chip">进阶知识</span></div>
@@ -3599,9 +3618,6 @@ ACAD_ARTICLES = [
     {"cat": "投资工具", "no": "08", "h": "Au(T+D) 延期合约：杠杆、递延费与风险",
      "p": ["Au(T+D) 是保证金交易（约 8~12 倍杠杆），可多空双向，日内交易活跃。",
            "递延费是多空失衡时一方每日向另一方支付的费用，方向每日可能切换，长期持仓不可忽视。"]},
-    {"cat": "投资工具", "no": "09", "h": "黄金价格提醒怎么设置才有效？",
-     "p": ["价格提醒应设置在关键价位（如前高前低、整数关口、溢价极值）。",
-           "本站的「价格提醒」功能支持设置高于/低于某值通知，浏览器通知免费无门槛。"]},
     {"cat": "宏观分析", "no": "10", "h": "美联储利率如何影响金价？",
      "p": ["利率上升 → 持有黄金的机会成本上升 → 金价承压；利率下降 → 金价获支撑。",
            "实际利率（名义利率 − 通胀）是金价的长期锚：实际利率下行，金价上行。"]},
