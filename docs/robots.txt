@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://c314726018.github.io/sitemap.xml
+Sitemap: https://www.jinhengwang.cn/sitemap.xml
