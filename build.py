@@ -1096,13 +1096,14 @@ def head_html(title, desc, canonical, extra=""):
 
 
 def topbar_html(data):
+    _alert_btn = "" if COMPLIANCE_MODE else '<a class="tb-btn gold" href="./index.html#alerts">🔔 金市异动提醒</a>'
     return f"""<div class="topbar"><div class="wrap">
   <div class="tb-l"><span class="live-dot"></span><span>数据源：上海黄金交易所 · 国际现货黄金 · 美元兑人民币</span></div>
   <div class="tb-r">
     <span id="genTime">数据生成：{esc(data.get('generated_at') or '—')}</span>
     <a href="./about.html">数据说明</a>
     <a class="tb-btn" href="./feedback.html">✉ 留言反馈</a>
-    <a class="tb-btn gold" href="./index.html#alerts">🔔 金市异动提醒</a>
+    {_alert_btn}
   </div>
 </div></div>"""
 
@@ -1161,23 +1162,26 @@ def ticker_html(data):
 # 五大板块数据源（主导航下拉 + 常驻二级导航条 + 首页频道网格共用）
 NAV_SECTIONS = [
     ("quotes", "行情中心", "./index.html", [
+        # 第 1 组 · 总览(先看价)
         ("行情概览", "./index.html#overview"),
+        ("实时行情", "./index.html#quotes"),
+        # 第 2 组 · 分类频道(独立专题页)
         ("贵金属频道", "./channel-gjs.html"),
         ("期货频道", "./channel-qh.html"),
         ("国际市场", "./channel-intl.html"),
         ("全球股指", "./channel-gp.html"),
         ("汇率频道", "./channel-fx.html"),
+        # 第 3 组 · 实物与参考价(本页锚点)
         ("实物金价", "./index.html#physical"),
         ("标准金条", "./index.html#brands"),
         ("汽柴油", "./index.html#fuel"),
         ("国际原油", "./index.html#oil"),
         ("人民币汇率", "./index.html#fx"),
-        ("价格提醒", "./index.html#alerts"),
-        ("实时行情", "./index.html#quotes"),
+        # 第 4 组 · 分析工具(本页锚点)
         ("涨跌热力图", "./index.html#heat"),
         ("溢价对照", "./index.html#premium"),
-        ("工具计算", "./index.html#tools"),
         ("走势图表", "./index.html#charts"),
+        ("工具计算", "./index.html#tools"),
     ]),
     ("data", "数据中心", "./data.html", [
         ("关键指标", "./data.html#indicators"),
@@ -2603,9 +2607,17 @@ def page_index(data):
   </section>
 
 
-  <!-- ============ 全品种涨跌热力图<span class="heat-tabs" id="heatTabs"><a class="on" data-p="today">今日</a><a data-p="5">5 日</a><a data-p="20">20 日</a><a data-p="60">60 日</a></span>
-      <span class="heat-legend">色阶:<i class="hl dn4">-4%</i><i class="hl dn2">-2%</i><i class="hl flat">0</i><i class="hl up2">+2%</i><i class="hl up4">+4%</i>(红涨绿跌,色深代表幅度)</span>
-     
+  <!-- ============ 全品种涨跌热力图 ============ -->
+  <section class="section" id="heat">
+    <div class="section-head">
+      <div><div class="lbl">HEAT MAP</div><h2>全品种涨跌热力图</h2>
+        <p>一屏看清所有品种当日强弱;红涨绿跌,色深代表幅度。</p></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>涨跌幅一览</h3>
+        <span class="heat-tabs" id="heatTabs"><a class="on" data-p="today">今日</a><a data-p="5">5 日</a><a data-p="20">20 日</a><a data-p="60">60 日</a></span>
+        <span class="heat-legend">色阶:<i class="hl dn4">-4%</i><i class="hl dn2">-2%</i><i class="hl flat">0</i><i class="hl up2">+2%</i><i class="hl up4">+4%</i>(红涨绿跌,色深代表幅度)</span>
+      </div>
       <div id="heatToday">{heat}</div><div id="heatMultiBox" style="display:none"></div>
       <div class="hint" id="heatNote">口径:今日 = SGE 合约较今开(期货较昨结,现货/指数较昨收);5/20/60 日 = 各品种以对应交易日收盘为基准的累计涨跌(基于日线行情)。格里数字为百分比,点击品种可进行情区。</div>
     </div>
