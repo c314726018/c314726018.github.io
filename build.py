@@ -220,6 +220,26 @@ button,input,select{font:inherit}
 /* HIG:键盘焦点始终可见。禁止 outline:none，仅在 mouse 操作时隐藏以避免误触视觉噪音 */
 :focus-visible{outline:2pt solid var(--focus);outline-offset:2pt;border-radius:var(--r-sm)}
 :focus:not(:focus-visible){outline:none}
+/* HIG 控件状态:禁用态统一覆盖所有交互控件(默认/按下/hover/禁用/加载 五态齐全)。
+ * aria-disabled 兼容非表单元素;pointer-events:none 阻止误触,opacity 表达不可用。 */
+.btn:disabled,.btn[aria-disabled=true],button:disabled,button[aria-disabled=true],
+.icon-btn:disabled,.fbtn:disabled,.tb-btn:disabled,summary[aria-disabled=true],
+input:disabled,select:disabled,textarea:disabled{
+  opacity:.45;cursor:not-allowed;pointer-events:none;filter:grayscale(.4)}
+/* HIG 无障碍:高对比度偏好。系统开启"增强对比度"时加深文字与边框,保持 WCAG AA 以上。 */
+@media (prefers-contrast:more){
+  :root{--sub:var(--ink-2);--line:#9aa4b2;--line-2:#c2cad4;--gold-ink:var(--gold)}
+  html.dark{--line:#7d8ba1;--line-2:#5b6a80}
+  .card,.ov,.phys-card,.chan{border-width:1.5pt}
+}
+/* HIG 无障碍:forced-colors(Windows 高对比度)。浏览器会强制覆盖颜色,
+ * 用系统色关键字保证焦点环/边框/按钮边界不消失;依赖颜色表意的信息由 ▲▼ 符号兜底。 */
+@media (forced-colors:active){
+  :focus-visible{outline:2pt solid Highlight}
+  .card,.ov,.phys-card,.btn,.icon-btn,.tb-btn,input,select{border:1pt solid CanvasText}
+  .btn:disabled,button:disabled,input:disabled{opacity:1;color:GrayText;border-color:GrayText}
+  .tq-tabs a.on,.tq-tools a.on,.btn.ghost.on{forced-color-adjust:none}
+}
 /* HIG:最小触控目标 44×44pt。
  * 主按钮/输入框直接设 min-height；小型图标/链接用透明伪元素向外扩展可点区，不改视觉尺寸。 */
 .btn,.icon-btn,.nav-toggle,.back-top,.fbtn,input[type=text],input[type=email],
