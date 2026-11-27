@@ -1,1 +1,188 @@
-IyEvdXNyL2Jpbi9lbnYgcHl0aG9uMwoiIiLph5HooaHnvZHmlbDmja7mlq3pk77lrp7ml7blkYrorabjgIIKCuebkeaOp+WvueixoTrnur/kuIogR2l0SHViIFBhZ2VzIOeahCBkYXRhLmpzb24o55SxIEdpdEh1YiBBY3Rpb25zIOiHque7remTvuabtOaWsCnjgIIK5Y6f55CGOuiHque7remTvuavjyA1IOWIhumSn+aOqOS4gOasoeaVsOaNrizkuIDml6bmlq3pk74gUGFnZXMg55qEIGdlbmVyYXRlZF9hdCDlsLHkvJrlgZzmm7TjgIIK5Yik5o2uOmdlbmVyYXRlZF9hdCDot53ku4ogPiA0NSDliIbpkp8gPSDmlq3pk74s5Y+R6YKu5Lu25ZGK6K2m44CCCumYsui9sOeCuDrlkIzkuIDmlYXpmpwgNCDlsI/ml7blhoXlj6rlj5HkuIDmrKE75oGi5aSN5ZCO5Y+R5LiA5bCBIuW3suaBouWkjSLlubbmuIXpmaTnirbmgIHjgIIK54q25oCB5paH5Lu2Oi53b3JrYnVkZHkvYWxlcnRfc3RhdGUuanNvbijmjIHkuYXnm67lvZUs5LiN5pS+IC90bXApCiIiIgppbXBvcnQganNvbgppbXBvcnQgb3MKaW1wb3J0IHN1YnByb2Nlc3MKaW1wb3J0IHN5cwppbXBvcnQgdGltZQppbXBvcnQgdXJsbGliLnJlcXVlc3QKZnJvbSBkYXRldGltZSBpbXBvcnQgZGF0ZXRpbWUsIHRpbWVkZWx0YSwgdGltZXpvbmUKCkNTVCA9IHRpbWV6b25lKHRpbWVkZWx0YShob3Vycz04KSkKSEVSRSA9IG9zLnBhdGguZGlybmFtZShvcy5wYXRoLmFic3BhdGgoX19maWxlX18pKQpTVEFURSA9IG9zLnBhdGguam9pbihIRVJFLCAiLndvcmtidWRkeSIsICJhbGVydF9zdGF0ZS5qc29uIikKUkFXID0gImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS9jMzE0NzI2MDE4L2MzMTQ3MjYwMTguZ2l0aHViLmlvL21haW4vZG9jcy9kYXRhLmpzb24iClRIUkVTSE9MRF9NSU4gPSA0NSAgICAgICAgICAjIOi2hei/hyA0NSDliIbpkp/liKTlrprmlq3pk74KQ09PTERPV05fTUlOID0gMjQwICAgICAgICAgICMg5ZCM5LiA5pWF6ZqcIDQg5bCP5pe25YaF5Y+q5ZGK6K2m5LiA5qyhClNLSUxMX0RJUiA9ICIvVXNlcnMvY3Vpc2lxaS8ud29ya2J1ZGR5L3NraWxscy9xcS1lbWFpbCIKQ1JFRF9GSUxFID0gb3MucGF0aC5qb2luKFNLSUxMX0RJUiwgIi5sb2NhbF9jcmVkcyIpICAgIyDpgq7nrrHlh63or4E65pys5Zyw5LiN5YWl5bqTCiMgbGF1bmNoZCDnjq/looMgUEFUSCDlvojlubLlh4As5b+F6aG755So57ud5a+56Lev5b6E5om+IG5vZGUKTk9ERSA9ICIvVXNlcnMvY3Vpc2lxaS8ud29ya2J1ZGR5L2JpbmFyaWVzL25vZGUvdmVyc2lvbnMvMjIuMjIuMi02L2Jpbi9ub2RlIgoKCmRlZiBfbWFpbF9jcmVkcygpOgogICAgIiIi5LuOIHNraWxsIOeahOacrOWcsOWHreivgeaWh+S7tuivu+mCrueusei0puWPt+S4juaOiOadg+eggSjkuI3noaznvJbnoIHlhaXlupMp44CCIiIiCiAgICBjcmVkcyA9IHt9CiAgICB3aXRoIG9wZW4oQ1JFRF9GSUxFLCBlbmNvZGluZz0idXRmLTgiKSBhcyBmOgogICAgICAgIGZvciBsaW5lIGluIGY6CiAgICAgICAgICAgIGxpbmUgPSBsaW5lLnN0cmlwKCkKICAgICAgICAgICAgaWYgIj0iIGluIGxpbmUgYW5kIG5vdCBsaW5lLnN0YXJ0c3dpdGgoIiMiKToKICAgICAgICAgICAgICAgIGssIHYgPSBsaW5lLnNwbGl0KCI9IiwgMSkKICAgICAgICAgICAgICAgIGNyZWRzW2suc3RyaXAoKV0gPSB2LnN0cmlwKCkuc3RyaXAoJyInKS5zdHJpcCgiJyIpCiAgICByZXR1cm4gY3JlZHMuZ2V0KCJRUV9FTUFJTF9BQ0NPVU5UIiksIGNyZWRzLmdldCgiUVFfRU1BSUxfQVVUSF9DT0RFIikKCgpkZWYgbG9hZF9zdGF0ZSgpOgogICAgdHJ5OgogICAgICAgIHdpdGggb3BlbihTVEFURSwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjoKICAgICAgICAgICAgcmV0dXJuIGpzb24ubG9hZChmKQogICAgZXhjZXB0IEV4Y2VwdGlvbjoKICAgICAgICByZXR1cm4ge30KCgpkZWYgc2F2ZV9zdGF0ZShzKToKICAgIG9zLm1ha2VkaXJzKG9zLnBhdGguZGlybmFtZShTVEFURSksIGV4aXN0X29rPVRydWUpCiAgICB3aXRoIG9wZW4oU1RBVEUsICJ3IiwgZW5jb2Rpbmc9InV0Zi04IikgYXMgZjoKICAgICAgICBqc29uLmR1bXAocywgZiwgZW5zdXJlX2FzY2lpPUZhbHNlLCBpbmRlbnQ9MSkKCgpkZWYgZmV0Y2hfZ2VuZXJhdGVkX2F0KCk6CiAgICAiIiLku47nur/kuIogcmF3IOebtOmTvuWPliBkYXRhLmpzb24g55qEIGdlbmVyYXRlZF9hdCDkuI4gSFRUUCDnirbmgIHjgIIiIiIKICAgIHVybCA9IFJBVyArICI/dD0iICsgc3RyKGludCh0aW1lLnRpbWUoKSkpCiAgICByZXEgPSB1cmxsaWIucmVxdWVzdC5SZXF1ZXN0KHVybCwgaGVhZGVycz17IlVzZXItQWdlbnQiOiAiTW96aWxsYS81LjAifSkKICAgIHdpdGggdXJsbGliLnJlcXVlc3QudXJsb3BlbihyZXEsIHRpbWVvdXQ9MjUpIGFzIHI6CiAgICAgICAgYm9keSA9IHIucmVhZCgpLmRlY29kZSgidXRmLTgiLCAiaWdub3JlIikKICAgIGQgPSBqc29uLmxvYWRzKGJvZHkpCiAgICByZXR1cm4gZC5nZXQoImdlbmVyYXRlZF9hdCIpCgoKZGVmIHNlbmRfbWFpbChzdWJqZWN0LCBib2R5KToKICAgIGFjY291bnQsIGF1dGggPSBfbWFpbF9jcmVkcygpCiAgICBpZiBub3QgYWNjb3VudCBvciBub3QgYXV0aDoKICAgICAgICBwcmludCgi5Y+R5L+h5aSx6LSlOiDpgq7nrrHlh63or4Hmlofku7bor7vlj5blpLHotKUiLCBmaWxlPXN5cy5zdGRlcnIpCiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICByZWNpcGllbnQgPSAiMzE0NzI2MDE4QHFxLmNvbSIgICAgICAgIyDmlLbku7bkuro655So5oi36Ieq5bex55qE6YKu566xCiAgICBlbnYgPSBkaWN0KG9zLmVudmlyb24pCiAgICBlbnZbIlFRX0VNQUlMX0FDQ09VTlQiXSA9IGFjY291bnQKICAgIGVudlsiUVFfRU1BSUxfQVVUSF9DT0RFIl0gPSBhdXRoCiAgICBjbWQgPSBbTk9ERSwgInNjcmlwdHMvc2VuZC5qcyIsIHJlY2lwaWVudCwgc3ViamVjdCwgYm9keV0KICAgIHAgPSBzdWJwcm9jZXNzLnJ1bihjbWQsIGN3ZD1TS0lMTF9ESVIsIGVudj1lbnYsIGNhcHR1cmVfb3V0cHV0PVRydWUsIHRleHQ9VHJ1ZSwgdGltZW91dD02MCkKICAgIGlmIHAucmV0dXJuY29kZSAhPSAwOgogICAgICAgIHByaW50KGYi5Y+R5L+h5aSx6LSlOiB7cC5zdGRlcnJbOjIwMF19IiwgZmlsZT1zeXMuc3RkZXJyKQogICAgICAgIHJldHVybiBGYWxzZQogICAgcHJpbnQoIuWPkeS/oeaIkOWKnzoiLCBzdWJqZWN0KQogICAgcmV0dXJuIFRydWUKCgpkZWYgdHJ5X2F1dG9fZml4KCk6CiAgICAiIiLosIPnlKggYXV0b19maXhfc3RhbGUucHkg6Ieq5Yqo5L+u5aSNLOi/lOWbniAo5piv5ZCm5oiQ5YqfLCDor7TmmI4p44CCCiAgICDmiJDlip/liKTlrpo6YWN0aW9uPXJlc3RhcnQg5LiUIHZlcmlmaWVkPXRydWUo5bey6YeN5ZCv5bm256Gu6K6k5pawcnVuKSzmiJYgY29vbGRvd24oNOWwj+aXtuWGheW3suS/rui/hynjgIIKICAgICIiIgogICAgZml4ZXIgPSBvcy5wYXRoLmpvaW4oSEVSRSwgImF1dG9fZml4X3N0YWxlLnB5IikKICAgIFBZID0gIi9Vc2Vycy9jdWlzaXFpLy53b3JrYnVkZHkvYmluYXJpZXMvcHl0aG9uL3ZlcnNpb25zLzMuMTMuMTIvYmluL3B5dGhvbjMiCiAgICBpZiBub3Qgb3MucGF0aC5leGlzdHMoZml4ZXIpOgogICAgICAgIHJldHVybiBGYWxzZSwgImF1dG9fZml4X3N0YWxlLnB5IOS4jeWtmOWcqCIKICAgIHRyeToKICAgICAgICBwID0gc3VicHJvY2Vzcy5ydW4oW1BZLCBmaXhlcl0sIGNhcHR1cmVfb3V0cHV0PVRydWUsIHRleHQ9VHJ1ZSwgdGltZW91dD0xODApCiAgICAgICAgb3V0ID0gcC5zdGRvdXQuc3RyaXAoKS5zcGxpdGxpbmVzKCkKICAgICAgICBkYXRhID0ganNvbi5sb2FkcyhvdXRbLTFdKSBpZiBvdXQgZWxzZSB7fQogICAgICAgIGFjdGlvbiA9IGRhdGEuZ2V0KCJhY3Rpb24iKQogICAgICAgIGRldGFpbCA9IGRhdGEuZ2V0KCJkZXRhaWwiLCAiIikKICAgICAgICBpZiBhY3Rpb24gPT0gInJlc3RhcnQiIGFuZCBkYXRhLmdldCgidmVyaWZpZWQiKToKICAgICAgICAgICAgcmV0dXJuIFRydWUsIGYi5bey6YeN5ZCv6Ieq57ut6ZO+KHtkZXRhaWx9KSIKICAgICAgICBpZiBhY3Rpb24gPT0gImNvb2xkb3duIjoKICAgICAgICAgICAgcmV0dXJuIFRydWUsIGYiNOWwj+aXtuWGheW3suS/ruWkjei/hyzot7Pov4coe2RldGFpbH0pIgogICAgICAgIGlmIGFjdGlvbiA9PSAicmVjb3ZlcmVkIjoKICAgICAgICAgICAgcmV0dXJuIFRydWUsIGYi5pWw5o2u5bey5oGi5aSNKHtkZXRhaWx9KSIKICAgICAgICByZXR1cm4gRmFsc2UsIGYi5L+u5aSN5Yqo5L2cPXthY3Rpb259OiB7ZGV0YWlsfSIKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICByZXR1cm4gRmFsc2UsIGYi6LCD55So5L+u5aSN6ISa5pys5byC5bi4OiB7dHlwZShlKS5fX25hbWVfX306IHtzdHIoZSlbOjEwMF19IgoKCmRlZiBtYWluKCk6CiAgICBub3cgPSBkYXRldGltZS5ub3coQ1NUKQogICAgc3RhdGUgPSBsb2FkX3N0YXRlKCkKICAgIHN0YWxlID0gRmFsc2UKICAgIGRldGFpbCA9ICIiCgogICAgdHJ5OgogICAgICAgIGdlbiA9IGZldGNoX2dlbmVyYXRlZF9hdCgpCiAgICAgICAgaWYgbm90IGdlbjoKICAgICAgICAgICAgc3RhbGUgPSBUcnVlCiAgICAgICAgICAgIGRldGFpbCA9ICLnur/kuIogZGF0YS5qc29uIOe8uuWwkSBnZW5lcmF0ZWRfYXQg5a2X5q61IgogICAgICAgIGVsc2U6CiAgICAgICAgICAgIHQgPSBkYXRldGltZS5zdHJwdGltZShnZW4sICIlWS0lbS0lZCAlSDolTTolUyIpLnJlcGxhY2UodHppbmZvPUNTVCkKICAgICAgICAgICAgYWdlID0gKG5vdyAtIHQpLnRvdGFsX3NlY29uZHMoKSAvIDYwCiAgICAgICAgICAgIGRldGFpbCA9IGYi57q/5LiK5pWw5o2u5pe26Ze0IHtnZW5977yM6Led5LuKIHthZ2U6LjBmfSDliIbpkp/vvIjpmIjlgLwge1RIUkVTSE9MRF9NSU59IOWIhumSn++8iSIKICAgICAgICAgICAgc3RhbGUgPSBhZ2UgPiBUSFJFU0hPTERfTUlOCiAgICAgICAgICAgIGlmIGFnZSA8IDA6CiAgICAgICAgICAgICAgICBkZXRhaWwgKz0gIu+8iOazqOaEj++8muaVsOaNruaXtumXtOS4uuacquadpe+8jOWPr+iDveaYr+aXtuWMuuaIluaXtumSn+W8guW4uO+8iSIKICAgICAgICAgICAgICAgIHN0YWxlID0gVHJ1ZQogICAgZXhjZXB0IEV4Y2VwdGlvbiBhcyBlOgogICAgICAgIHN0YWxlID0gVHJ1ZQogICAgICAgIGRldGFpbCA9IGYi6K+75Y+W57q/5LiKIGRhdGEuanNvbiDlpLHotKXvvJp7dHlwZShlKS5fX25hbWVfX306IHtzdHIoZSlbOjEyMF19IgoKICAgIHByaW50KGYiW3tub3c6JVktJW0tJWQgJUg6JU06JVN9XSB7J+aWremTvicgaWYgc3RhbGUgZWxzZSAn5q2j5bi4J30g4oCUIHtkZXRhaWx9IikKCiAgICB3YXNfc3RhbGUgPSBzdGF0ZS5nZXQoInN0YWxlIiwgRmFsc2UpCiAgICBsYXN0X2FsZXJ0ID0gc3RhdGUuZ2V0KCJsYXN0X2FsZXJ0X3RzIikKICAgIGxhc3RfYWxlcnRfZHQgPSBOb25lCiAgICBpZiBsYXN0X2FsZXJ0OgogICAgICAgIHRyeToKICAgICAgICAgICAgbGFzdF9hbGVydF9kdCA9IGRhdGV0aW1lLmZyb21pc29mb3JtYXQobGFzdF9hbGVydCkKICAgICAgICBleGNlcHQgRXhjZXB0aW9uOgogICAgICAgICAgICBwYXNzCgogICAgaWYgc3RhbGU6CiAgICAgICAgIyDlhYjlsJ3or5Xoh6rliqjkv67lpI066LCD55SoIGF1dG9fZml4X3N0YWxlLnB5IOmHjeWQr+iHque7remTvijlroPlhoXnva405bCP5pe25L+u5aSN5Ya35Y20KQogICAgICAgIGZpeF9vaywgZml4X21zZyA9IHRyeV9hdXRvX2ZpeCgpCiAgICAgICAgcHJpbnQoZiIgIOiHquWKqOS/ruWkje+8mntmaXhfbXNnfSIpCiAgICAgICAgaWYgZml4X29rOgogICAgICAgICAgICAjIOS/ruWkjeW3suinpuWPkeW5tumqjOivgeaWsCBydW4g5ZCv5YqoIOKAlOKAlCDpnZnpu5gs5LiN5Y+R5ZGK6K2m5oOK5Yqo5Lq6LOiusOW9leWNs+WPrwogICAgICAgICAgICBzdGF0ZS51cGRhdGUoc3RhbGU9VHJ1ZSwgbGFzdF9hbGVydF90cz1Ob25lLCBsYXN0X2ZpeD1ub3cuaXNvZm9ybWF0KCksCiAgICAgICAgICAgICAgICAgICAgICAgICBkZXRhaWw9ZGV0YWlsKQogICAgICAgICAgICBzdGF0ZS5wb3AoImxhc3RfYWxlcnRfZmFpbGVkIiwgTm9uZSkKICAgICAgICAgICAgcHJpbnQoIiAg5bey6Ieq5Yqo5L+u5aSN5bm26aqM6K+B5pawcnVuLOacrOasoeS4jeWPkeWRiuitpumCruS7tiIpCiAgICAgICAgZWxzZToKICAgICAgICAgICAgIyDoh6rliqjkv67lpI3lpLHotKXmiJbmnKrpqozor4Eg4oCU4oCUIOaJjeWPkeWRiuitpuiuqeS6uuS7i+WFpQogICAgICAgICAgICBpbl9jb29sZG93biA9IChsYXN0X2FsZXJ0X2R0IGlzIG5vdCBOb25lIGFuZAogICAgICAgICAgICAgICAgICAgICAgICAgICAobm93IC0gbGFzdF9hbGVydF9kdCkudG90YWxfc2Vjb25kcygpIDwgQ09PTERPV05fTUlOICogNjApCiAgICAgICAgICAgIGlmIG5vdCB3YXNfc3RhbGUgb3Igbm90IGluX2Nvb2xkb3duOgogICAgICAgICAgICAgICAgb2sgPSBzZW5kX21haWwoCiAgICAgICAgICAgICAgICAgICAgIuOAkOmHkeihoee9keWRiuitpuOAkeaVsOaNruaWremTvu+8jOiHquWKqOS/ruWkjeacquaIkOWKnyIsCiAgICAgICAgICAgICAgICAgICAgZiLmo4DmtYvml7bpl7TvvJp7bm93OiVZLSVtLSVkICVIOiVNOiVTfVxuIgogICAgICAgICAgICAgICAgICAgIGYi5byC5bi477yae2RldGFpbH1cbiIKICAgICAgICAgICAgICAgICAgICBmIuiHquWKqOS/ruWkje+8mntmaXhfbXNnfVxuXG4iCiAgICAgICAgICAgICAgICAgICAgIuiHquWKqOmHjeWQr+iHque7remTvuacquaIkOWKn++8jOmcgOS6uuW3peS7i+WFpe+8mlxuIgogICAgICAgICAgICAgICAgICAgICIxLiDnmbvlvZUgR2l0SHViIOaJi+WKqCBkaXNwYXRjaCB1cGRhdGUueW1sXG4iCiAgICAgICAgICAgICAgICAgICAgIjIuIOaIluacrOWcsOaJp+ihjCBweXRob24zIGF1dG9fZml4X3N0YWxlLnB5IOafpeeci+ivpue7humUmeivr1xuIgogICAgICAgICAgICAgICAgICAgICLlj4LogIPvvJp+L0RvY3VtZW50cy93b3JrYnVkZHnpobnnm64v6YeR6KGh572RL+WPkeW4g+Wkh+S7vS/lj5HluIPlm57mu5rpooTmoYgubWQiCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICAgICBzdGF0ZS51cGRhdGUoc3RhbGU9VHJ1ZSwgbGFzdF9hbGVydF90cz1ub3cuaXNvZm9ybWF0KCksIGRldGFpbD1kZXRhaWwpCiAgICAgICAgICAgICAgICBpZiBub3Qgb2s6CiAgICAgICAgICAgICAgICAgICAgc3RhdGVbImxhc3RfYWxlcnRfZmFpbGVkIl0gPSBUcnVlCiAgICAgICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgICAgIHN0YXRlLnBvcCgibGFzdF9hbGVydF9mYWlsZWQiLCBOb25lKQogICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgcHJpbnQoZiIgIOWGt+WNtOacn+WGhe+8jOi3s+i/h+mHjeWkjeWRiuitpu+8iOS4iuasoSB7bGFzdF9hbGVydH3vvIkiKQogICAgZWxzZToKICAgICAgICBpZiB3YXNfc3RhbGU6CiAgICAgICAgICAgIHNlbmRfbWFpbCgKICAgICAgICAgICAgICAgICLjgJDph5HooaHnvZHmgaLlpI3jgJHmlbDmja7lt7LmgaLlpI3mm7TmlrAiLAogICAgICAgICAgICAgICAgZiLmo4DmtYvml7bpl7TvvJp7bm93OiVZLSVtLSVkICVIOiVNOiVTfVxue2RldGFpbH1cblxu5pWw5o2u6ZO+6Lev5bey5oGi5aSN5q2j5bi444CCIgogICAgICAgICAgICApCiAgICAgICAgc3RhdGUudXBkYXRlKHN0YWxlPUZhbHNlLCBsYXN0X2FsZXJ0X3RzPU5vbmUsIGxhc3Rfb2s9bm93Lmlzb2Zvcm1hdCgpKQogICAgICAgIHN0YXRlLnBvcCgibGFzdF9hbGVydF9mYWlsZWQiLCBOb25lKQoKICAgIHNhdmVfc3RhdGUoc3RhdGUpCgoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIG1haW4oKQo=
+#!/usr/bin/env python3
+"""金衡网数据断链实时告警。
+
+监控对象:线上 GitHub Pages 的 data.json(由 GitHub Actions 自续链更新)。
+原理:自续链每 5 分钟推一次数据,一旦断链 Pages 的 generated_at 就会停更。
+判据:generated_at 距今 > 45 分钟 = 断链,发邮件告警。
+防轰炸:同一故障 4 小时内只发一次;恢复后发一封"已恢复"并清除状态。
+状态文件:.workbuddy/alert_state.json(持久目录,不放 /tmp)
+"""
+import json
+import os
+import subprocess
+import sys
+import time
+import urllib.request
+from datetime import datetime, timedelta, timezone
+
+CST = timezone(timedelta(hours=8))
+HERE = os.path.dirname(os.path.abspath(__file__))
+STATE = os.path.join(HERE, ".workbuddy", "alert_state.json")
+RAW = "https://raw.githubusercontent.com/c314726018/c314726018.github.io/main/docs/data.json"
+THRESHOLD_MIN = 45          # 超过 45 分钟判定断链
+COOLDOWN_MIN = 240          # 同一故障 4 小时内只告警一次
+SKILL_DIR = "/Users/cuisiqi/.workbuddy/skills/qq-email"
+CRED_FILE = os.path.join(SKILL_DIR, ".local_creds")   # 邮箱凭证:本地不入库
+# launchd 环境 PATH 很干净,必须用绝对路径找 node
+NODE = "/Users/cuisiqi/.workbuddy/binaries/node/versions/22.22.2-6/bin/node"
+
+
+def _mail_creds():
+    """从 skill 的本地凭证文件读邮箱账号与授权码(不硬编码入库)。"""
+    creds = {}
+    with open(CRED_FILE, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if "=" in line and not line.startswith("#"):
+                k, v = line.split("=", 1)
+                creds[k.strip()] = v.strip().strip('"').strip("'")
+    return creds.get("QQ_EMAIL_ACCOUNT"), creds.get("QQ_EMAIL_AUTH_CODE")
+
+
+def load_state():
+    try:
+        with open(STATE, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def save_state(s):
+    os.makedirs(os.path.dirname(STATE), exist_ok=True)
+    with open(STATE, "w", encoding="utf-8") as f:
+        json.dump(s, f, ensure_ascii=False, indent=1)
+
+
+def fetch_generated_at():
+    """从线上 raw 直链取 data.json 的 generated_at 与 HTTP 状态。"""
+    url = RAW + "?t=" + str(int(time.time()))
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=25) as r:
+        body = r.read().decode("utf-8", "ignore")
+    d = json.loads(body)
+    return d.get("generated_at")
+
+
+def send_mail(subject, body):
+    account, auth = _mail_creds()
+    if not account or not auth:
+        print("发信失败: 邮箱凭证文件读取失败", file=sys.stderr)
+        return False
+    recipient = "314726018@qq.com"       # 收件人:用户自己的邮箱
+    env = dict(os.environ)
+    env["QQ_EMAIL_ACCOUNT"] = account
+    env["QQ_EMAIL_AUTH_CODE"] = auth
+    cmd = [NODE, "scripts/send.js", recipient, subject, body]
+    p = subprocess.run(cmd, cwd=SKILL_DIR, env=env, capture_output=True, text=True, timeout=60)
+    if p.returncode != 0:
+        print(f"发信失败: {p.stderr[:200]}", file=sys.stderr)
+        return False
+    print("发信成功:", subject)
+    return True
+
+
+def try_auto_fix():
+    """调用 auto_fix_stale.py 自动修复,返回 (是否成功, 说明)。
+    成功判定:action=restart 且 verified=true(已重启并确认新run),或 cooldown(4小时内已修过)。
+    """
+    fixer = os.path.join(HERE, "auto_fix_stale.py")
+    PY = "/Users/cuisiqi/.workbuddy/binaries/python/versions/3.13.12/bin/python3"
+    if not os.path.exists(fixer):
+        return False, "auto_fix_stale.py 不存在"
+    try:
+        p = subprocess.run([PY, fixer], capture_output=True, text=True, timeout=180)
+        out = p.stdout.strip().splitlines()
+        data = json.loads(out[-1]) if out else {}
+        action = data.get("action")
+        detail = data.get("detail", "")
+        if action == "restart" and data.get("verified"):
+            return True, f"已重启自续链({detail})"
+        if action == "cooldown":
+            return True, f"4小时内已修复过,跳过({detail})"
+        if action == "recovered":
+            return True, f"数据已恢复({detail})"
+        return False, f"修复动作={action}: {detail}"
+    except Exception as e:
+        return False, f"调用修复脚本异常: {type(e).__name__}: {str(e)[:100]}"
+
+
+def main():
+    now = datetime.now(CST)
+    state = load_state()
+    stale = False
+    detail = ""
+
+    try:
+        gen = fetch_generated_at()
+        if not gen:
+            stale = True
+            detail = "线上 data.json 缺少 generated_at 字段"
+        else:
+            t = datetime.strptime(gen, "%Y-%m-%d %H:%M:%S").replace(tzinfo=CST)
+            age = (now - t).total_seconds() / 60
+            detail = f"线上数据时间 {gen}，距今 {age:.0f} 分钟（阈值 {THRESHOLD_MIN} 分钟）"
+            stale = age > THRESHOLD_MIN
+            if age < 0:
+                detail += "（注意：数据时间为未来，可能是时区或时钟异常）"
+                stale = True
+    except Exception as e:
+        stale = True
+        detail = f"读取线上 data.json 失败：{type(e).__name__}: {str(e)[:120]}"
+
+    print(f"[{now:%Y-%m-%d %H:%M:%S}] {'断链' if stale else '正常'} — {detail}")
+
+    was_stale = state.get("stale", False)
+    last_alert = state.get("last_alert_ts")
+    last_alert_dt = None
+    if last_alert:
+        try:
+            last_alert_dt = datetime.fromisoformat(last_alert)
+        except Exception:
+            pass
+
+    if stale:
+        # 先尝试自动修复:调用 auto_fix_stale.py 重启自续链(它内置4小时修复冷却)
+        fix_ok, fix_msg = try_auto_fix()
+        print(f"  自动修复：{fix_msg}")
+        if fix_ok:
+            # 修复已触发并验证新 run 启动 —— 静默,不发告警惊动人,记录即可
+            state.update(stale=True, last_alert_ts=None, last_fix=now.isoformat(),
+                         detail=detail)
+            state.pop("last_alert_failed", None)
+            print("  已自动修复并验证新run,本次不发告警邮件")
+        else:
+            # 自动修复失败或未验证 —— 才发告警让人介入
+            in_cooldown = (last_alert_dt is not None and
+                           (now - last_alert_dt).total_seconds() < COOLDOWN_MIN * 60)
+            if not was_stale or not in_cooldown:
+                ok = send_mail(
+                    "【金衡网告警】数据断链，自动修复未成功",
+                    f"检测时间：{now:%Y-%m-%d %H:%M:%S}\n"
+                    f"异常：{detail}\n"
+                    f"自动修复：{fix_msg}\n\n"
+                    "自动重启自续链未成功，需人工介入：\n"
+                    "1. 登录 GitHub 手动 dispatch update.yml\n"
+                    "2. 或本地执行 python3 auto_fix_stale.py 查看详细错误\n"
+                    "参考：~/Documents/workbuddy项目/金衡网/发布备份/发布回滚预案.md"
+                )
+                state.update(stale=True, last_alert_ts=now.isoformat(), detail=detail)
+                if not ok:
+                    state["last_alert_failed"] = True
+                else:
+                    state.pop("last_alert_failed", None)
+            else:
+                print(f"  冷却期内，跳过重复告警（上次 {last_alert}）")
+    else:
+        if was_stale:
+            send_mail(
+                "【金衡网恢复】数据已恢复更新",
+                f"检测时间：{now:%Y-%m-%d %H:%M:%S}\n{detail}\n\n数据链路已恢复正常。"
+            )
+        state.update(stale=False, last_alert_ts=None, last_ok=now.isoformat())
+        state.pop("last_alert_failed", None)
+
+    save_state(state)
+
+
+if __name__ == "__main__":
+    main()

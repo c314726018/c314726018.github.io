@@ -1,1 +1,8 @@
-X19weWNhY2hlX18vCioucHljCi5EU19TdG9yZQpfY25nb2xkX3JlZi8KLndvcmtidWRkeS8KCiouYmFrLioKKi5iYWsK
+__pycache__/
+*.pyc
+.DS_Store
+_cngold_ref/
+.workbuddy/
+
+*.bak.*
+*.bak
