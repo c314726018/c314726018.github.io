@@ -21,11 +21,22 @@ STATE = os.path.join(HERE, ".workbuddy", "alert_state.json")
 RAW = "https://raw.githubusercontent.com/c314726018/c314726018.github.io/main/docs/data.json"
 THRESHOLD_MIN = 45          # 超过 45 分钟判定断链
 COOLDOWN_MIN = 240          # 同一故障 4 小时内只告警一次
-QQ_ACCOUNT = "314726018@qq.com"
-QQ_AUTH = "vzqcithsiancbgdj"
 SKILL_DIR = "/Users/cuisiqi/.workbuddy/skills/qq-email"
+CRED_FILE = os.path.join(SKILL_DIR, ".local_creds")   # 邮箱凭证:本地不入库
 # launchd 环境 PATH 很干净,必须用绝对路径找 node
 NODE = "/Users/cuisiqi/.workbuddy/binaries/node/versions/22.22.2-6/bin/node"
+
+
+def _mail_creds():
+    """从 skill 的本地凭证文件读邮箱账号与授权码(不硬编码入库)。"""
+    creds = {}
+    with open(CRED_FILE, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if "=" in line and not line.startswith("#"):
+                k, v = line.split("=", 1)
+                creds[k.strip()] = v.strip().strip('"').strip("'")
+    return creds.get("QQ_EMAIL_ACCOUNT"), creds.get("QQ_EMAIL_AUTH_CODE")
 
 
 def load_state():
@@ -53,16 +64,46 @@ def fetch_generated_at():
 
 
 def send_mail(subject, body):
+    account, auth = _mail_creds()
+    if not account or not auth:
+        print("发信失败: 邮箱凭证文件读取失败", file=sys.stderr)
+        return False
+    recipient = "314726018@qq.com"       # 收件人:用户自己的邮箱
     env = dict(os.environ)
-    env["QQ_EMAIL_ACCOUNT"] = QQ_ACCOUNT
-    env["QQ_EMAIL_AUTH_CODE"] = QQ_AUTH
-    cmd = [NODE, "scripts/send.js", QQ_ACCOUNT, subject, body]
+    env["QQ_EMAIL_ACCOUNT"] = account
+    env["QQ_EMAIL_AUTH_CODE"] = auth
+    cmd = [NODE, "scripts/send.js", recipient, subject, body]
     p = subprocess.run(cmd, cwd=SKILL_DIR, env=env, capture_output=True, text=True, timeout=60)
     if p.returncode != 0:
         print(f"发信失败: {p.stderr[:200]}", file=sys.stderr)
         return False
     print("发信成功:", subject)
     return True
+
+
+def try_auto_fix():
+    """调用 auto_fix_stale.py 自动修复,返回 (是否成功, 说明)。
+    成功判定:action=restart 且 verified=true(已重启并确认新run),或 cooldown(4小时内已修过)。
+    """
+    fixer = os.path.join(HERE, "auto_fix_stale.py")
+    PY = "/Users/cuisiqi/.workbuddy/binaries/python/versions/3.13.12/bin/python3"
+    if not os.path.exists(fixer):
+        return False, "auto_fix_stale.py 不存在"
+    try:
+        p = subprocess.run([PY, fixer], capture_output=True, text=True, timeout=180)
+        out = p.stdout.strip().splitlines()
+        data = json.loads(out[-1]) if out else {}
+        action = data.get("action")
+        detail = data.get("detail", "")
+        if action == "restart" and data.get("verified"):
+            return True, f"已重启自续链({detail})"
+        if action == "cooldown":
+            return True, f"4小时内已修复过,跳过({detail})"
+        if action == "recovered":
+            return True, f"数据已恢复({detail})"
+        return False, f"修复动作={action}: {detail}"
+    except Exception as e:
+        return False, f"调用修复脚本异常: {type(e).__name__}: {str(e)[:100]}"
 
 
 def main():
@@ -100,26 +141,37 @@ def main():
             pass
 
     if stale:
-        # 冷却期内不重复发信
-        in_cooldown = (last_alert_dt is not None and
-                       (now - last_alert_dt).total_seconds() < COOLDOWN_MIN * 60)
-        if not was_stale or not in_cooldown:
-            ok = send_mail(
-                "【金衡网告警】数据断链，超过45分钟未更新",
-                f"检测时间：{now:%Y-%m-%d %H:%M:%S}\n"
-                f"异常：{detail}\n\n"
-                "可能原因：GitHub Actions 自续链中断（workflow_dispatch 链未续上）。\n"
-                "处理：手动 dispatch 一次 update.yml 重启链条；"
-                "服务器每小时第11分钟有 cron 兜底，但频率低。\n"
-                "参考：~/Documents/workbuddy项目/金衡网/发布备份/发布回滚预案.md"
-            )
-            state.update(stale=True, last_alert_ts=now.isoformat())
-            if not ok:
-                state["last_alert_failed"] = True
-            else:
-                state.pop("last_alert_failed", None)
+        # 先尝试自动修复:调用 auto_fix_stale.py 重启自续链(它内置4小时修复冷却)
+        fix_ok, fix_msg = try_auto_fix()
+        print(f"  自动修复：{fix_msg}")
+        if fix_ok:
+            # 修复已触发并验证新 run 启动 —— 静默,不发告警惊动人,记录即可
+            state.update(stale=True, last_alert_ts=None, last_fix=now.isoformat(),
+                         detail=detail)
+            state.pop("last_alert_failed", None)
+            print("  已自动修复并验证新run,本次不发告警邮件")
         else:
-            print(f"冷却期内，跳过重复告警（上次 {last_alert}）")
+            # 自动修复失败或未验证 —— 才发告警让人介入
+            in_cooldown = (last_alert_dt is not None and
+                           (now - last_alert_dt).total_seconds() < COOLDOWN_MIN * 60)
+            if not was_stale or not in_cooldown:
+                ok = send_mail(
+                    "【金衡网告警】数据断链，自动修复未成功",
+                    f"检测时间：{now:%Y-%m-%d %H:%M:%S}\n"
+                    f"异常：{detail}\n"
+                    f"自动修复：{fix_msg}\n\n"
+                    "自动重启自续链未成功，需人工介入：\n"
+                    "1. 登录 GitHub 手动 dispatch update.yml\n"
+                    "2. 或本地执行 python3 auto_fix_stale.py 查看详细错误\n"
+                    "参考：~/Documents/workbuddy项目/金衡网/发布备份/发布回滚预案.md"
+                )
+                state.update(stale=True, last_alert_ts=now.isoformat(), detail=detail)
+                if not ok:
+                    state["last_alert_failed"] = True
+                else:
+                    state.pop("last_alert_failed", None)
+            else:
+                print(f"  冷却期内，跳过重复告警（上次 {last_alert}）")
     else:
         if was_stale:
             send_mail(
