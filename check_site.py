@@ -68,7 +68,8 @@ except Exception as e:
 # 3. 功能抽查
 try:
     idx = http(f"{BASE}/index.html").decode("utf-8", "ignore")
-    for kw, name in [("金市异动提醒", "topbar 提醒按钮"), ("标准金条企业名录", "标准金条名录"),
+    # COMPLIANCE_MODE=True(备案合规)时 build.py 有意隐藏「金市异动提醒」按钮(提交 208e77be0/f06a42250),不再作为必查项
+    for kw, name in [("标准金条企业名录", "标准金条名录"),
                      ("ocOut", "原油换算器"), ("fcCur2", "交叉汇率"), ("heatTabs", "热力图周期切换")]:
         check(f"功能[{name}]", kw in idx, "存在" if kw in idx else "缺失")
 except Exception as e:
