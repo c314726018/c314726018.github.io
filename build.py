@@ -1362,7 +1362,7 @@ NAV_SECTIONS = [
         ("汇率频道", "./channel-fx.html"),
         # 第 3 组 · 实物与参考价(本页锚点)
         ("实物金价", "./index.html#physical"),
-        ("标准金条", "./index.html#brands"),
+        ("品牌金价", "./index.html#brands"),
         ("汽柴油", "./index.html#fuel"),
         ("国际原油", "./index.html#oil"),
         ("人民币汇率", "./index.html#fx"),
@@ -1386,7 +1386,6 @@ NAV_SECTIONS = [
     ]),
     ("news", "金融快讯", "./news.html", [
         ("7×24 快讯", "./news.html#live"),
-        ("资讯来源", "./news.html#live"),
     ]),
     ("academy", "投资学院", "./academy.html", [
         ("科普文章", "./academy.html#articles"),
@@ -1870,10 +1869,10 @@ def footer_html():
     <div class="foot-col"><h4>行情中心</h4>
       <a href="./index.html#quotes">实时行情</a><a href="./index.html#premium">溢价对照</a>
       <a href="./index.html#physical">实物金价</a><a href="./index.html#charts">走势图表</a>
-      <a href="./index.html#energy">油价汇率</a><a href="./index.html#tools">工具计算</a></div>
+      <a href="./index.html#fuel">油价汇率</a><a href="./index.html#tools">工具计算</a></div>
     <div class="foot-col"><h4>数据中心</h4>
-      <a href="./data.html#indicators">关键指标</a><a href="./data.html#history">历史走势</a>
-      <a href="./data.html#fx">汇率一览</a><a href="./history.html">历史日线</a></div>
+      <a href="./data.html#indicators">关键指标</a><a href="./history.html">历史走势</a>
+      <a href="./data.html#fx">汇率一览</a><a href="./data.html#history">历史日线</a></div>
     <div class="foot-col"><h4>日历快讯</h4>
       <a href="./calendar.html#events">经济事件</a><a href="./calendar.html#fomc">FOMC 议息</a>
       <a href="./calendar.html#cb">央行决议</a><a href="./news.html">7×24 快讯</a></div>

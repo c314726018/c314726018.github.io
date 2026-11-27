@@ -25,8 +25,8 @@
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "今日金价是多少？", "acceptedAnswer": {"@type": "Answer", "text": "本页实时展示上海黄金交易所 Au99.99 等合约最新价，以及国际现货黄金（XAU/USD）折算人民币后的价格与国内溢价。数据每小时自动更新，页面每 60 秒检查一次新数据。"}}, {"@type": "Question", "name": "Au99.99 是什么？和 Au99.95 有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "Au99.99 是上海黄金交易所纯度 99.99% 的现货黄金合约，单位元/克，是国内黄金现货最主要的基准报价。Au99.95 纯度为 99.95%，成交活跃度较低，两者价格通常相差很小。iAu99.99 是国际板合约，以人民币计价但面向国际投资者，可观察境内外价差。"}}, {"@type": "Question", "name": "国内溢价怎么算？为什么会是负数？", "acceptedAnswer": {"@type": "Answer", "text": "国内溢价 =（SGE Au99.99 元/克 − 国际金价折算元/克）÷ 国际金价折算元/克 × 100%。国际折算价 = XAU/USD × USD/CNY ÷ 31.1034768。溢价为正说明国内比国际贵，常见于实物需求旺盛或进口配额紧张；为负说明国内贴水，可能与人民币汇率预期、境内供给充裕或国际金价短期快速上涨有关。"}}, {"@type": "Question", "name": "一盎司黄金等于多少克？", "acceptedAnswer": {"@type": "Answer", "text": "金衡盎司（troy ounce）是国际贵金属计价单位，1 金衡盎司 = 31.1034768 克。注意它与日常用的常衡盎司（28.3495 克）不同。把国际金价换算成人民币每克，需要先乘以美元兑人民币汇率，再除以 31.1034768。"}}, {"@type": "Question", "name": "账户黄金和实物黄金有什么区别？", "acceptedAnswer": {"@type": "Answer", "text": "账户黄金（如 SGE 现货合约、银行积存金）不提取实物，交易便捷、买卖价差小；实物黄金（金条、金币、首饰）需额外考虑加工费、保管、鉴定与回购折价，实际买入成本通常显著高于交易所报价。"}}, {"@type": "Question", "name": "数据多久更新一次？非交易时段显示什么？", "acceptedAnswer": {"@type": "Answer", "text": "站点每小时抓取一次上海黄金交易所官方行情、国际现货金价与美元兑人民币汇率。非交易时段（夜间、周末、节假日）会显示最近一次有效报价，不会用空值或 0 填充。分时图展示的是最近一个交易时段采集到的价格序列。"}}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "金衡网", "url": "https://www.jinhengwang.cn/", "description": "实时黄金价格、上海黄金交易所行情、国际金价与国内溢价", "inLanguage": "zh-CN"}</script>
-<link rel="stylesheet" href="./site.css?v=202611271345">
-<script src="./common.js?v=202611271345"></script>
+<link rel="stylesheet" href="./site.css?v=202611271349">
+<script src="./common.js?v=202611271349"></script>
 </head>
 
 <body>
@@ -56,13 +56,13 @@
 </div></header>
 <div class="subnav"><div class="wrap subnav-inner">
   <span class="subnav-home"><a href="./index.html">首页</a> <i>›</i> <b>行情中心</b></span>
-  <nav class="subnav-links"><a href="./index.html#overview">行情概览</a><a href="./index.html#quotes">实时行情</a><a href="./channel-gjs.html">贵金属频道</a><a href="./channel-qh.html">期货频道</a><a href="./channel-intl.html">国际市场</a><a href="./channel-gp.html">全球股指</a><a href="./channel-fx.html">汇率频道</a><a href="./index.html#physical">实物金价</a><a href="./index.html#brands">标准金条</a><a href="./index.html#fuel">汽柴油</a><a href="./index.html#oil">国际原油</a><a href="./index.html#fx">人民币汇率</a><a href="./index.html#heat">涨跌热力图</a><a href="./index.html#premium">溢价对照</a><a href="./index.html#charts">走势图表</a><a href="./index.html#tools">工具计算</a></nav>
+  <nav class="subnav-links"><a href="./index.html#overview">行情概览</a><a href="./index.html#quotes">实时行情</a><a href="./channel-gjs.html">贵金属频道</a><a href="./channel-qh.html">期货频道</a><a href="./channel-intl.html">国际市场</a><a href="./channel-gp.html">全球股指</a><a href="./channel-fx.html">汇率频道</a><a href="./index.html#physical">实物金价</a><a href="./index.html#brands">品牌金价</a><a href="./index.html#fuel">汽柴油</a><a href="./index.html#oil">国际原油</a><a href="./index.html#fx">人民币汇率</a><a href="./index.html#heat">涨跌热力图</a><a href="./index.html#premium">溢价对照</a><a href="./index.html#charts">走势图表</a><a href="./index.html#tools">工具计算</a></nav>
   <span class="subnav-search"><input id="siteSearch" type="text" autocomplete="off" placeholder="搜索品种…" aria-label="搜索品种"><div class="sh-sug" id="searchSug" style="display:none"></div></span>
 </div></div>
 
 <div class="wrap">
 
-  <div class="portal"><aside class="portal-l"><div class="pmod"><div class="pmod-h">频道导航</div><div class="pmod-b"><ul class="side-nav"><li><a href="./index.html" class="cur">行情中心</a></li><li><a href="./index.html#overview" style="padding-left:22px;font-size:11.5px;color:var(--sub)">行情概览</a></li><li><a href="./index.html#quotes" style="padding-left:22px;font-size:11.5px;color:var(--sub)">实时行情</a></li><li><a href="./channel-gjs.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">贵金属频道</a></li><li><a href="./channel-qh.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">期货频道</a></li><li><a href="./channel-intl.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">国际市场</a></li><li><a href="./channel-gp.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">全球股指</a></li><li><a href="./channel-fx.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">汇率频道</a></li><li><a href="./index.html#physical" style="padding-left:22px;font-size:11.5px;color:var(--sub)">实物金价</a></li><li><a href="./index.html#brands" style="padding-left:22px;font-size:11.5px;color:var(--sub)">标准金条</a></li><li><a href="./index.html#fuel" style="padding-left:22px;font-size:11.5px;color:var(--sub)">汽柴油</a></li><li><a href="./index.html#oil" style="padding-left:22px;font-size:11.5px;color:var(--sub)">国际原油</a></li><li><a href="./index.html#fx" style="padding-left:22px;font-size:11.5px;color:var(--sub)">人民币汇率</a></li><li><a href="./index.html#heat" style="padding-left:22px;font-size:11.5px;color:var(--sub)">涨跌热力图</a></li><li><a href="./index.html#premium" style="padding-left:22px;font-size:11.5px;color:var(--sub)">溢价对照</a></li><li><a href="./index.html#charts" style="padding-left:22px;font-size:11.5px;color:var(--sub)">走势图表</a></li><li><a href="./index.html#tools" style="padding-left:22px;font-size:11.5px;color:var(--sub)">工具计算</a></li><li><a href="./data.html">数据中心</a></li><li><a href="./calendar.html">财经日历</a></li><li><a href="./news.html">金融快讯</a></li><li><a href="./academy.html">投资学院</a></li></ul></div></div></aside>
+  <div class="portal"><aside class="portal-l"><div class="pmod"><div class="pmod-h">频道导航</div><div class="pmod-b"><ul class="side-nav"><li><a href="./index.html" class="cur">行情中心</a></li><li><a href="./index.html#overview" style="padding-left:22px;font-size:11.5px;color:var(--sub)">行情概览</a></li><li><a href="./index.html#quotes" style="padding-left:22px;font-size:11.5px;color:var(--sub)">实时行情</a></li><li><a href="./channel-gjs.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">贵金属频道</a></li><li><a href="./channel-qh.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">期货频道</a></li><li><a href="./channel-intl.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">国际市场</a></li><li><a href="./channel-gp.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">全球股指</a></li><li><a href="./channel-fx.html" style="padding-left:22px;font-size:11.5px;color:var(--sub)">汇率频道</a></li><li><a href="./index.html#physical" style="padding-left:22px;font-size:11.5px;color:var(--sub)">实物金价</a></li><li><a href="./index.html#brands" style="padding-left:22px;font-size:11.5px;color:var(--sub)">品牌金价</a></li><li><a href="./index.html#fuel" style="padding-left:22px;font-size:11.5px;color:var(--sub)">汽柴油</a></li><li><a href="./index.html#oil" style="padding-left:22px;font-size:11.5px;color:var(--sub)">国际原油</a></li><li><a href="./index.html#fx" style="padding-left:22px;font-size:11.5px;color:var(--sub)">人民币汇率</a></li><li><a href="./index.html#heat" style="padding-left:22px;font-size:11.5px;color:var(--sub)">涨跌热力图</a></li><li><a href="./index.html#premium" style="padding-left:22px;font-size:11.5px;color:var(--sub)">溢价对照</a></li><li><a href="./index.html#charts" style="padding-left:22px;font-size:11.5px;color:var(--sub)">走势图表</a></li><li><a href="./index.html#tools" style="padding-left:22px;font-size:11.5px;color:var(--sub)">工具计算</a></li><li><a href="./data.html">数据中心</a></li><li><a href="./calendar.html">财经日历</a></li><li><a href="./news.html">金融快讯</a></li><li><a href="./academy.html">投资学院</a></li></ul></div></div></aside>
   <div class="portal-main" id="main">
 
   <!-- ============ 核心价格卡片区(P0 首屏强曝光) ============ -->
@@ -636,10 +636,10 @@
     <div class="foot-col"><h4>行情中心</h4>
       <a href="./index.html#quotes">实时行情</a><a href="./index.html#premium">溢价对照</a>
       <a href="./index.html#physical">实物金价</a><a href="./index.html#charts">走势图表</a>
-      <a href="./index.html#energy">油价汇率</a><a href="./index.html#tools">工具计算</a></div>
+      <a href="./index.html#fuel">油价汇率</a><a href="./index.html#tools">工具计算</a></div>
     <div class="foot-col"><h4>数据中心</h4>
-      <a href="./data.html#indicators">关键指标</a><a href="./data.html#history">历史走势</a>
-      <a href="./data.html#fx">汇率一览</a><a href="./history.html">历史日线</a></div>
+      <a href="./data.html#indicators">关键指标</a><a href="./history.html">历史走势</a>
+      <a href="./data.html#fx">汇率一览</a><a href="./data.html#history">历史日线</a></div>
     <div class="foot-col"><h4>日历快讯</h4>
       <a href="./calendar.html#events">经济事件</a><a href="./calendar.html#fomc">FOMC 议息</a>
       <a href="./calendar.html#cb">央行决议</a><a href="./news.html">7×24 快讯</a></div>
@@ -666,6 +666,6 @@
 <script src="./vendor/chart.umd.min.js"></script>
 <script src="./vendor/chartjs-chart-financial.umd.min.js"></script>
 <script src="./ads.js"></script>
-<script src="./app.js?v=202611271345"></script>
+<script src="./app.js?v=202611271349"></script>
 </body>
 </html>
